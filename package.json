@@ -1,0 +1,36 @@
+{
+  "name": "kz-admin",
+  "version": "0.1.0",
+  "packageManager": "pnpm@7.14.0",
+  "description": "基于NestJs + TypeScript + TypeORM + Redis + MySql + Vben Admin编写的一款前后端分离的权限管理系统",
+  "author": {
+    "name": "kuizuo",
+    "email": "hi@kuizuo.cn",
+    "url": "https://github.com/kuizuo"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/kuizuo/kz-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuizuo/kz-admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kuizuo/kz-admin/issues"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
+  },
+  "dependencies": {
+    "@kuizuo/eslint-config-ts": "^1.0.1"
+  },
+  "devDependencies": {
+    "turbo": "^1.6.2"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

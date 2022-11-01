@@ -1,0 +1,11 @@
+{
+  "npm.packageManager": "pnpm",
+  "stylelint.enable": true,
+  "prettier.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "files.associations": {
+    "*.env.*": "dotenv"
+  }
+}
