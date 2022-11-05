@@ -16,12 +16,12 @@ export class <%= Name %>Service {
   ) {}
 
   async page(dto: <%= Name %>PageDto) {
-    const { page, limit } = dto;
+    const { page, pageSize } = dto;
 
     const [items, total] = await this.<%= name %>Repository
       .createQueryBuilder(this.<%= name %>Repository.metadata.tableName)
-      .skip(limit * (page - 1))
-      .take(limit)
+      .skip(pageSize * (page - 1))
+      .take(pageSize)
       .getManyAndCount();
 
     return { total, items };

@@ -13,12 +13,12 @@ export class TestService {
   ) {}
 
   async page(dto: TestPageDto) {
-    const { page, limit } = dto;
+    const { page, pageSize } = dto;
 
     const [items, total] = await this.testRepository
       .createQueryBuilder(this.testRepository.metadata.tableName)
-      .skip(limit * (page - 1))
-      .take(limit)
+      .skip(pageSize * (page - 1))
+      .take(pageSize)
       .getManyAndCount();
 
     return { total, items };

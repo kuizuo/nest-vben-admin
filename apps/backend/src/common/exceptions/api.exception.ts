@@ -8,14 +8,15 @@ export class ApiException extends HttpException {
   /**
    * 业务类型错误代码，非Http code
    */
-  private errorCode: number;
-
-  constructor(errorCode: number) {
-    super(ErrorCodeMap[errorCode], 200);
-    this.errorCode = errorCode;
+  constructor(private errorCode: number, private errorMessage?: string) {
+    super(errorMessage ?? ErrorCodeMap[errorCode], 200);
   }
 
   getErrorCode(): number {
     return this.errorCode;
+  }
+
+  getErrorMessage(): string {
+    return this.errorMessage;
   }
 }
