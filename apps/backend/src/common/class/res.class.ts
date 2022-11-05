@@ -1,16 +1,23 @@
-export class ResOp {
-  readonly data: any;
-  readonly code: number;
-  readonly message: string;
+import { ApiProperty } from '@nestjs/swagger';
 
-  constructor(code: number, data?: any, message = 'success') {
+export class ResOp<T = any> {
+  @ApiProperty({ type: 'object' })
+  data?: T;
+
+  @ApiProperty({ type: 'number', default: 200 })
+  code: number;
+
+  @ApiProperty({ type: 'string', default: 'success' })
+  message: string;
+
+  constructor(code: number, data: T, message = 'success') {
     this.code = code;
     this.data = data;
     this.message = message;
   }
 
-  static success(data?: any) {
-    return new ResOp(200, data);
+  static success<T>(data?: T, message?: string) {
+    return new ResOp(200, data, message);
   }
 
   static error(code: number, message) {
@@ -18,7 +25,10 @@ export class ResOp {
   }
 }
 
-export class PageResult<T> {
+export class PageResult<T = any> {
+  @ApiProperty({ type: 'array', items: { type: 'object' } })
   items?: Array<T>;
+
+  @ApiProperty({ type: 'number', default: 0 })
   total: number;
 }

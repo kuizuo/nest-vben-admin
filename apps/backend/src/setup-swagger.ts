@@ -1,6 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { PageResult, ResOp } from './common/class/res.class';
+import { BaseEntity } from './entities/base.entity';
 
 export function setupSwagger(app: INestApplication): void {
   const configService: ConfigService = app.get(ConfigService);
@@ -8,9 +10,7 @@ export function setupSwagger(app: INestApplication): void {
   const enable = configService.get<boolean>('swagger.enable', true);
 
   // 判断是否需要启用
-  if (!enable) {
-    return;
-  }
+  if (!enable) return;
 
   // 配置 Swagger 文档
   const options = new DocumentBuilder()
@@ -22,6 +22,7 @@ export function setupSwagger(app: INestApplication): void {
     .build();
   const document = SwaggerModule.createDocument(app, options, {
     ignoreGlobalPrefix: false,
+    extraModels: [BaseEntity, ResOp, PageResult],
   });
 
   SwaggerModule.setup(path, app, document);
