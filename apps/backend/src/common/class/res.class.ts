@@ -26,9 +26,9 @@ export class ResOp<T = any> {
 }
 
 export class PageResult<T = any> {
-  @ApiProperty({ type: 'array', items: { type: 'object' } })
+  @ApiProperty({ type: 'array' })
   items?: Array<T>;
 
-  @ApiProperty({ type: 'number', default: 0 })
+  @ApiProperty({ default: 0 })
   total: number;
 }
