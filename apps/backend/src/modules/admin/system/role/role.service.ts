@@ -6,10 +6,9 @@ import SysRole from '@/entities/admin/sys-role.entity';
 import SysMenu from '@/entities/admin/sys-menu.entity';
 import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
 import SysUserRole from '@/entities/admin/sys-user-role.entity';
-import { CreateRoleDto, UpdateRoleDto } from './role.dto';
-import { CreatedRoleId } from './role.class';
+import { RoleCreateDto, RoleUpdateDto } from './role.dto';
 import { ROOT_ROLE_ID } from '@/modules/admin/admin.constants';
-import { PageSearchRoleDto } from './role.dto';
+import { RolePageDto } from './role.dto';
 import { PageResult } from '@/common/class/res.class';
 
 @Injectable()
@@ -71,7 +70,7 @@ export class SysRoleService {
   /**
    * 增加角色
    */
-  async add(param: CreateRoleDto): Promise<CreatedRoleId> {
+  async add(param: RoleCreateDto): Promise<{ roleId: number }> {
     const { name, value, remark, menus } = param;
     const role = await this.roleRepository.insert({
       name,
@@ -96,7 +95,7 @@ export class SysRoleService {
   /**
    * 更新角色信息
    */
-  async update(param: UpdateRoleDto): Promise<SysRole> {
+  async update(param: RoleUpdateDto): Promise<SysRole> {
     const { id: roleId, name, value, remark, status, menus } = param;
     const role = await this.roleRepository.save({
       id: roleId,
@@ -142,7 +141,7 @@ export class SysRoleService {
   /**
    * 分页加载角色信息
    */
-  async page(dto: PageSearchRoleDto): Promise<PageResult<SysRole>> {
+  async page(dto: RolePageDto): Promise<PageResult<SysRole>> {
     const { page, pageSize, name, value, status } = dto;
     const where = {
       ...(value ? { value: Like(`%${value}%`) } : null),

@@ -1,32 +1,33 @@
 import { Body, Controller, Get, Headers, Post, Query, Req } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Authorize } from '../core/decorators/authorize.decorator';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Authorize } from '@/common/decorators/authorize.decorator';
 import { ImageCaptchaDto, LoginInfoDto, RegisterInfoDto, sendCodeDto } from './login.dto';
 import { ImageCaptcha, LoginToken } from './login.class';
 import { LoginService } from './login.service';
-import { LogDisabled } from '../core/decorators/log-disabled.decorator';
+import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { UtilService } from '@/shared/services/util.service';
 import { ResOp } from '@/common/class/res.class';
 import { Keep } from '@/common/decorators/keep.decorator';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
 
 @ApiTags('登录模块')
 @Controller()
 export class LoginController {
   constructor(private loginService: LoginService, private utils: UtilService) {}
 
-  @ApiOperation({ summary: '获取登录图片验证码' })
-  @ApiOkResponse({ type: ImageCaptcha })
   @Get('captcha/img')
+  @ApiOperation({ summary: '获取登录图片验证码' })
+  @ApiResult({ type: ImageCaptcha })
   @Authorize()
   async captchaByImg(@Query() dto: ImageCaptchaDto): Promise<ImageCaptcha> {
     return await this.loginService.createImageCaptcha(dto);
   }
 
-  @ApiOperation({ summary: '发送邮箱验证码' })
   @Post('sendCode')
-  @LogDisabled()
+  @ApiOperation({ summary: '发送邮箱验证码' })
   @Authorize()
+  @LogDisabled()
   @Keep()
   async sendCode(@Body() dto: sendCodeDto, @Req() req: FastifyRequest): Promise<any> {
     // await this.loginService.checkImgCaptcha(dto.captchaId, dto.verifyCode);
@@ -39,11 +40,11 @@ export class LoginController {
     }
   }
 
-  @ApiOperation({ summary: '登录' })
-  @ApiOkResponse({ type: LoginToken })
   @Post('login')
-  @LogDisabled()
+  @ApiOperation({ summary: '登录' })
+  @ApiResult({ type: LoginToken })
   @Authorize()
+  @LogDisabled()
   async login(
     @Body() dto: LoginInfoDto,
     @Req() req: FastifyRequest,
@@ -59,10 +60,10 @@ export class LoginController {
     return { token };
   }
 
-  @ApiOperation({ summary: '注册' })
   @Post('register')
-  @LogDisabled()
+  @ApiOperation({ summary: '注册' })
   @Authorize()
+  @LogDisabled()
   async register(@Body() dto: RegisterInfoDto): Promise<void> {
     await this.loginService.checkCode(dto.email, dto.code);
     await this.loginService.register(dto);

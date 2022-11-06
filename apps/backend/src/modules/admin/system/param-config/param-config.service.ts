@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApiException } from '@/common/exceptions/api.exception';
 import SysConfig from '@/entities/admin/sys-config.entity';
 import { Repository } from 'typeorm';
-import { CreateParamConfigDto, UpdateParamConfigDto } from './param-config.dto';
+import { ParamConfigCreateDto, ParamConfigUpdateDto } from './param-config.dto';
 
 @Injectable()
 export class SysParamConfigService {
@@ -35,14 +35,14 @@ export class SysParamConfigService {
   /**
    * 新增
    */
-  async add(dto: CreateParamConfigDto): Promise<void> {
+  async add(dto: ParamConfigCreateDto): Promise<void> {
     await this.configRepository.insert(dto);
   }
 
   /**
    * 更新
    */
-  async update(dto: UpdateParamConfigDto): Promise<void> {
+  async update(dto: ParamConfigUpdateDto): Promise<void> {
     await this.configRepository.update(
       { id: dto.id },
       { name: dto.name, value: dto.value, remark: dto.remark },

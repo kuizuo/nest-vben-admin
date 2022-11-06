@@ -9,10 +9,10 @@ export default class SysRoleMenu extends BaseEntity {
   id: number;
 
   @Column({ name: 'role_id' })
-  @ApiProperty()
+  @ApiProperty({ description: '角色ID' })
   roleId: number;
 
   @Column({ name: 'menu_id' })
-  @ApiProperty()
+  @ApiProperty({ description: '菜单ID' })
   menuId: number;
 }

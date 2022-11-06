@@ -1,16 +1,17 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PageResult } from '@/common/class/res.class';
 import { PaginateDto } from '@/common/dto/page.dto';
 import SysConfig from '@/entities/admin/sys-config.entity';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import {
-  CreateParamConfigDto,
-  DeleteParamConfigDto,
-  InfoParamConfigDto,
-  UpdateParamConfigDto,
+  ParamConfigCreateDto,
+  ParamConfigDeleteDto,
+  ParamConfigInfoDto,
+  ParamConfigUpdateDto,
 } from './param-config.dto';
 import { SysParamConfigService } from './param-config.service';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('参数配置模块')
@@ -19,7 +20,7 @@ export class SysParamConfigController {
   constructor(private paramConfigService: SysParamConfigService) {}
 
   @ApiOperation({ summary: '分页获取参数配置列表' })
-  @ApiOkResponse({ type: [SysConfig] })
+  @ApiResult({ type: [SysConfig] })
   @Get('page')
   async page(@Query() dto: PaginateDto): Promise<PageResult<SysConfig>> {
     const items = await this.paramConfigService.getConfigListByPage(dto.page - 1, dto.pageSize);
@@ -32,27 +33,27 @@ export class SysParamConfigController {
 
   @ApiOperation({ summary: '新增参数配置' })
   @Post('add')
-  async add(@Body() dto: CreateParamConfigDto): Promise<void> {
+  async add(@Body() dto: ParamConfigCreateDto): Promise<void> {
     await this.paramConfigService.isExistKey(dto.key);
     await this.paramConfigService.add(dto);
   }
 
   @ApiOperation({ summary: '查询单个参数配置信息' })
-  @ApiOkResponse({ type: SysConfig })
+  @ApiResult({ type: SysConfig })
   @Get('info')
-  async info(@Query() dto: InfoParamConfigDto): Promise<SysConfig> {
+  async info(@Query() dto: ParamConfigInfoDto): Promise<SysConfig> {
     return this.paramConfigService.findOne(dto.id);
   }
 
   @ApiOperation({ summary: '更新单个参数配置' })
   @Post('update')
-  async update(@Body() dto: UpdateParamConfigDto): Promise<void> {
+  async update(@Body() dto: ParamConfigUpdateDto): Promise<void> {
     await this.paramConfigService.update(dto);
   }
 
   @ApiOperation({ summary: '删除指定的参数配置' })
   @Post('delete')
-  async delete(@Body() dto: DeleteParamConfigDto): Promise<void> {
+  async delete(@Body() dto: ParamConfigDeleteDto): Promise<void> {
     await this.paramConfigService.delete(dto.ids);
   }
 }

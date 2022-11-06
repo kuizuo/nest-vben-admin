@@ -9,22 +9,22 @@ export default class SysLoginLog extends BaseEntity {
   id: number;
 
   @Column({ nullable: true, name: 'user_id' })
-  @ApiProperty()
+  @ApiProperty({ description: '用户ID' })
   userId: number;
 
   @Column({ nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: 'IP' })
   ip: string;
 
   @Column({ nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '地址' })
   address: string;
 
   @Column({ type: 'datetime', nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '登录时间' })
   time: Date;
 
   @Column({ length: 500, nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '浏览器ua' })
   ua: string;
 }

@@ -7,9 +7,9 @@ import SysMenu from '@/entities/admin/sys-menu.entity';
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';
-import { CreateMenuDto, SearchMenuDto } from './menu.dto';
+import { MenuCreateDto, MenuSearchDto } from './menu.dto';
 import { RedisService } from '@/shared/services/redis.service';
-import { generatorMenu, generatorRouters } from '../../core/permission';
+import { generatorMenu, generatorRouters } from '@/common/permission';
 
 @Injectable()
 export class SysMenuService {
@@ -42,7 +42,7 @@ export class SysMenuService {
   /**
    * 保存或新增菜单
    */
-  async save(menu: CreateMenuDto & { id?: number }): Promise<void> {
+  async save(menu: MenuCreateDto & { id?: number }): Promise<void> {
     await this.menuRepository.save(menu);
   }
 
@@ -70,7 +70,7 @@ export class SysMenuService {
   /**
    * 检查菜单创建规则是否符合
    */
-  async check(dto: CreateMenuDto): Promise<void | never> {
+  async check(dto: MenuCreateDto): Promise<void | never> {
     if (dto.type === 2 && !dto.parent) {
       // 无法直接创建权限，必须有parent
       throw new ApiException(10005);

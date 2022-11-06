@@ -13,7 +13,7 @@ import SysTaskLog from '@/entities/admin/sys-task-log.entity';
 import SysTask from '@/entities/admin/sys-task.entity';
 import SysUserRole from '@/entities/admin/sys-user-role.entity';
 import SysUser from '@/entities/admin/sys-user.entity';
-import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
+import { rootRoleIdProvider } from '@/common/provider/root-role-id.provider';
 import { SysLogController } from './log/log.controller';
 import { SysLogService } from './log/log.service';
 import { SysMenuController } from './menu/menu.controller';

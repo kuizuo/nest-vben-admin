@@ -42,7 +42,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
   }
 }
 
-export class CreateTaskDto {
+export class TaskCreateDto {
   @ApiProperty({ description: '任务名称' })
   @IsString()
   @MinLength(2)
@@ -99,14 +99,14 @@ export class CreateTaskDto {
   remark: string;
 }
 
-export class UpdateTaskDto extends CreateTaskDto {
+export class TaskUpdateDto extends TaskCreateDto {
   @ApiProperty({ description: '需要更新的任务ID' })
   @IsInt()
   @Min(0)
   id: number;
 }
 
-export class CheckIdTaskDto {
+export class TaskCheckIdDto {
   @ApiProperty({ description: '任务ID' })
   @IsInt()
   @Min(0)
@@ -114,7 +114,7 @@ export class CheckIdTaskDto {
   id: number;
 }
 
-export class PageSearchTaskDto extends PaginateDto {
+export class TaskPageDto extends PaginateDto {
   @ApiProperty({ description: '任务名称' })
   @IsOptional()
   @IsString()

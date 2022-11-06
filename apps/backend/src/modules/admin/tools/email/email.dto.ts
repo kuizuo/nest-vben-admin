@@ -4,7 +4,7 @@ import { IsOptional, IsString } from 'class-validator';
 /**
  * 发送邮件
  */
-export class SendEmailDto {
+export class EmailSendDto {
   @ApiProperty({ description: '收件人邮箱' })
   @IsString()
   to: string;

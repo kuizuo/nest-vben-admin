@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository } from 'typeorm';
 import ToolStorage from '@/entities/admin/tool-storage.entity';
-import { CreateStorageDto, PageSearchStorageDto } from './storage.dto';
+import { StorageCreateDto, StoragePageDto } from './storage.dto';
 import { deleteFile } from '@/utils/file.util';
 import { StorageInfo } from './storage.class';
 import SysUser from '@/entities/admin/sys-user.entity';
@@ -19,7 +19,7 @@ export class StorageService {
   /**
    * 保存文件上传记录
    */
-  async save(file: CreateStorageDto & { userId: number }): Promise<void> {
+  async save(file: StorageCreateDto & { userId: number }): Promise<void> {
     await this.storageRepository.save({
       name: file.name,
       fileName: file.fileName,
@@ -43,7 +43,7 @@ export class StorageService {
     });
   }
 
-  async page(dto: PageSearchStorageDto): Promise<StorageInfo[]> {
+  async page(dto: StoragePageDto): Promise<StorageInfo[]> {
     const { page, pageSize, name, type, size, extName, time, username } = dto;
 
     const where = {

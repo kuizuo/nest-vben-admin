@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ArrayNotEmpty, IsArray, IsOptional, IsString } from 'class-validator';
 import { PaginateDto } from '@/common/dto/page.dto';
 
-export class PageSearchStorageDto extends PaginateDto {
+export class StoragePageDto extends PaginateDto {
   @ApiProperty({ description: '文件名' })
   @IsOptional()
   @IsString()
@@ -33,7 +33,7 @@ export class PageSearchStorageDto extends PaginateDto {
   username: string;
 }
 
-export class CreateStorageDto {
+export class StorageCreateDto {
   @ApiProperty({ description: '文件名' })
   @IsString()
   name: string;
@@ -59,7 +59,7 @@ export class CreateStorageDto {
   size: string;
 }
 
-export class DeleteStorageDto {
+export class StorageDeleteDto {
   @ApiProperty({ description: '需要删除的文件ID列表', type: [Number] })
   @IsArray()
   @ArrayNotEmpty()

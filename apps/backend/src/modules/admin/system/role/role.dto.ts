@@ -13,14 +13,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class DeleteRoleDto {
-  @ApiProperty({ description: '需要删除的角色ID列表', type: [Number] })
-  @IsArray()
-  @ArrayNotEmpty()
-  ids: number[];
-}
-
-export class CreateRoleDto {
+export class RoleCreateDto {
   @ApiProperty({ description: '角色名称' })
   @IsString()
   @MinLength(2)
@@ -48,14 +41,14 @@ export class CreateRoleDto {
   menus: number[];
 }
 
-export class UpdateRoleDto extends CreateRoleDto {
+export class RoleUpdateDto extends RoleCreateDto {
   @ApiProperty({ description: '关联部门编号' })
   @IsInt()
   @Min(0)
   id: number;
 }
 
-export class InfoRoleDto {
+export class RoleInfoDto {
   @ApiProperty({ description: '需要查找的角色ID' })
   @IsInt()
   @Min(0)
@@ -63,7 +56,14 @@ export class InfoRoleDto {
   id: number;
 }
 
-export class PageSearchRoleDto extends PaginateDto {
+export class RoleDeleteDto {
+  @ApiProperty({ description: '需要删除的角色ID列表', type: [Number] })
+  @IsArray()
+  @ArrayNotEmpty()
+  ids: number[];
+}
+
+export class RolePageDto extends PaginateDto {
   @ApiProperty({ description: '角色名称' })
   @IsOptional()
   @IsString()

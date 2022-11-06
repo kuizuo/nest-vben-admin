@@ -8,19 +8,19 @@ export default class SysConfig extends BaseEntity {
   @ApiProperty()
   id: number;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
-  @ApiProperty()
-  key: string;
-
   @Column({ type: 'varchar', length: 50 })
-  @ApiProperty()
+  @ApiProperty({ description: '配置名' })
   name: string;
 
+  @Column({ type: 'varchar', length: 50, unique: true })
+  @ApiProperty({ description: '配置键名' })
+  key: string;
+
   @Column({ type: 'varchar', nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '配置值' })
   value: string;
 
   @Column({ type: 'varchar', nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '配置描述' })
   remark: string;
 }

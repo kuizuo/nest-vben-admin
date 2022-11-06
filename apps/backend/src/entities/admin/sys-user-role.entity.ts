@@ -9,10 +9,10 @@ export default class SysUserRole extends BaseEntity {
   id: number;
 
   @Column({ name: 'user_id' })
-  @ApiProperty()
+  @ApiProperty({ description: '用户ID' })
   userId: number;
 
   @Column({ name: 'role_id' })
-  @ApiProperty()
+  @ApiProperty({ description: '角色ID' })
   roleId: number;
 }

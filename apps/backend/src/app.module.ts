@@ -1,11 +1,12 @@
+import configuration from './config/configuration';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from './config/configuration';
 import { AdminModule } from './modules/admin/admin.module';
+import { AppsModule } from './modules/apps/apps.module';
+import { WSModule } from './modules/ws/ws.module';
 import { LoggerModuleOptions, WinstonLogLevel } from './shared/logger/logger.interface';
 import { LoggerModule } from './shared/logger/logger.module';
 import { SharedModule } from './shared/shared.module';
-import { WSModule } from './modules/ws/ws.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeORMLoggerService } from './shared/logger/typeorm-logger.service';
 import { BullModule } from '@nestjs/bull';
@@ -61,6 +62,7 @@ import { LOGGER_MODULE_OPTIONS } from './shared/logger/logger.constants';
     BullModule.forRoot({}),
     SharedModule,
     AdminModule,
+    AppsModule,
     WSModule,
   ],
 })

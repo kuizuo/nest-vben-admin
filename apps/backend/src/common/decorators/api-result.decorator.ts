@@ -1,5 +1,5 @@
-import { Type, applyDecorators } from '@nestjs/common';
-import { ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
+import { Type, applyDecorators, HttpStatus } from '@nestjs/common';
+import { ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { ResOp } from '@/common/class/res.class';
 
 const baseTypeNames = ['String', 'Number', 'Boolean'];
@@ -10,9 +10,11 @@ const baseTypeNames = ['String', 'Number', 'Boolean'];
 export const ApiResult = <TModel extends Type<any>>({
   type,
   isPage,
+  status,
 }: {
   type?: TModel | TModel[];
   isPage?: boolean;
+  status?: HttpStatus;
 }) => {
   let prop = null;
   if (Array.isArray(type)) {
@@ -47,7 +49,8 @@ export const ApiResult = <TModel extends Type<any>>({
   }
 
   return applyDecorators(
-    ApiOkResponse({
+    ApiResponse({
+      status: status,
       schema: {
         allOf: [
           { $ref: getSchemaPath(ResOp) },

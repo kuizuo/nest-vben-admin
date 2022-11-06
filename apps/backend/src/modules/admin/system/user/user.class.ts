@@ -2,77 +2,70 @@ import { ApiProperty } from '@nestjs/swagger';
 import SysUser from '@/entities/admin/sys-user.entity';
 
 export class AccountInfo {
-  @ApiProperty()
+  @ApiProperty({ description: '用户名' })
   username: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '昵称' })
   nickName: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '邮箱' })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '手机号' })
   phone: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '备注' })
   remark: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '头像' })
   avatar: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'qq' })
   qq: string;
 }
 
-export class PageSearchUserInfo {
-  @ApiProperty()
+export class UserInfoPage {
+  @ApiProperty({ description: '创建时间' })
   createdAt: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '邮箱' })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'qq' })
   qq: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '头像' })
   avatar: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'id' })
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: '用户名' })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '昵称' })
   nickName: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '手机号' })
   phone: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '备注' })
   remark: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '状态' })
   status: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: '更新时间' })
   updatedAt: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '用户名' })
   username: string;
 
-  @ApiProperty()
-  departmentName: string;
-
-  @ApiProperty({
-    type: [String],
-  })
+  @ApiProperty({ type: [String], description: '角色' })
   roleNames: string[];
 }
 
 export class UserDetailInfo extends SysUser {
-  @ApiProperty({
-    description: '关联角色',
-  })
+  @ApiProperty({ description: '关联角色' })
   roles: number[];
 }

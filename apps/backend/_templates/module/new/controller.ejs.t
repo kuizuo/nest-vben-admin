@@ -12,7 +12,7 @@ import {
   <%= Name %>PageDto,
 } from './<%= name %>.dto';
 import <%= Name %> from '@/entities/apps/<%= name %>.entity';
-import { ApiResult } from '@/common/decorators/api-result.decorators';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { PageResult } from '@/common/class/res.class';
 
 @ApiTags('<%= Name %>模块')

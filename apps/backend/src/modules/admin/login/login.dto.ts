@@ -36,14 +36,16 @@ export class ImageCaptchaDto {
 }
 
 export class LoginInfoDto {
-  @ApiProperty({ description: '用户名' })
+  @ApiProperty({ description: '用户名', example: 'admin' })
   @IsString()
+  @Matches(/^[a-zA-Z0-9_-]{4,16}$/, { message: '账号格式不正确' })
   @MinLength(1)
   username: string;
 
-  @ApiProperty({ description: '密码' })
+  @ApiProperty({ description: '密码', example: 'a123456' })
   @IsString()
-  @MinLength(4)
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, { message: '密码格式不正确' })
+  @MinLength(6)
   password: string;
 
   // @ApiProperty({ description: '验证码标识' })
@@ -58,16 +60,16 @@ export class LoginInfoDto {
 }
 
 export class RegisterInfoDto {
-  @ApiProperty({ description: '账号' })
+  @ApiProperty({ description: '账号', example: 'user' })
   @IsString()
-  @Matches(/^[a-z0-9A-Z]+$/)
+  @Matches(/^[a-zA-Z0-9_-]{4,16}$/, { message: '账号格式不正确' })
   @MinLength(4)
   @MaxLength(20)
   username: string;
 
-  @ApiProperty({ description: '密码' })
+  @ApiProperty({ description: '密码', example: 'a123456' })
   @IsString()
-  @Matches(/^[a-z0-9A-Z`~!#%^&*=+\\|{};:'\\",<>/?]+$/)
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, { message: '密码格式不正确' })
   @MinLength(4)
   @MaxLength(16)
   password: string;
@@ -77,7 +79,7 @@ export class RegisterInfoDto {
   // @IsOptional()
   // phone: string;
 
-  @ApiProperty({ required: false, description: '邮箱' })
+  @ApiProperty({ required: false, description: '邮箱', example: 'hi@example.com' })
   @IsEmail()
   email: string;
 
@@ -88,12 +90,13 @@ export class RegisterInfoDto {
 
   @ApiProperty({ required: false, description: 'QQ' })
   @IsString()
-  @Matches(/^[0-9]+$/)
+  @Matches(/^[1-9][0-9]{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
   @IsOptional()
   qq: string;
 }
+
 export class sendCodeDto {
   @ApiProperty({ description: '邮箱' })
   @IsEmail({ message: '邮箱格式不正确' })

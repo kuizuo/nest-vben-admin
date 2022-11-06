@@ -1,22 +1,24 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ApiException } from '@/common/exceptions/api.exception';
+import { AdminUser } from '@/common/decorators/admin-user.decorator';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
-import { AdminUser } from '../../core/decorators/admin-user.decorator';
-import { LogDisabled } from '../../core/decorators/log-disabled.decorator';
+import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { OnlineUserInfo } from './online.class';
 import { KickDto } from './online.dto';
 import { SysOnlineService } from './online.service';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('在线用户模块')
+@ApiExtraModels(OnlineUserInfo)
 @Controller('online')
 export class SysOnlineController {
   constructor(private onlineService: SysOnlineService) {}
 
   @ApiOperation({ summary: '查询当前在线用户' })
-  @ApiOkResponse({ type: [OnlineUserInfo] })
+  @ApiResult({ type: [OnlineUserInfo] })
   @LogDisabled()
   @Get('list')
   async list(@AdminUser() user: IAdminUser): Promise<OnlineUserInfo[]> {

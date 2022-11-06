@@ -15,7 +15,7 @@ import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { setupSwagger } from './setup-swagger';
 import { LoggerService } from './shared/logger/logger.service';
-import { ApiExceptionFilter } from './common/filter/api-exception.filter';
+import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 

@@ -19,7 +19,7 @@ import {
 import { isEmpty } from 'lodash';
 import { PaginateDto } from '@/common/dto/page.dto';
 
-export class UpdateUserInfoDto {
+export class UserInfoUpdateDto {
   @ApiProperty({ description: '用户呢称' })
   @IsString()
   @IsOptional()
@@ -54,7 +54,7 @@ export class UpdateUserInfoDto {
   remark: string;
 }
 
-export class UpdatePasswordDto {
+export class PasswordUpdateDto {
   @ApiProperty({ description: '旧密码' })
   @IsString()
   @Matches(/^[a-z0-9A-Z\W_]+$/)
@@ -63,24 +63,24 @@ export class UpdatePasswordDto {
   oldPassword: string;
 
   @ApiProperty({ description: '新密码' })
-  @Matches(/(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{6,16}$/, {
-    message: '密码必须包含数字、字母、特殊字符，长度为6-16',
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+    message: '密码必须包含数字、字母，长度为6-16',
   })
   newPassword: string;
 }
 
-export class CreateUserDto {
-  @ApiProperty({ description: '登录账号' })
+export class UserCreateDto {
+  @ApiProperty({ description: '登录账号', example: 'kz-admin' })
   @IsString()
   @Matches(/^[a-z0-9A-Z\W_]+$/)
   @MinLength(4)
   @MaxLength(20)
   username: string;
 
-  @ApiProperty({ description: '登录密码' })
+  @ApiProperty({ description: '登录密码', example: '123456' })
   @IsOptional()
-  @Matches(/(?!^\d+$)(?!^[A-Za-z]+$)(?!^[^A-Za-z0-9]+$)(?!^.*[\u4E00-\u9FA5].*$)^\S{6,16}$/, {
-    message: '密码必须包含数字、字母、特殊字符，长度为6-16',
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+    message: '密码必须包含数字、，长度为6-16',
   })
   password: string;
 
@@ -90,12 +90,12 @@ export class CreateUserDto {
   @ArrayMaxSize(3)
   roles: number[];
 
-  @ApiProperty({ description: '呢称' })
+  @ApiProperty({ description: '呢称', example: 'kz-admin' })
   @IsString()
   @IsOptional()
   nickName: string;
 
-  @ApiProperty({ description: '邮箱' })
+  @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
   @IsEmail()
   @ValidateIf((o) => !isEmpty(o.email))
   email: string;
@@ -107,7 +107,7 @@ export class CreateUserDto {
 
   @ApiProperty({ description: 'QQ' })
   @IsString()
-  @Matches(/^[0-9]+$/)
+  @Matches(/^[1-9][0-9]{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
   @IsOptional()
@@ -123,14 +123,14 @@ export class CreateUserDto {
   status: number;
 }
 
-export class UpdateUserDto extends CreateUserDto {
+export class UserUpdateDto extends UserCreateDto {
   @ApiProperty({ description: '用户ID' })
   @IsInt()
   @Min(0)
   id: number;
 }
 
-export class InfoUserDto {
+export class UserInfoDto {
   @ApiProperty({ description: '用户ID' })
   @IsInt()
   @Min(0)
@@ -138,14 +138,14 @@ export class InfoUserDto {
   id: number;
 }
 
-export class DeleteUserDto {
+export class UserDeleteDto {
   @ApiProperty({ description: '需要删除的用户ID列表', type: [Number] })
   @IsArray()
   @ArrayNotEmpty()
   ids: number[];
 }
 
-export class PageSearchUserDto extends PaginateDto {
+export class UserPageDto extends PaginateDto {
   @ApiProperty({ description: '用户名' })
   @IsOptional()
   @IsString()
@@ -158,7 +158,7 @@ export class PageSearchUserDto extends PaginateDto {
 
   @ApiProperty({ description: 'qq' })
   @IsString()
-  @Matches(/^[0-9]+$/)
+  @Matches(/^[1-9][0-9]{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
   @IsOptional()
@@ -174,21 +174,21 @@ export class PageSearchUserDto extends PaginateDto {
   status: number;
 }
 
-export class PasswordUserDto {
+export class UserPasswordDto {
   @ApiProperty({ description: '管理员ID' })
   @IsInt()
   @Min(0)
   id: number;
 
   @ApiProperty({ description: '更改后的密码' })
-  @Matches(/^[a-z0-9A-Z`~!#%^&*=+\\|{};:'\\",<>/?]{6,16}$/, { message: '密码格式不正确' })
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, { message: '密码格式不正确' })
   password: string;
 }
 
 export class UserExistDto {
   @ApiProperty({ description: '登录账号' })
   @IsString()
-  @Matches(/^[a-z0-9A-Z]+$/)
+  @Matches(/^[a-zA-Z0-9_-]{4,16}$/)
   @MinLength(6)
   @MaxLength(20)
   username: string;

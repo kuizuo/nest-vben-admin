@@ -9,39 +9,39 @@ export default class SysUser extends BaseEntity {
   id: number;
 
   @Column({ unique: true })
-  @ApiProperty()
+  @ApiProperty({ description: '用户名' })
   username: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: '密码' })
   password: string;
 
   @Column({ length: 32 })
-  @ApiProperty()
+  @ApiProperty({ description: '昵称' })
   psalt: string;
 
   @Column({ name: 'nick_name', nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '昵称' })
   nickName: string;
 
   @Column({ name: 'avatar', nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '头像' })
   avatar: string;
 
   @Column({ nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: 'qq' })
   qq: string;
 
   @Column({ nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '邮箱' })
   email: string;
 
   @Column({ nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '手机号' })
   phone: string;
 
   @Column({ nullable: true })
-  @ApiProperty()
+  @ApiProperty({ description: '备注' })
   remark: string;
 
   @Column({ type: 'tinyint', nullable: true, default: 1 })

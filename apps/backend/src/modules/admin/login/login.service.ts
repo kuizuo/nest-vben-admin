@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as svgCaptcha from 'svg-captcha';
-import { ImageCaptcha, MenuInfo, PermInfo } from './login.class';
+import { ImageCaptcha } from './login.class';
 import { isEmpty } from 'lodash';
 import { ImageCaptchaDto, RegisterInfoDto } from './login.dto';
 import { JwtService } from '@nestjs/jwt';

@@ -12,7 +12,7 @@ import { LoggerService } from '@/shared/logger/logger.service';
 import { RedisService } from '@/shared/services/redis.service';
 import { Like, Repository } from 'typeorm';
 import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '../../admin.constants';
-import { CreateTaskDto, PageSearchTaskDto, UpdateTaskDto } from './task.dto';
+import { TaskCreateDto, TaskPageDto, TaskUpdateDto } from './task.dto';
 import { PageResult } from '@/common/class/res.class';
 
 @Injectable()
@@ -76,7 +76,7 @@ export class SysTaskService implements OnModuleInit {
   /**
    * 分页查询
    */
-  async page(dto: PageSearchTaskDto): Promise<PageResult<SysTask>> {
+  async page(dto: TaskPageDto): Promise<PageResult<SysTask>> {
     const { page, pageSize, name, service, type, status } = dto;
     const where = {
       ...(name ? { name: Like(`%${name}%`) } : null),
@@ -138,7 +138,7 @@ export class SysTaskService implements OnModuleInit {
   /**
    * 添加任务
    */
-  async addOrUpdate(param: CreateTaskDto | UpdateTaskDto): Promise<void> {
+  async addOrUpdate(param: TaskCreateDto | TaskUpdateDto): Promise<void> {
     const result = await this.taskRepository.save(param);
     const task = await this.info(result.id);
     if (result.status === 0) {

@@ -3,17 +3,11 @@ import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
 import SysRole from '@/entities/admin/sys-role.entity';
 
 export class RoleInfo {
-  @ApiProperty({
-    type: SysRole,
-  })
+  @ApiProperty({ type: SysRole })
   info: SysRole;
 
   @ApiProperty({
     type: [SysRoleMenu],
   })
   menus: any[];
-}
-
-export class CreatedRoleId {
-  roleId: number;
 }

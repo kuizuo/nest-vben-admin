@@ -1,4 +1,3 @@
-import { PaginateDto } from '@/common/dto/page.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -16,7 +15,7 @@ import {
 /**
  * 增加菜单
  */
-export class CreateMenuDto {
+export class MenuCreateDto {
   @ApiProperty({ description: '菜单类型' })
   @IsIn([0, 1, 2])
   type: number;
@@ -78,7 +77,7 @@ export class CreateMenuDto {
   component: string;
 }
 
-export class UpdateMenuDto extends CreateMenuDto {
+export class MenuUpdateDto extends MenuCreateDto {
   @ApiProperty({ description: '更新的菜单ID' })
   @IsInt()
   @Min(0)
@@ -88,7 +87,7 @@ export class UpdateMenuDto extends CreateMenuDto {
 /**
  * 删除菜单
  */
-export class DeleteMenuDto {
+export class MenuDeleteDto {
   @ApiProperty({ description: '删除的菜单ID' })
   @IsInt()
   @Min(0)
@@ -98,7 +97,7 @@ export class DeleteMenuDto {
 /**
  * 查询菜单
  */
-export class InfoMenuDto {
+export class MenuInfoDto {
   @ApiProperty({ description: '查询的菜单ID' })
   @IsInt()
   @Min(0)
@@ -106,7 +105,7 @@ export class InfoMenuDto {
   menuId: number;
 }
 
-export class SearchMenuDto {
+export class MenuSearchDto {
   @ApiProperty({ description: '菜单名称' })
   @IsOptional()
   @IsString()

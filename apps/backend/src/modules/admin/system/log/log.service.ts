@@ -5,7 +5,7 @@ import SysTaskLog from '@/entities/admin/sys-task-log.entity';
 import { Between, Like, Repository } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import { LoginLogInfo, TaskLogInfo } from './log.class';
-import { PageSearchLoginLogDto } from './log.dto';
+import { LoginLogPageDto } from './log.dto';
 import { SysUserService } from '../user/user.service';
 import { IpService } from '@/shared/services/ip.service';
 
@@ -44,7 +44,7 @@ export class SysLogService {
   /**
    * 分页加载日志信息
    */
-  async pageGetLoginLog(dto: PageSearchLoginLogDto): Promise<LoginLogInfo[]> {
+  async pageGetLoginLog(dto: LoginLogPageDto): Promise<LoginLogInfo[]> {
     const { page, pageSize, username, ip, address, time } = dto;
 
     const where = {

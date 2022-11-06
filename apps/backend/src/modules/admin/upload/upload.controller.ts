@@ -1,7 +1,7 @@
 import { BadRequestException, Controller, Post, Req } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
 import { MultipartFile } from '@fastify/multipart';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import {
   fileRename,
   getExtname,
@@ -12,8 +12,9 @@ import {
   saveFile,
 } from '@/utils/file.util';
 import { StorageService } from '../tools/storage/storage.service';
-import { AdminUser } from '../core/decorators/admin-user.decorator';
+import { AdminUser } from '@/common/decorators/admin-user.decorator';
 import { IAdminUser } from '../admin.interface';
+import { FileUploadDto } from './upload.dto';
 
 @ApiTags('上传模块')
 @Controller('upload')
@@ -21,6 +22,10 @@ export class UploadController {
   constructor(private storageService: StorageService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: FileUploadDto,
+  })
   async upload(@Req() req: FastifyRequest, @AdminUser() user: IAdminUser) {
     const file: MultipartFile = await req.file();
     const fileName = file.filename;
