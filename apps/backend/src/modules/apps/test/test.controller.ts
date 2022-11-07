@@ -20,8 +20,15 @@ export class TestController {
 
   @Get('list')
   @ApiOperation({ summary: '获取Test列表' })
+  @ApiResult({ type: [Test] })
+  async list(): Promise<Test[]> {
+    return await this.testService.list();
+  }
+
+  @Get('page')
+  @ApiOperation({ summary: '分页获取Test列表' })
   @ApiResult({ type: [Test], isPage: true })
-  async list(@Query() dto: TestPageDto): Promise<PageResult<Test>> {
+  async page(@Query() dto: TestPageDto): Promise<PageResult<Test>> {
     return await this.testService.page(dto);
   }
 
@@ -34,22 +41,19 @@ export class TestController {
 
   @Post('create')
   @ApiOperation({ summary: '创建Test' })
-  @ApiResult({ type: Test })
-  async create(@Body() dto: TestCreateDto): Promise<Test> {
-    return await this.testService.create(dto);
+  async create(@Body() dto: TestCreateDto): Promise<void> {
+    await this.testService.create(dto);
   }
 
   @Post('update')
   @ApiOperation({ summary: '更新Test' })
-  @ApiResult({ type: Test })
-  async update(@Body() dto: TestUpdateDto): Promise<Test> {
-    return await this.testService.update(dto);
+  async update(@Body() dto: TestUpdateDto): Promise<void> {
+    await this.testService.update(dto);
   }
 
   @Post('delete')
   @ApiOperation({ summary: '删除Test' })
-  @ApiResult({ type: Test })
-  async delete(@Body() dto: TestDeleteDto): Promise<Test> {
-    return await this.testService.delete(dto.id);
+  async delete(@Body() dto: TestDeleteDto): Promise<void> {
+    await this.testService.delete(dto.id);
   }
 }

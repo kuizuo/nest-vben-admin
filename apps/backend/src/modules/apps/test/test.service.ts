@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import Test from '@/entities/apps/test.entity';
 import { TestCreateDto, TestUpdateDto, TestPageDto } from './test.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
+import { PageResult } from '@/common/class/res.class';
 
 @Injectable()
 export class TestService {
@@ -12,7 +13,11 @@ export class TestService {
     private testRepository: Repository<Test>,
   ) {}
 
-  async page(dto: TestPageDto) {
+  async list(): Promise<Test[]> {
+    return await this.testRepository.find();
+  }
+
+  async page(dto: TestPageDto): Promise<PageResult<Test>> {
     const { page, pageSize } = dto;
 
     const [items, total] = await this.testRepository
@@ -26,29 +31,30 @@ export class TestService {
 
   async detail(id: number): Promise<Test> {
     const item = await this.testRepository.findOneBy({ id });
-    if (!item) throw new ApiException(30001, 'test not found');
+    if (!item) throw new ApiException(20004);
 
     return item;
   }
 
-  async create(dto: TestCreateDto): Promise<Test> {
+  async create(dto: TestCreateDto) {
     let test = new Test();
     test = Object.assign(dto);
 
-    return await this.testRepository.save(test);
+    await this.testRepository.save(test);
   }
 
-  async update(dto: TestUpdateDto): Promise<Test> {
-    const exist = await this.testRepository.findOneBy({ id: dto.id });
+  async update(dto: TestUpdateDto) {
+    const item = await this.testRepository.findOneBy({ id: dto.id });
+    if (!item) throw new ApiException(20004, 'test not found');
 
-    const test: Test = Object.assign(exist, dto);
-    return await this.testRepository.save(test);
+    const test: Test = Object.assign(item, dto);
+    await this.testRepository.save(test);
   }
 
-  async delete(id: number): Promise<Test> {
-    const exist = await this.testRepository.findOne({ where: { id } });
-    const result = await this.testRepository.remove(exist);
+  async delete(id: number) {
+    const item = await this.testRepository.findOneBy({ id });
+    if (!item) throw new ApiException(20004);
 
-    return result;
+    await this.testRepository.remove(item);
   }
 }

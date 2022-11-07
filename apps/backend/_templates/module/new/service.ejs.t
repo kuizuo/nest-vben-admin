@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import <%= Name %> from '@/entities/apps/<%= name %>.entity';
 import { <%= Name %>CreateDto, <%= Name %>UpdateDto, <%= Name %>PageDto } from './<%= name %>.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
+import { PageResult } from '@/common/class/res.class';
 
 @Injectable()
 export class <%= Name %>Service {
@@ -15,7 +16,11 @@ export class <%= Name %>Service {
     private <%= name %>Repository: Repository<<%= Name %>>,
   ) {}
 
-  async page(dto: <%= Name %>PageDto) {
+  async list(): Promise<<%= Name %>[]> {
+    return await this.<%= name %>Repository.find();
+  }
+
+  async page(dto: <%= Name %>PageDto): Promise<PageResult<<%= Name %>>> {
     const { page, pageSize } = dto;
 
     const [items, total] = await this.<%= name %>Repository
@@ -29,29 +34,30 @@ export class <%= Name %>Service {
 
   async detail(id: number): Promise<<%= Name %>> {
     const item = await this.<%= name %>Repository.findOneBy({ id });
-    if (!item) throw new ApiException(30001, '<%= name %> not found');
-
+    if (!item) throw new ApiException(20004);
+    
     return item;
   }
 
-  async create(dto: <%= Name %>CreateDto): Promise<<%= Name %>> {
+  async create(dto: <%= Name %>CreateDto) {
     let <%= name %> = new <%= Name %>();
     <%= name %> = Object.assign(dto);
 
-    return await this.<%= name %>Repository.save(<%= name %>);
+    await this.<%= name %>Repository.save(<%= name %>);
   }
 
-  async update(dto: <%= Name %>UpdateDto): Promise<<%= Name %>> {
-    const exist = await this.<%= name %>Repository.findOneBy({ id: dto.id });
+  async update(dto: <%= Name %>UpdateDto) {
+    const item = await this.<%= name %>Repository.findOneBy({ id: dto.id });
+    if (!item) throw new ApiException(20004, '<%= name %> not found');
 
-    const <%= name %>: <%= Name %> = Object.assign(exist, dto);
-    return await this.<%= name %>Repository.save(<%= name %>);
+    const <%= name %>: <%= Name %> = Object.assign(item, dto);
+    await this.<%= name %>Repository.save(<%= name %>);
   }
 
-  async delete(id: number): Promise<<%= Name %>> {
-    const exist = await this.<%= name %>Repository.findOne({ where: { id } });
-    const result = await this.<%= name %>Repository.remove(exist);
+  async delete(id: number) {
+    const item = await this.<%= name %>Repository.findOneBy({ id });
+    if (!item) throw new ApiException(20004);
 
-    return result;
+    await this.<%= name %>Repository.remove(item);
   }
 }

@@ -23,8 +23,15 @@ export class <%= Name %>Controller {
 
   @Get('list')
   @ApiOperation({ summary: '获取<%= Name %>列表' })
+  @ApiResult({ type: [<%= Name %>] })
+  async list(): Promise<<%= Name %>[]> {
+    return await this.<%= name %>Service.list();
+  }
+
+  @Get('page')
+  @ApiOperation({ summary: '分页获取<%= Name %>列表' })
   @ApiResult({ type: [<%= Name %>], isPage: true })
-  async list(@Query() dto: <%= Name %>PageDto): Promise<PageResult<<%= Name %>>> {
+  async page(@Query() dto: <%= Name %>PageDto): Promise<PageResult<<%= Name %>>> {
     return await this.<%= name %>Service.page(dto);
   }
 
@@ -37,22 +44,19 @@ export class <%= Name %>Controller {
 
   @Post('create')
   @ApiOperation({ summary: '创建<%= Name %>' })
-  @ApiResult({ type: <%= Name %> })
-  async create(@Body() dto: <%= Name %>CreateDto): Promise<<%= Name %>> {
-    return await this.<%= name %>Service.create(dto);
+  async create(@Body() dto: <%= Name %>CreateDto): Promise<void> {
+    await this.<%= name %>Service.create(dto);
   }
 
   @Post('update')
   @ApiOperation({ summary: '更新<%= Name %>' })
-  @ApiResult({ type: <%= Name %> })
-  async update(@Body() dto: <%= Name %>UpdateDto): Promise<<%= Name %>> {
-    return await this.<%= name %>Service.update(dto);
+  async update(@Body() dto: <%= Name %>UpdateDto): Promise<void> {
+    await this.<%= name %>Service.update(dto);
   }
 
   @Post('delete')
   @ApiOperation({ summary: '删除<%= Name %>' })
-  @ApiResult({ type: <%= Name %> })
-  async delete(@Body() dto: <%= Name %>DeleteDto): Promise<<%= Name %>> {
-    return await this.<%= name %>Service.delete(dto.id);
+  async delete(@Body() dto: <%= Name %>DeleteDto): Promise<void> {
+    await this.<%= name %>Service.delete(dto.id);
   }
 }
