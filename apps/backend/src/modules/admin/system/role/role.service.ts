@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { difference, filter, includes, isEmpty, map } from 'lodash';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
@@ -59,7 +59,7 @@ export class SysRoleService {
    */
   async delete(roleIds: number[]): Promise<void> {
     if (includes(roleIds, this.rootRoleId)) {
-      throw new Error('不能删除超级管理员');
+      throw new BadRequestException('不能删除超级管理员');
     }
     await this.entityManager.transaction(async (manager) => {
       await manager.delete(SysRole, roleIds);
@@ -182,7 +182,7 @@ export class SysRoleService {
    */
   async countUserIdByRole(ids: number[]): Promise<number | never> {
     if (includes(ids, this.rootRoleId)) {
-      throw new Error('Not Support Delete Root');
+      throw new BadRequestException('不支持删除根角色');
     }
     return await this.userRoleRepository.countBy({ roleId: In(ids) });
   }

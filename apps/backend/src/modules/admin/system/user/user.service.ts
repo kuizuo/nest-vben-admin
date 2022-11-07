@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { findIndex, isEmpty } from 'lodash';
 import { ApiException } from '@/common/exceptions/api.exception';
@@ -180,6 +180,10 @@ export class SysUserService {
    * 更新用户信息
    */
   async update(param: UserUpdateDto): Promise<void> {
+    if (param.id === this.rootRoleId) {
+      throw new BadRequestException('不能更新超级管理员');
+    }
+
     await this.entityManager.transaction(async (manager) => {
       if (param.password) {
         await this.forceUpdatePassword(param.id, param.password);
@@ -245,7 +249,7 @@ export class SysUserService {
   async delete(userIds: number[]): Promise<void | never> {
     const rootUserId = await this.findRootUserId();
     if (userIds.includes(rootUserId)) {
-      throw new Error('不能删除root用户!');
+      throw new BadRequestException('不能删除root用户!');
     }
     await this.userRepository.delete(userIds);
     await this.userRoleRepository.delete({ userId: In(userIds) });

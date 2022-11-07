@@ -18,6 +18,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { PaginateDto } from '@/common/dto/page.dto';
+import { BadRequestException } from '@nestjs/common';
 
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })
@@ -26,7 +27,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
   validate(value: string, args: ValidationArguments) {
     try {
       if (isEmpty(value)) {
-        throw new Error('cron expression is empty');
+        throw new BadRequestException('cron expression is empty');
       }
       parser.parseExpression(value);
       return true;

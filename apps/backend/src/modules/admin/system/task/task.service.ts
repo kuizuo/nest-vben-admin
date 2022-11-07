@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef, Reflector } from '@nestjs/core';
 import { UnknownElementException } from '@nestjs/core/errors/exceptions/unknown-element.exception';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -115,7 +115,7 @@ export class SysTaskService implements OnModuleInit {
    */
   async delete(task: SysTask): Promise<void> {
     if (!task) {
-      throw new Error('Task is Empty');
+      throw new BadRequestException('Task is Empty');
     }
     await this.stop(task);
     await this.taskRepository.delete(task.id);
@@ -131,7 +131,7 @@ export class SysTaskService implements OnModuleInit {
         { jobId: task.id, removeOnComplete: true, removeOnFail: true },
       );
     } else {
-      throw new Error('Task is Empty');
+      throw new BadRequestException('Task is Empty');
     }
   }
 
@@ -153,7 +153,7 @@ export class SysTaskService implements OnModuleInit {
    */
   async start(task: SysTask): Promise<void> {
     if (!task) {
-      throw new Error('Task is Empty');
+      throw new BadRequestException('Task is Empty');
     }
     // 先停掉之前存在的任务
     await this.stop(task);
@@ -192,7 +192,7 @@ export class SysTaskService implements OnModuleInit {
       // update status to 0，标识暂停任务，因为启动失败
       job && (await job.remove());
       await this.taskRepository.update(task.id, { status: 0 });
-      throw new Error('Task Start failed');
+      throw new BadRequestException('Task Start failed');
     }
   }
 
@@ -201,7 +201,7 @@ export class SysTaskService implements OnModuleInit {
    */
   async stop(task: SysTask): Promise<void> {
     if (!task) {
-      throw new Error('Task is Empty');
+      throw new BadRequestException('Task is Empty');
     }
     const exist = await this.existJob(task.id.toString());
     if (!exist) {
@@ -302,7 +302,7 @@ export class SysTaskService implements OnModuleInit {
     if (serviceName) {
       const arr = serviceName.split('.');
       if (arr.length < 1) {
-        throw new Error('serviceName define error');
+        throw new BadRequestException('serviceName define BadRequestException');
       }
       const methodName = arr[1];
       const service = await this.moduleRef.get(arr[0], { strict: false });

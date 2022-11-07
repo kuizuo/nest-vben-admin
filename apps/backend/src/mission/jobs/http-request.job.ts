@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/shared/logger/logger.service';
 import { Mission } from '../mission.decorator';
 
@@ -20,7 +20,7 @@ export class HttpRequestJob {
       const result = await this.httpService.request(config);
       this.logger.log(result, HttpRequestJob.name);
     } else {
-      throw new Error('Http request job param is empty');
+      throw new BadRequestException('Http request job param is empty');
     }
   }
 }
