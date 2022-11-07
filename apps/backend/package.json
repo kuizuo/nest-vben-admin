@@ -1,5 +1,5 @@
 {
-  "name": "kz-nest-admin",
+  "name": "backend",
   "version": "0.1.0",
   "description": "基于NestJs + TypeScript + TypeORM + Redis + MySql + Vben Admin编写的一款前后端分离的权限管理系统",
   "packageManager": "pnpm@7.11.0",
