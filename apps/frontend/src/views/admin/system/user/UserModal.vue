@@ -33,7 +33,7 @@
     if (unref(isUpdate)) {
       updateSchema([
         { field: 'username', componentProps: { disabled: true } },
-        { field: 'password', required: false, defaultValue: '' },
+        { field: 'password', required: false },
       ]);
 
       rowId.value = data.record.id;
@@ -45,7 +45,7 @@
         {
           field: 'password',
           required: true,
-          defaultValue: '123456',
+          defaultValue: 'a123456',
           componentProps: { placeholder: '请输入' },
         },
       ]);
@@ -61,6 +61,8 @@
         ...values,
         id: rowId.value,
       };
+
+      if (!data.password) delete data.password;
 
       await (!unref(isUpdate) ? createUser : updateUser)(data);
 

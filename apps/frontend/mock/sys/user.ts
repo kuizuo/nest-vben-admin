@@ -9,7 +9,7 @@ export function createFakeUserList() {
       realName: 'Vben Admin',
       avatar: 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640',
       desc: 'manager',
-      password: '123456',
+      password: 'a123456',
       token: 'fakeToken1',
       homePath: '/dashboard/analysis',
       roles: [
@@ -22,7 +22,7 @@ export function createFakeUserList() {
     {
       userId: '2',
       username: 'test',
-      password: '123456',
+      password: 'a123456',
       realName: 'test user',
       avatar: 'https://q1.qlogo.cn/g?b=qq&nk=339449197&s=640',
       desc: 'tester',

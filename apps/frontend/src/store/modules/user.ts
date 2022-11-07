@@ -136,8 +136,8 @@ export const useUserStore = defineStore({
         this.setRoleList([]);
       }
       this.setUserInfo(userInfo);
-      // const wsStore = useWsStore();
-      // !wsStore.client && wsStore.initSocket();
+      const wsStore = useWsStore();
+      !wsStore.client && wsStore.initSocket();
 
       return userInfo;
     },

@@ -24,7 +24,7 @@
   import { ref } from 'vue';
   import { Timeline, TimelineItem, Card, Empty } from 'ant-design-vue';
   import { formatToDateTime } from '/@/utils/dateUtil';
-  import { getNoticeList } from '/@/api/business/notice/index';
+  import { getNoticeList } from '/@/api/apps/notice';
 
   const noticeList = ref<API.NoticeListPageResult>([]);
 

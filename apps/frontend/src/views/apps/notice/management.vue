@@ -35,7 +35,7 @@
 <script lang="ts" setup name="公告管理">
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
-  import { findAllNotice, updateNotice, deleteNotice } from '/@/api/business/notice';
+  import { findAllNotice, updateNotice, deleteNotice } from '/@/api/apps/notice';
   import { columns, searchFormSchema } from './notice.data';
   import NoticeModal from './NoticeModal.vue';
 

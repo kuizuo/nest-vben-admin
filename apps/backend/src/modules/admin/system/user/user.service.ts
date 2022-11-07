@@ -144,9 +144,9 @@ export class SysUserService {
       let password;
       if (!param.password) {
         const initPassword = await this.paramConfigService.findValueByKey(SYS_USER_INITPASSWORD);
-        password = this.util.md5(`${initPassword ?? '123456'}${salt}`);
+        password = this.util.md5(`${initPassword ?? 'a123456'}${salt}`);
       } else {
-        password = this.util.md5(`${param.password ?? '123456'}${salt}`);
+        password = this.util.md5(`${param.password ?? 'a123456'}${salt}`);
       }
 
       const avatar = await this.qqService.getAvater(param.qq);
@@ -389,7 +389,7 @@ export class SysUserService {
     await this.entityManager.transaction(async (manager) => {
       const salt = this.util.generateRandomValue(32);
 
-      const password = this.util.md5(`${param.password ?? '123456'}${salt}`);
+      const password = this.util.md5(`${param.password ?? 'a123456'}${salt}`);
       const avatar = await this.qqService.getAvater(param.qq);
       const nickName = await this.qqService.getNickname(param.qq);
       const u = manager.create(SysUser, {

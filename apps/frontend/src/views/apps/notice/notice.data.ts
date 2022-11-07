@@ -3,7 +3,7 @@ import { FormSchema } from '/@/components/Table';
 
 import { h } from 'vue';
 import { Switch, Tag } from 'ant-design-vue';
-import { updateNotice } from '/@/api/business/notice';
+import { updateNotice } from '/@/api/apps/notice';
 import { formatToDateTime } from '/@/utils/dateUtil';
 
 export const columns: BasicColumn[] = [

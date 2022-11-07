@@ -9,7 +9,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
 
   import { formSchema } from './notice.data';
-  import { createNotice, updateNotice } from '/@/api/business/notice';
+  import { createNotice, updateNotice } from '/@/api/apps/notice';
 
   const emit = defineEmits(['success', 'register']);
 

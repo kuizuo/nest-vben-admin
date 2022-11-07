@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 15/05/2022 23:19:58
+ Date: 07/11/2022 13:56:28
 */
 
 SET NAMES utf8mb4;
@@ -31,12 +31,13 @@ CREATE TABLE `sys_config`  (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `IDX_2c363c25cf99bcaab3a7f389ba`(`key`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_config
 -- ----------------------------
-INSERT INTO `sys_config` VALUES (1, 'sys_user_initPassword', '初始密码', '123456', '创建管理员账号的初始密码', '2022-04-18 13:51:59.021771', '2022-04-18 13:51:59.176361');
+INSERT INTO `sys_config` VALUES (1, 'sys_user_initPassword', '初始密码', 'a123456', '创建管理员账号的初始密码', '2022-04-18 13:51:59.021771', '2022-04-18 13:51:59.176361');
+INSERT INTO `sys_config` VALUES (2, 'sys_api_token', 'API Token', 'kz-admin', '用于请求 @ApiToken 的控制器', '2022-10-13 00:10:51.146746', '2022-10-13 00:12:29.000000');
 
 -- ----------------------------
 -- Table structure for sys_login_log
@@ -52,7 +53,7 @@ CREATE TABLE `sys_login_log`  (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_login_log
@@ -65,6 +66,50 @@ INSERT INTO `sys_login_log` VALUES (17, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Wind
 INSERT INTO `sys_login_log` VALUES (18, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39', '2022-05-15 01:00:50.365353', '2022-05-15 01:00:50.365353', ' 本机地址');
 INSERT INTO `sys_login_log` VALUES (19, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39', '2022-05-15 01:11:02.770238', '2022-05-15 01:11:02.770238', ' 本机地址');
 INSERT INTO `sys_login_log` VALUES (20, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39', '2022-05-15 15:47:00.475699', '2022-05-15 15:47:00.475699', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (21, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.47', '2022-05-16 19:54:11.508215', '2022-05-16 19:54:11.508215', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (22, 2, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0', '2022-05-16 21:28:50.058982', '2022-05-16 21:28:50.058982', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (23, 2, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.47', '2022-05-16 22:10:16.077302', '2022-05-16 22:10:16.077302', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (24, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.47', '2022-05-17 17:27:24.268632', '2022-05-17 17:27:24.268632', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (25, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-24 21:44:30.530596', '2022-05-24 21:44:30.530596', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (26, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-26 23:26:37.012410', '2022-05-26 23:26:37.012410', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (27, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-26 23:27:10.287027', '2022-05-26 23:27:10.287027', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (28, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-26 23:40:37.867300', '2022-05-26 23:40:37.867300', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (29, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-26 23:42:29.343866', '2022-05-26 23:42:29.343866', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (30, 7, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-27 00:47:35.601525', '2022-05-27 00:47:35.601525', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (31, 8, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-27 00:49:54.031877', '2022-05-27 00:49:54.031877', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (32, 8, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36 Edg/101.0.1210.53', '2022-05-27 00:50:18.602503', '2022-05-27 00:50:18.602503', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (33, 2, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36', '2022-06-06 15:17:13.300024', '2022-06-06 15:17:13.300024', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (34, 2, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36', '2022-06-06 15:18:48.982612', '2022-06-06 15:18:48.982612', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (35, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-23 23:08:16.859012', '2022-06-23 23:08:16.859012', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (36, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-23 23:08:17.016878', '2022-06-23 23:08:17.016878', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (37, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 11:47:26.997003', '2022-06-24 11:47:26.997003', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (38, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 11:47:55.441337', '2022-06-24 11:47:55.441337', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (39, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 11:48:20.540839', '2022-06-24 11:48:20.540839', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (40, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 13:03:52.525444', '2022-06-24 13:03:52.525444', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (41, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 13:06:58.572895', '2022-06-24 13:06:58.572895', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (42, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 15:17:35.211475', '2022-06-24 15:17:35.211475', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (43, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 15:19:07.260109', '2022-06-24 15:19:07.260109', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (44, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-24 15:19:31.581676', '2022-06-24 15:19:31.581676', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (45, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44', '2022-06-26 18:15:09.486400', '2022-06-26 18:15:09.486400', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (46, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.27', '2022-09-06 22:24:54.498764', '2022-09-06 22:24:54.498764', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (47, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.27', '2022-09-13 19:33:22.410568', '2022-09-13 19:33:22.410568', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (48, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26', '2022-10-31 15:04:55.606683', '2022-10-31 15:04:55.606683', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (49, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26', '2022-10-31 15:04:58.259296', '2022-10-31 15:04:58.259296', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (50, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26', '2022-11-01 18:08:28.584756', '2022-11-01 18:08:28.584756', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (51, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.26', '2022-11-01 18:08:28.688336', '2022-11-01 18:08:28.688336', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (52, 1, '127.0.0.1', NULL, '', '2022-11-05 11:07:37.216934', '2022-11-05 11:07:37.216934', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (53, 1, '127.0.0.1', NULL, '', '2022-11-05 11:07:37.327768', '2022-11-05 11:07:37.327768', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (54, 1, '127.0.0.1', NULL, '', '2022-11-05 11:08:42.396452', '2022-11-05 11:08:42.396452', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (55, 1, '127.0.0.1', NULL, '', '2022-11-05 11:13:56.641426', '2022-11-05 11:13:56.641426', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (56, 1, '127.0.0.1', NULL, '', '2022-11-05 11:16:04.895238', '2022-11-05 11:16:04.895238', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (57, 1, '127.0.0.1', NULL, '', '2022-11-06 16:38:57.908120', '2022-11-06 16:38:57.908120', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (58, 1, '127.0.0.1', NULL, '', '2022-11-06 16:38:57.980948', '2022-11-06 16:38:57.980948', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (59, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:51:07.999994', '2022-11-07 12:51:07.999994', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (60, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:52:02.675266', '2022-11-07 12:52:02.675266', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (61, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:52:02.745285', '2022-11-07 12:52:02.745285', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (62, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:54:01.477348', '2022-11-07 12:54:01.477348', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (63, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:54:01.545497', '2022-11-07 12:54:01.545497', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (64, 1, '127.0.0.1', NULL, '', '2022-11-07 13:40:48.996788', '2022-11-07 13:40:48.996788', ' 本机地址');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -87,7 +132,7 @@ CREATE TABLE `sys_menu`  (
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `external` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -96,11 +141,11 @@ INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:11:3
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:03:56.210517', 2, 1, '/system/user', '用户管理', 'sys:user:list', 1, '', 0, '/admin/system/user/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:04:11.012979', 3, 1, '/system/role', '角色管理', 'sys:role:list,sys:role:page', 1, '', 1, '/admin/system/role/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:04:25.479739', 4, 1, '/system/menu', '菜单管理', 'sys:menu:list', 1, '', 2, '/admin/system/menu/index', 1, 1, 1, 0);
-INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-05 14:25:40.809791', 5, 1, '/system/monitor', '系统监控', '', 0, '', 4, 'LAYOUT', 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-10-12 23:30:14.914107', 5, 1, '/system/monitor', '系统监控', '', 0, '', 5, 'LAYOUT', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:05:02.045318', 6, 5, '/system/monitor/online', '在线用户', 'sys:online:list', 1, '', 0, '/admin/system/monitor/online/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 16:57:03.198541', '2022-05-05 15:15:55.969186', 7, 5, '/sys/monitor/login-log', '登录日志', '', 1, '', 0, '/admin/system/monitor/login-log/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 16:13:44.214923', '2022-05-05 15:14:51.878278', 8, 5, '/system/monitor/serve', '服务监控', 'sys:monitor:serve', 1, '', 4, '/admin/system/monitor/serve/index', 1, 1, 1, 0);
-INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:05:25.116518', 9, 1, '/system/schedule', '任务调度', '', 0, '', 5, 'LAYOUT', 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-10-12 23:30:04.361622', 9, 1, '/system/schedule', '任务调度', '', 0, '', 6, 'LAYOUT', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-05 15:16:50.331218', 10, 9, '/system/schedule/task', '定时任务', '', 1, '', 0, '/admin/system/schedule/task/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-15 01:05:22.437041', 11, 9, '/system/schedule/log', '任务日志', 'sys:task:page', 1, '', 0, '/admin/system/schedule/log/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 13:51:56.794076', '2022-05-05 15:14:43.240670', 12, NULL, '/document', '文档', '', 0, 'ion:tv-outline', 2, 'LAYOUT', 1, 1, 1, 0);
@@ -144,6 +189,13 @@ INSERT INTO `sys_menu` VALUES ('2022-05-14 19:14:40.038017', '2022-05-15 01:27:4
 INSERT INTO `sys_menu` VALUES ('2022-05-15 01:26:45.531494', '2022-05-15 15:43:07.000000', 51, 48, '/tools/storage', '存储管理', 'tools:storage:list', 1, '', 2, '/admin/tools/storage/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-15 01:27:32.585503', '2022-05-15 01:27:32.585503', 52, 51, NULL, '文件上传', 'upload', 2, '', 0, NULL, 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-15 16:53:02.343638', '2022-05-15 16:53:02.343638', 53, 51, NULL, '文件删除', 'tools:storage:delete', 2, '', 2, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-06-06 15:20:26.509930', '2022-06-06 15:20:40.000000', 54, 2, NULL, '修改密码', 'sys:user:password', 2, '', 5, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-06-24 01:37:11.694562', '2022-09-30 00:15:36.031062', 55, NULL, '/profile/setting', '个人设置', '', 1, '', 252, '/admin/system/profile/index', 1, 0, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-10-13 00:08:57.971469', '2022-10-13 00:14:17.000000', 56, 1, '/system/param-config', '参数配置', 'sys:param-config:page', 1, '', 4, '/admin/system/param-config/index', 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-10-13 00:14:34.220628', '2022-10-13 00:14:34.220628', 57, 56, NULL, '新增', 'sys:param-config:add', 2, '', 1, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-10-13 00:14:52.311703', '2022-10-13 00:14:52.311703', 58, 56, NULL, '更新', 'sys:param-config:update', 2, '', 2, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-10-13 00:15:09.832903', '2022-10-13 00:15:09.832903', 59, 56, NULL, '删除', 'sys:param-config:delete', 2, '', 3, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-10-13 00:15:36.452796', '2022-10-13 00:15:36.452796', 60, 56, NULL, '查询', 'sys:param-config:info', 2, '', 4, NULL, 1, 1, 1, 0);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -180,7 +232,7 @@ CREATE TABLE `sys_role_menu`  (
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -190,19 +242,6 @@ INSERT INTO `sys_role_menu` VALUES (2, 2, 16, '2022-05-05 15:25:04.461136', '202
 INSERT INTO `sys_role_menu` VALUES (3, 2, 18, '2022-05-05 15:25:04.461136', '2022-05-05 15:25:04.461136');
 INSERT INTO `sys_role_menu` VALUES (4, 2, 17, '2022-05-05 15:25:04.461136', '2022-05-05 15:25:04.461136');
 INSERT INTO `sys_role_menu` VALUES (9, 2, 43, '2022-05-05 15:25:04.461136', '2022-05-05 15:25:04.461136');
-INSERT INTO `sys_role_menu` VALUES (10, 2, 20, '2022-05-15 01:02:20.397784', '2022-05-15 01:02:20.397784');
-INSERT INTO `sys_role_menu` VALUES (11, 2, 22, '2022-05-15 01:02:20.397784', '2022-05-15 01:02:20.397784');
-INSERT INTO `sys_role_menu` VALUES (12, 2, 23, '2022-05-15 01:02:20.397784', '2022-05-15 01:02:20.397784');
-INSERT INTO `sys_role_menu` VALUES (13, 2, 2, '2022-05-15 01:02:20.397784', '2022-05-15 01:02:20.397784');
-INSERT INTO `sys_role_menu` VALUES (14, 2, 1, '2022-05-15 01:02:20.397784', '2022-05-15 01:02:20.397784');
-INSERT INTO `sys_role_menu` VALUES (20, 2, 3, '2022-05-15 01:03:48.028164', '2022-05-15 01:03:48.028164');
-INSERT INTO `sys_role_menu` VALUES (21, 2, 24, '2022-05-15 01:03:48.028164', '2022-05-15 01:03:48.028164');
-INSERT INTO `sys_role_menu` VALUES (22, 2, 25, '2022-05-15 01:03:48.028164', '2022-05-15 01:03:48.028164');
-INSERT INTO `sys_role_menu` VALUES (23, 2, 26, '2022-05-15 01:03:48.028164', '2022-05-15 01:03:48.028164');
-INSERT INTO `sys_role_menu` VALUES (24, 2, 27, '2022-05-15 01:03:48.028164', '2022-05-15 01:03:48.028164');
-INSERT INTO `sys_role_menu` VALUES (25, 2, 52, '2022-05-15 01:28:20.895618', '2022-05-15 01:28:20.895618');
-INSERT INTO `sys_role_menu` VALUES (26, 2, 51, '2022-05-15 01:28:20.895618', '2022-05-15 01:28:20.895618');
-INSERT INTO `sys_role_menu` VALUES (27, 2, 48, '2022-05-15 01:28:20.895618', '2022-05-15 01:28:20.895618');
 
 -- ----------------------------
 -- Table structure for sys_task
@@ -232,7 +271,7 @@ CREATE TABLE `sys_task`  (
 -- Records of sys_task
 -- ----------------------------
 INSERT INTO `sys_task` VALUES (2, '定时清空登录日志', 'SysLogClearJob.clearLoginLog', 0, 0, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:2:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":2}', '定时清空登录日志', '2022-04-18 13:51:58.066927', '2022-04-29 00:04:39.000000');
-INSERT INTO `sys_task` VALUES (3, '定时清空任务日志', 'SysLogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2022-04-18 13:51:58.066927', '2022-05-15 23:14:58.000000');
+INSERT INTO `sys_task` VALUES (3, '定时清空任务日志', 'SysLogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2022-04-18 13:51:58.066927', '2022-11-07 13:38:54.000000');
 INSERT INTO `sys_task` VALUES (4, '访问百度首页', 'HttpRequestJob.handle', 0, 0, NULL, NULL, 1, '* * * * * ?', NULL, '{\"url\":\"https://www.baidu.com\",\"method\":\"get\"}', NULL, '访问百度首页', '2022-04-29 00:34:59.365492', '2022-04-29 13:02:32.000000');
 INSERT INTO `sys_task` VALUES (5, '发送邮箱', 'EmailJob.send', 0, 0, NULL, NULL, -1, '0 0 0 1 * ?', NULL, '{\"subject\":\"这是标题\",\"to\":\"zeyu57@163.com\",\"content\":\"这是正文\"}', NULL, '每月发送邮箱', '2022-05-14 19:58:51.344360', '2022-05-14 19:58:51.000000');
 
@@ -277,14 +316,14 @@ CREATE TABLE `sys_user`  (
   `qq` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `IDX_9e7164b2f1ea1348bc0eb0a7da`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', 'ccdb5f7e5be14fe0c0528974428f79f9', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', 'kuizuo12@163.com', NULL, '描述', 'xQYCspvFb8cAW6GG1pOoUGTLqsuUSO3d', 1, '2022-04-18 13:51:58.000000', '2022-05-05 14:47:15.219140', '愧怍', '911993023');
-INSERT INTO `sys_user` VALUES (2, 'user', '186ae252f2fb24d71c65708e5a6ec8eb', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', 'kuizuo12@163.com', NULL, NULL, 'qlovDV7pL5dPYPI3QgFFo1HH74nP6sJe', 1, '2022-05-05 15:21:29.941577', '2022-05-05 15:25:40.151674', '用户', '911993023');
-INSERT INTO `sys_user` VALUES (3, 'user1', '47893b1c5727361051b4c19b28aa8696', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=12345', 'zeyu57@163.com', NULL, NULL, 'GiQSun6hrVL6oQmlfybuuC5Jodq3jkm4', 1, '2022-05-05 17:18:17.196300', '2022-05-05 17:18:17.196300', '12345', '12345');
+INSERT INTO `sys_user` VALUES (1, 'admin', 'a11571e778ee85e82caae2d980952546', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', 'hi@kuizuo.cn', NULL, '管理员', 'xQYCspvFb8cAW6GG1pOoUGTLqsuUSO3d', 1, '2022-04-18 13:51:58.000000', '2022-06-24 15:17:27.000000', '愧怍', '911993023');
+INSERT INTO `sys_user` VALUES (2, 'user', '98b6f2563e89b1a0e4af638345155527', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', 'kuizuo12@163.com', NULL, NULL, 'qlovDV7pL5dPYPI3QgFFo1HH74nP6sJe', 1, '2022-05-05 15:21:29.941577', '2022-06-06 15:17:22.000000', '用户', '911993023');
+INSERT INTO `sys_user` VALUES (3, 'kuizuo', 'f03fa2a99595127b9a39587421d471f6', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', '911993023@qq.com', NULL, NULL, 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '2022-05-27 00:49:42.341553', '2022-05-27 00:49:42.341553', '愧怍小儿', '911993023');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -297,14 +336,32 @@ CREATE TABLE `sys_user_role`  (
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1, 1, '2022-04-20 14:08:52.788308', '2022-05-05 15:25:49.157062');
-INSERT INTO `sys_user_role` VALUES (2, 2, 2, '2022-05-05 15:24:05.631702', '2022-05-05 15:25:52.773330');
-INSERT INTO `sys_user_role` VALUES (3, 3, 2, '2022-05-05 17:18:17.200375', '2022-05-05 17:18:17.200375');
+INSERT INTO `sys_user_role` VALUES (5, 8, 2, '2022-05-27 00:49:42.350411', '2022-05-27 00:49:42.350411');
+INSERT INTO `sys_user_role` VALUES (7, 2, 2, '2022-06-06 15:17:22.535453', '2022-06-06 15:17:22.535453');
+INSERT INTO `sys_user_role` VALUES (9, 3, 2, '2022-06-24 15:21:12.719440', '2022-06-24 15:21:12.719440');
+INSERT INTO `sys_user_role` VALUES (10, 9, 0, '2022-11-06 01:38:28.813422', '2022-11-06 01:38:28.813422');
+
+-- ----------------------------
+-- Table structure for test
+-- ----------------------------
+DROP TABLE IF EXISTS `test`;
+CREATE TABLE `test`  (
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of test
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for tool-storage
@@ -314,19 +371,43 @@ CREATE TABLE `tool-storage`  (
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件名',
-  `fileName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '真实文件名',
   `ext_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `user_id` int(11) NULL DEFAULT NULL,
+  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件名',
+  `fileName` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '真实文件名',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tool-storage
 -- ----------------------------
-INSERT INTO `tool-storage` VALUES ('2022-05-15 23:18:10.106054', '2022-05-15 23:18:10.106054', 1, 'logo', 'logo.jpg', 'jpg', '/upload/logo-202205152318102.jpg', '图片', '41.72 KB', 1);
+INSERT INTO `tool-storage` VALUES ('2022-05-15 23:18:10.106054', '2022-05-15 23:18:10.106054', 1, 'jpg', '/upload/logo-202205152318102.jpg', '图片', '41.72 KB', 1, '', NULL);
+INSERT INTO `tool-storage` VALUES ('2022-06-24 12:17:26.620764', '2022-06-24 12:17:26.620764', 2, 'jpg', '/upload/group-202206241217613.jpg', '图片', '8.91 KB', 1, 'group', 'group.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:11:11.063990', '2022-06-24 13:11:11.063990', 3, 'jpg', '/upload/group-202206241311059.jpg', '图片', '8.81 KB', 1, 'group', 'group.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:23:53.792470', '2022-06-24 13:23:53.792470', 4, 'jpg', '/upload/group-202206241323789.jpg', '图片', '8.81 KB', 1, 'group', 'group.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:25:18.967834', '2022-06-24 13:25:18.967834', 5, 'jpg', '/upload/group-202206241325965.jpg', '图片', '8.81 KB', 1, 'group', 'group.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:28:10.010700', '2022-06-24 13:28:10.010700', 6, 'jpg', '/upload/10557-202206241328008.jpg', '图片', '70.66 KB', 1, '10557', '10557.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:32:02.690719', '2022-06-24 13:32:02.690719', 7, 'jpg', '/upload/10557-202206241332687.jpg', '图片', '70.66 KB', 1, '10557', '10557.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:39:57.191874', '2022-06-24 13:39:57.191874', 8, 'jpg', '/upload/10557-202206241339189.jpg', '图片', '70.66 KB', 1, '10557', '10557.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 13:41:43.325983', '2022-06-24 13:41:43.325983', 9, 'jpg', '/upload/10557-202206241341323.jpg', '图片', '70.66 KB', 1, '10557', '10557.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:10:04.938689', '2022-06-24 14:10:04.938689', 10, 'jpg', '/upload/-38937d964dcd5466-202206241410927.jpg', '图片', '70.65 KB', 1, '-38937d964dcd5466', '-38937d964dcd5466.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:12:56.211305', '2022-06-24 14:12:56.211305', 11, 'jpg', '/upload/-38937d964dcd5466-202206241412204.jpg', '图片', '70.65 KB', 1, '-38937d964dcd5466', '-38937d964dcd5466.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:25:21.195792', '2022-06-24 14:25:21.195792', 12, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241425187.jpg', '图片', '70.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:25:48.458873', '2022-06-24 14:25:48.458873', 13, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241425455.jpg', '图片', '78.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:28:44.183225', '2022-06-24 14:28:44.183225', 14, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241428850.jpg', '图片', '41.61 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:28:49.604961', '2022-06-24 14:28:49.604961', 15, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241428518.jpg', '图片', '41.61 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:29:32.674298', '2022-06-24 14:29:32.674298', 16, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241429629.jpg', '图片', '78.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:47:13.811704', '2022-06-24 14:47:13.811704', 17, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241447238.jpg', '图片', '70.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:47:23.298837', '2022-06-24 14:47:23.298837', 18, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241447396.jpg', '图片', '78.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:47:31.946829', '2022-06-24 14:47:31.946829', 19, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241447789.jpg', '图片', '15.86 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:50:30.696426', '2022-06-24 14:50:30.696426', 20, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241450688.jpg', '图片', '15.86 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:52:08.792906', '2022-06-24 14:52:08.792906', 21, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241452009.jpg', '图片', '70.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:52:47.278072', '2022-06-24 14:52:47.278072', 22, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241452273.jpg', '图片', '39.86 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-06-24 14:52:59.298522', '2022-06-24 14:52:59.298522', 23, 'jpg', '/upload/-7dc4e24e8a3c2126-202206241452293.jpg', '图片', '70.65 KB', 1, '-7dc4e24e8a3c2126', '-7dc4e24e8a3c2126.jpg');
+INSERT INTO `tool-storage` VALUES ('2022-11-06 17:27:43.130669', '2022-11-06 17:27:43.130669', 24, 'ico', '/upload/favicon-202211061727124.ico', '其他', '4.19 KB', 1, 'favicon', 'favicon.ico');
+INSERT INTO `tool-storage` VALUES ('2022-11-06 17:27:45.921296', '2022-11-06 17:27:45.921296', 25, 'ico', '/upload/favicon-202211061727919.ico', '其他', '4.19 KB', 1, 'favicon', 'favicon.ico');
 
 SET FOREIGN_KEY_CHECKS = 1;

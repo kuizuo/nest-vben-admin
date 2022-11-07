@@ -77,11 +77,11 @@ export class UserCreateDto {
   @MaxLength(20)
   username: string;
 
-  @ApiProperty({ description: '登录密码', example: '123456' })
-  @IsOptional()
+  @ApiProperty({ description: '登录密码', example: 'a123456' })
   @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
-    message: '密码必须包含数字、，长度为6-16',
+    message: '密码必须包含数字、字母，长度为6-16',
   })
+  @IsOptional()
   password: string;
 
   @ApiProperty({ description: '归属角色', type: [Number] })
