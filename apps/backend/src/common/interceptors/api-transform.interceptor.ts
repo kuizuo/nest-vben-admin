@@ -20,7 +20,7 @@ export class ApiTransformInterceptor implements NestInterceptor {
         } else {
           const response = context.switchToHttp().getResponse<FastifyReply>();
           response.header('Content-Type', 'application/json; charset=utf-8');
-          return new ResOp(200, data);
+          return new ResOp(200, data ?? null);
         }
       }),
     );

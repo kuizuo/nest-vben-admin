@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import SysMenu from '@/entities/admin/sys-menu.entity';
 
 export class ImageCaptcha {
   @ApiProperty({ description: 'base64格式的svg图片' })
