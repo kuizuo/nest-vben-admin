@@ -29,10 +29,14 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // 检测是否是开放类型的，例如获取验证码类型的接口不需要校验，可以加入@Authorize可自动放过
-    const authorize = this.reflector.get<boolean>(AUTHORIZE_KEY_METADATA, context.getHandler());
+    const authorize = this.reflector.getAllAndOverride<boolean>(AUTHORIZE_KEY_METADATA, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     if (authorize) {
       return true;
     }
+
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const url = request.url;
     const path = url.split('?')[0];
@@ -42,7 +46,10 @@ export class AuthGuard implements CanActivate {
     }
 
     // 检查是否开启API TOKEN授权，当开启时，只有带API TOKEN可以正常访问
-    const apiToken = this.reflector.get<boolean>(API_TOKEN_KEY_METADATA, context.getHandler());
+    const apiToken = this.reflector.getAllAndOverride<boolean>(API_TOKEN_KEY_METADATA, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     if (apiToken) {
       const result = await this.paramConfigService.findValueByKey(SYS_API_TOKEN);
       if (token === result) {
