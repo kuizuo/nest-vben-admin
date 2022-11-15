@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: SSH Deploy frontend
+        uses: easingthemes/ssh-deploy@v2.2.11
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          ARGS: '-avzr --delete'
+          SOURCE: 'apps/frontend/dist'
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: '/www/wwwroot/admin.kuizuo.cn'
+
+      - name: SSH Deploy backend
+        uses: easingthemes/ssh-deploy@v2.2.11
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          ARGS: '-avzr --delete'
+          SOURCE: 'apps/backend/dist'
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: '/www/wwwroot/NodeProject/kz-admin'
+
+      - name: SSH Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: pm2 restart kz-admin

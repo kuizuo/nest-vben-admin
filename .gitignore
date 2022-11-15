@@ -3,7 +3,6 @@ node_modules
 dist
 *-dist
 .cache
-pnpm-lock.yaml
 .history
 
 .turbo
@@ -63,5 +62,3 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-.env.production

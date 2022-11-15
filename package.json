@@ -19,6 +19,8 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:frontend": "turbo run -C frontend build",
+    "build:backend": "turbo run -C backend build",
     "test": "turbo run test",
     "lint": "turbo run lint",
     "dev": "turbo run dev"
