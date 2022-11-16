@@ -47,16 +47,14 @@ export class <%= Name %>Service {
   }
 
   async update(dto: <%= Name %>UpdateDto) {
-    const item = await this.<%= name %>Repository.findOneBy({ id: dto.id });
-    if (!item) throw new ApiException(20004, '<%= name %> not found');
+    const item = await this.detail(id);
 
     const <%= name %>: <%= Name %> = Object.assign(item, dto);
     await this.<%= name %>Repository.save(<%= name %>);
   }
 
   async delete(id: number) {
-    const item = await this.<%= name %>Repository.findOneBy({ id });
-    if (!item) throw new ApiException(20004);
+    const item = await this.detail(id);
 
     await this.<%= name %>Repository.remove(item);
   }

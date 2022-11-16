@@ -44,16 +44,14 @@ export class TestService {
   }
 
   async update(dto: TestUpdateDto) {
-    const item = await this.testRepository.findOneBy({ id: dto.id });
-    if (!item) throw new ApiException(20004, 'test not found');
+    const item = await this.detail(dto.id);
 
     const test: Test = Object.assign(item, dto);
     await this.testRepository.save(test);
   }
 
   async delete(id: number) {
-    const item = await this.testRepository.findOneBy({ id });
-    if (!item) throw new ApiException(20004);
+    const item = await this.detail(id);
 
     await this.testRepository.remove(item);
   }

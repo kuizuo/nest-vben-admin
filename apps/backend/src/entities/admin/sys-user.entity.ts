@@ -17,7 +17,7 @@ export default class SysUser extends BaseEntity {
   password: string;
 
   @Column({ length: 32 })
-  @ApiProperty({ description: '昵称' })
+  @ApiProperty({ description: '盐值' })
   psalt: string;
 
   @Column({ name: 'nick_name', nullable: true })
