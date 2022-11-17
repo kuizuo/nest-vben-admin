@@ -15,6 +15,9 @@ export class TestUpdateDto extends PartialType(TestCreateDto) {
 
 export class TestDeleteDto {
   @ApiProperty({ description: 'ID', example: 1 })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   id: number;
 }
 

@@ -18,6 +18,9 @@ export class <%= Name %>UpdateDto extends PartialType(<%= Name %>CreateDto) {
 
 export class <%= Name %>DeleteDto {
   @ApiProperty({ description: 'ID', example: 1 })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   id: number;
 }
 
