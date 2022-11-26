@@ -1,3 +1,4 @@
+import { ErrorEnum } from '@/common/constants/error';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isEmpty } from 'lodash';
@@ -10,14 +11,14 @@ export class AuthService {
 
   checkAdminAuthToken(token: string | string[] | undefined): IAdminUser | never {
     if (isEmpty(token)) {
-      throw new SocketException(11001);
+      throw new SocketException(ErrorEnum.CODE_1101);
     }
     try {
       // 挂载对象到当前请求上
       return this.jwtService.verify(Array.isArray(token) ? token[0] : token);
     } catch (e) {
       // 无法通过token校验
-      throw new SocketException(11001);
+      throw new SocketException(ErrorEnum.CODE_1101);
     }
   }
 }

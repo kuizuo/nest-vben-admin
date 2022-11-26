@@ -10,6 +10,7 @@ import { MenuCreateDto, MenuSearchDto } from './menu.dto';
 import { RedisService } from '@/shared/services/redis.service';
 import { generatorMenu, generatorRouters } from '@/common/permission';
 import { AppGeneralService } from '/@/shared/services/app/app-general.service';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class SysMenuService {
@@ -73,16 +74,16 @@ export class SysMenuService {
   async check(dto: MenuCreateDto): Promise<void | never> {
     if (dto.type === 2 && !dto.parent) {
       // 无法直接创建权限，必须有parent
-      throw new ApiException(10005);
+      throw new ApiException(ErrorEnum.CODE_1005);
     }
     if (dto.type === 1 && dto.parent) {
       const parent = await this.getMenuItemInfo(dto.parent);
       if (isEmpty(parent)) {
-        throw new ApiException(10014);
+        throw new ApiException(ErrorEnum.CODE_1014);
       }
       if (parent && parent.type === 1) {
         // 当前新增为菜单但父节点也为菜单时为非法操作
-        throw new ApiException(10006);
+        throw new ApiException(ErrorEnum.CODE_1006);
       }
     }
   }

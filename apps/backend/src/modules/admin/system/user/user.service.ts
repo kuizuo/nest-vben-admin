@@ -18,11 +18,12 @@ import { RegisterInfoDto } from '../../login/login.dto';
 import { AccountInfo, UserInfoPage } from './user.class';
 import { RedisService } from '@/shared/services/redis.service';
 import { SysParamConfigService } from '../param-config/param-config.service';
-import { SYS_USER_INITPASSWORD } from '@/common/contants/param-config.contants';
+import { SYS_USER_INITPASSWORD } from '@/common/constants/param-config';
 import { PageResult } from '@/common/class/res.class';
 import { QQService } from '@/shared/services/qq.service';
 import { AppConfigService } from '@/shared/services/app/app-config.service';
 import { AppGeneralService } from '/@/shared/services/app/app-general.service';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class SysUserService {
@@ -56,7 +57,7 @@ export class SysUserService {
   async getAccountInfo(uid: number): Promise<AccountInfo> {
     const user: SysUser = await this.userRepository.findOneBy({ id: uid });
     if (isEmpty(user)) {
-      throw new ApiException(10017);
+      throw new ApiException(ErrorEnum.CODE_1017);
     }
     return {
       username: user.username,
@@ -75,7 +76,7 @@ export class SysUserService {
   async updateAccountInfo(uid: number, info: UserInfoUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid });
     if (isEmpty(user)) {
-      throw new ApiException(10017);
+      throw new ApiException(ErrorEnum.CODE_1017);
     }
 
     const data = {
@@ -103,12 +104,12 @@ export class SysUserService {
   async updatePassword(uid: number, dto: PasswordUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid });
     if (isEmpty(user)) {
-      throw new ApiException(10017);
+      throw new ApiException(ErrorEnum.CODE_1017);
     }
     const comparePassword = this.util.md5(`${dto.oldPassword}${user.psalt}`);
     // 原密码不一致，不允许更改
     if (user.password !== comparePassword) {
-      throw new ApiException(10011);
+      throw new ApiException(ErrorEnum.CODE_1011);
     }
     const password = this.util.md5(`${dto.newPassword}${user.psalt}`);
     await this.userRepository.update({ id: uid }, { password });
@@ -121,7 +122,7 @@ export class SysUserService {
   async forceUpdatePassword(uid: number, password: string): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid });
     if (isEmpty(user)) {
-      throw new ApiException(10017);
+      throw new ApiException(ErrorEnum.CODE_1017);
     }
     const newPassword = this.util.md5(`${password}${user.psalt}`);
     await this.userRepository.update({ id: uid }, { password: newPassword });
@@ -138,7 +139,7 @@ export class SysUserService {
       username: param.username,
     });
     if (!isEmpty(exists)) {
-      throw new ApiException(10001);
+      throw new ApiException(ErrorEnum.CODE_1001);
     }
     await this.entityManager.transaction(async (manager) => {
       const salt = this.util.generateRandomValue(32);
@@ -226,7 +227,7 @@ export class SysUserService {
   async info(id: number): Promise<SysUser & { roles: number[] }> {
     const user: SysUser = await this.userRepository.findOneBy({ id });
     if (isEmpty(user)) {
-      throw new ApiException(10017);
+      throw new ApiException(ErrorEnum.CODE_1017);
     }
     const roleRows = await this.userRoleRepository.findBy({ userId: user.id });
     const roles = roleRows.map((e) => {
@@ -377,7 +378,7 @@ export class SysUserService {
   async exist(username: string) {
     const user = await this.userRepository.findOneBy({ username });
     if (isEmpty(user)) {
-      throw new ApiException(10001);
+      throw new ApiException(ErrorEnum.CODE_1001);
     }
     return true;
   }
@@ -387,7 +388,7 @@ export class SysUserService {
    */
   async register(param: RegisterInfoDto): Promise<void> {
     const exists = await this.userRepository.findOneBy({ username: param.username });
-    if (!isEmpty(exists)) throw new ApiException(10001);
+    if (!isEmpty(exists)) throw new ApiException(ErrorEnum.CODE_1001);
 
     await this.entityManager.transaction(async (manager) => {
       const salt = this.util.generateRandomValue(32);
@@ -408,7 +409,7 @@ export class SysUserService {
       });
       const result = await manager.save(u);
       const role = await this.roleRepository.findOneBy({ value: 'user' });
-      if (!role) throw new ApiException(10022);
+      if (!role) throw new ApiException(ErrorEnum.CODE_1022);
 
       const r = manager.create(SysUserRole, {
         userId: result.id,

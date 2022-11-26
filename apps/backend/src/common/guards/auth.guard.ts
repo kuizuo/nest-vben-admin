@@ -11,9 +11,10 @@ import {
   AUTHORIZE_KEY_METADATA,
   API_TOKEN_KEY_METADATA,
 } from '@/modules/admin/admin.constants';
-import { SYS_API_TOKEN } from '@/common/contants/param-config.contants';
+import { SYS_API_TOKEN } from '@/common/constants/param-config';
 import { LoginService } from '@/modules/admin/login/login.service';
 import { SysParamConfigService } from '@/modules/admin/system/param-config/param-config.service';
+import { ErrorEnum } from '../constants/error';
 
 /**
  * admin perm check guard
@@ -42,7 +43,7 @@ export class AuthGuard implements CanActivate {
     const path = url.split('?')[0];
     const token = request.headers['authorization']?.replace('Bearer ', '');
     if (isEmpty(token)) {
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
 
     // 检查是否开启API TOKEN授权，当开启时，只有带API TOKEN可以正常访问
@@ -55,7 +56,7 @@ export class AuthGuard implements CanActivate {
       if (token === result) {
         return true;
       } else {
-        throw new ApiException(11003);
+        throw new ApiException(ErrorEnum.CODE_1103);
       }
     }
 
@@ -64,20 +65,20 @@ export class AuthGuard implements CanActivate {
       request[ADMIN_USER] = this.jwtService.verify(token);
     } catch (e) {
       // 无法通过token校验
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
     if (isEmpty(request[ADMIN_USER])) {
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
     const pv = await this.loginService.getRedisPasswordVersionById(request[ADMIN_USER].uid);
     if (pv !== `${request[ADMIN_USER].pv}`) {
       // 密码版本不一致，登录期间已更改过密码
-      throw new ApiException(11002);
+      throw new ApiException(ErrorEnum.CODE_1102);
     }
     const redisToken = await this.loginService.getRedisTokenById(request[ADMIN_USER].uid);
     if (token !== redisToken) {
       // 与redis保存不一致
-      throw new ApiException(11002);
+      throw new ApiException(ErrorEnum.CODE_1102);
     }
     // 注册该注解，Api则放行检测
     const notNeedPerm = this.reflector.get<boolean>(
@@ -91,7 +92,7 @@ export class AuthGuard implements CanActivate {
     const perms: string = await this.loginService.getRedisPermsById(request[ADMIN_USER].uid);
     // 安全判空
     if (isEmpty(perms)) {
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
     // 将sys:admin:user等转换成sys/admin/user
     const permArray: string[] = (JSON.parse(perms) as string[]).map((e) => {
@@ -99,7 +100,7 @@ export class AuthGuard implements CanActivate {
     });
     // 遍历权限是否包含该url，不包含则无访问权限
     if (!permArray.includes(path.replace(`/${process.env.PREFIX}/`, ''))) {
-      throw new ApiException(11003);
+      throw new ApiException(ErrorEnum.CODE_1103);
     }
     // pass
     return true;

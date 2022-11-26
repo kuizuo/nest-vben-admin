@@ -1,22 +1,26 @@
-import { HttpException } from '@nestjs/common';
-import { ErrorCodeMap } from '../contants/error-code.contants';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ErrorEnum } from '/@/common/constants/error';
 
 /**
- * Api业务异常均抛出该异常
+ * 业务错误时可抛出该异常
  */
 export class ApiException extends HttpException {
+  private errorCode: number;
+
   /**
-   * 业务类型错误代码，非Http code
+   * 业务错误，请求结果仍为200
    */
-  constructor(private errorCode: number, private errorMessage?: string) {
-    super(errorMessage ?? ErrorCodeMap[errorCode], 200);
+  constructor(err: ErrorEnum) {
+    super(`${err}`, HttpStatus.OK);
+    // CODE_500 str parse to 500 number
+    this.errorCode = Number(
+      Object.entries(ErrorEnum)
+        .find(([_, val]) => val === err)[0]
+        .replace('CODE_', ''),
+    );
   }
 
   getErrorCode(): number {
     return this.errorCode;
-  }
-
-  getErrorMessage(): string {
-    return this.errorMessage;
   }
 }

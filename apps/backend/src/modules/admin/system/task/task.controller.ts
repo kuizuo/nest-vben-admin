@@ -8,6 +8,7 @@ import { ADMIN_PREFIX } from '../../admin.constants';
 import { TaskCheckIdDto, TaskCreateDto, TaskUpdateDto, TaskPageDto } from './task.dto';
 import { SysTaskService } from './task.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ErrorEnum } from '@/common/constants/error';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('任务调度模块')
@@ -53,7 +54,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.once(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 
@@ -64,7 +65,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.stop(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 
@@ -75,7 +76,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.start(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 
@@ -86,7 +87,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.delete(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 }

@@ -1,12 +1,17 @@
 import { WsException } from '@nestjs/websockets';
-import { ErrorCodeMap } from '../contants/error-code.contants';
+import { ErrorEnum } from '../constants/error';
 
 export class SocketException extends WsException {
   private errorCode: number;
 
-  constructor(errorCode: number) {
-    super(ErrorCodeMap[errorCode]);
-    this.errorCode = errorCode;
+  constructor(err: ErrorEnum) {
+    super(`${err}`);
+    // CODE_500 str parse to 500 number
+    this.errorCode = Number(
+      Object.entries(ErrorEnum)
+        .find(([_, val]) => val === err)[0]
+        .replace('CODE_', ''),
+    );
   }
 
   getErrorCode(): number {

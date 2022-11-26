@@ -1,38 +1,40 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import type { IBaseResponse } from '/@/interfaces/response';
 import { FastifyReply } from 'fastify';
-import { ApiException } from '../exceptions/api.exception';
-import { ResOp } from '../class/res.class';
-import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import { ApiException } from '/@/common/exceptions/api.exception';
+import { AppConfigService } from '/@/shared/services/app/app-config.service';
+import { ErrorEnum } from '/@/common/constants/error';
 
-/**
- * 异常接管，统一异常返回数据
- */
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  constructor(private logger: AppLoggerService) {}
+  constructor(private readonly configService: AppConfigService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
 
-    // check api exection
-    const status =
+    // 响应结果码判断
+    const httpStatus: number =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    // set json response
-    response.header('Content-Type', 'application/json; charset=utf-8');
-    // prod env will not return internal error message
-    const code =
-      exception instanceof ApiException ? (exception as ApiException).getErrorCode() : status;
-    let message = '服务器异常，请稍后再试';
-    // 开发模式下提示500类型错误，生产模式下屏蔽500内部错误提示
-    if (process.env.NODE_ENV === 'development' || status < 500) {
-      message = exception instanceof HttpException ? exception.message : `${exception}`;
+
+    const apiErrorCode: number =
+      exception instanceof ApiException ? exception.getErrorCode() : httpStatus;
+
+    let errorMessage: string =
+      exception instanceof HttpException ? exception.message : `${exception}`;
+
+    // 系统内部错误时，在生产模式下隐藏具体异常消息
+    if (this.configService.isProduction && httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) {
+      errorMessage = ErrorEnum.CODE_500;
     }
-    // 记录 500 日志
-    if (status >= 500) {
-      this.logger.error(exception, ApiExceptionFilter.name);
-    }
-    const result = new ResOp(code, null, message);
-    response.status(status).send(result);
+
+    // 返回基础响应结果
+    const resBody: IBaseResponse = {
+      code: apiErrorCode,
+      message: errorMessage,
+      data: null,
+    };
+
+    response.status(httpStatus).send(resBody);
   }
 }

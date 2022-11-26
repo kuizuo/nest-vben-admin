@@ -1,3 +1,4 @@
+import { ErrorEnum } from '@/common/constants/error';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
@@ -19,7 +20,7 @@ export class AdminWsGuard implements CanActivate {
       // close
       client.disconnect();
       // 无法通过token校验
-      throw new SocketException(11001);
+      throw new SocketException(ErrorEnum.CODE_1101);
     }
   }
 }

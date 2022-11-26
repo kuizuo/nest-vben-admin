@@ -12,6 +12,7 @@ import { SysLogService } from '../system/log/log.service';
 import { RedisService } from '@/shared/services/redis.service';
 import { EmailService } from '@/shared/services/email.service';
 import dayjs from 'dayjs';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class LoginService {
@@ -56,7 +57,7 @@ export class LoginService {
   async checkImgCaptcha(id: string, code: string): Promise<void> {
     const result = await this.redisService.getRedis().get(`admin:captcha:img:${id}`);
     if (isEmpty(result) || code.toLowerCase() !== result.toLowerCase()) {
-      throw new ApiException(10002);
+      throw new ApiException(ErrorEnum.CODE_1002);
     }
     // 校验成功后移除验证码
     await this.redisService.getRedis().del(`admin:captcha:img:${id}`);
@@ -69,11 +70,11 @@ export class LoginService {
   async getLoginSign(username: string, password: string, ip: string, ua: string): Promise<string> {
     const user = await this.userService.findUserByUserName(username);
     if (isEmpty(user)) {
-      throw new ApiException(10003);
+      throw new ApiException(ErrorEnum.CODE_1003);
     }
     const comparePassword = this.util.md5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(10003);
+      throw new ApiException(ErrorEnum.CODE_1003);
     }
     const perms = await this.menuService.getPerms(user.id);
 
@@ -120,26 +121,26 @@ export class LoginService {
 
     // ip限制
     const ipLimit = await this.redisService.getRedis().get(`admin:ip:${ip}:code:limit`);
-    if (ipLimit) throw new ApiException(10200);
+    if (ipLimit) throw new ApiException(ErrorEnum.CODE_1201);
 
     // 1分钟最多接收1条
     const limit = await this.redisService.getRedis().get(`admin:email:${email}:limit`);
-    if (limit) throw new ApiException(10200);
+    if (limit) throw new ApiException(ErrorEnum.CODE_1201);
 
     // 1天一个邮箱最多接收5条
     let limitDayNum: string | number = await this.redisService
       .getRedis()
       .get(`admin:email:${email}:limit-day`);
     limitDayNum = limitDayNum ? parseInt(limitDayNum) : 0;
-    if (limitDayNum > LIMIT_TIME) throw new ApiException(10201);
+    if (limitDayNum > LIMIT_TIME) throw new ApiException(ErrorEnum.CODE_1202);
 
     // 1天一个ip最多发送5条
     let ipLimitDayNum: string | number = await this.redisService
       .getRedis()
       .get(`admin:ip:${ip}:code:limit-day`);
     ipLimitDayNum = ipLimitDayNum ? parseInt(ipLimitDayNum) : 0;
-    if (ipLimitDayNum > LIMIT_TIME) throw new ApiException(10201);
-    if (ipLimitDayNum) throw new ApiException(10200);
+    if (ipLimitDayNum > LIMIT_TIME) throw new ApiException(ErrorEnum.CODE_1202);
+    if (ipLimitDayNum) throw new ApiException(ErrorEnum.CODE_1201);
 
     // 发送验证码
     const code = Math.random().toString(16).substring(2, 6);
@@ -164,7 +165,7 @@ export class LoginService {
   async checkCode(email: string, code: string): Promise<void> {
     const result = await this.redisService.getRedis().get(`admin:email:${email}:code`);
     if (isEmpty(result) || code.toLowerCase() !== result.toLowerCase()) {
-      throw new ApiException(10002);
+      throw new ApiException(ErrorEnum.CODE_1002);
     }
     // 校验成功后移除验证码
     await this.redisService.getRedis().del(`admin:email:${email}:code`);

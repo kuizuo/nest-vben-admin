@@ -9,6 +9,7 @@ import { EntityManager } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import { SysUserService } from '../user/user.service';
 import { OnlineUserInfo } from './online.class';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class SysOnlineService {
@@ -42,7 +43,7 @@ export class SysOnlineService {
     const rootUserId = await this.userService.findRootUserId();
     const currentUserInfo = await this.userService.getAccountInfo(currentUid);
     if (uid === rootUserId) {
-      throw new ApiException(10013);
+      throw new ApiException(ErrorEnum.CODE_1013);
     }
     // reset redis keys
     await this.userService.forbidden(uid);
@@ -66,8 +67,8 @@ export class SysOnlineService {
     const result = await this.entityManager.query(
       `
       SELECT sys_login_log.created_at, sys_login_log.ip, sys_login_log.address, sys_login_log.ua, sys_user.id, sys_user.username, sys_user.nick_name
-        FROM sys_login_log 
-        INNER JOIN sys_user ON sys_login_log.user_id = sys_user.id 
+        FROM sys_login_log
+        INNER JOIN sys_user ON sys_login_log.user_id = sys_user.id
         WHERE sys_login_log.created_at IN (SELECT MAX(created_at) as createdAt FROM sys_login_log GROUP BY user_id)
           AND sys_user.id IN (?)
       `,

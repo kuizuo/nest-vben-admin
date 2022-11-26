@@ -9,6 +9,7 @@ import { OnlineUserInfo } from './online.class';
 import { KickDto } from './online.dto';
 import { SysOnlineService } from './online.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ErrorEnum } from '@/common/constants/error';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('在线用户模块')
@@ -29,7 +30,7 @@ export class SysOnlineController {
   @Post('kick')
   async kick(@Body() dto: KickDto, @AdminUser() user: IAdminUser): Promise<void> {
     if (dto.id === user.uid) {
-      throw new ApiException(10012);
+      throw new ApiException(ErrorEnum.CODE_1012);
     }
     await this.onlineService.kickUser(dto.id, user.uid);
   }

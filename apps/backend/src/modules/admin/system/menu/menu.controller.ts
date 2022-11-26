@@ -14,6 +14,7 @@ import {
   MenuUpdateDto,
 } from './menu.dto';
 import { SysMenuService } from './menu.service';
+import { ErrorEnum } from '@/common/constants/error';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('菜单权限模块')
@@ -53,7 +54,7 @@ export class SysMenuController {
   async update(@Body() dto: MenuUpdateDto): Promise<void> {
     if (dto.id <= FORBIDDEN_OP_MENU_ID_INDEX) {
       // 系统内置功能不提供删除
-      throw new ApiException(10016);
+      throw new ApiException(ErrorEnum.CODE_1016);
     }
     // check
     await this.menuService.check(dto);
@@ -77,7 +78,7 @@ export class SysMenuController {
     // 68为内置init.sql中插入最后的索引编号
     if (dto.id <= FORBIDDEN_OP_MENU_ID_INDEX) {
       // 系统内置功能不提供删除
-      throw new ApiException(10016);
+      throw new ApiException(ErrorEnum.CODE_1016);
     }
     // 如果有子目录，一并删除
     const childMenus = await this.menuService.findChildMenus(dto.id);

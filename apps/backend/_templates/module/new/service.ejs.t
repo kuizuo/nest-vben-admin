@@ -8,6 +8,7 @@ import <%= Name %> from '@/entities/apps/<%= name %>.entity';
 import { <%= Name %>CreateDto, <%= Name %>UpdateDto, <%= Name %>PageDto } from './<%= name %>.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { PageResult } from '@/common/class/res.class';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class <%= Name %>Service {
@@ -34,8 +35,8 @@ export class <%= Name %>Service {
 
   async detail(id: number): Promise<<%= Name %>> {
     const item = await this.<%= name %>Repository.findOneBy({ id });
-    if (!item) throw new ApiException(20004);
-    
+    if (!item) throw new ApiException(ErrorEnum.CODE_2004);
+
     return item;
   }
 

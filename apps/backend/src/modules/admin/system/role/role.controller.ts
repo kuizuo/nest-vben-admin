@@ -10,6 +10,7 @@ import { ApiException } from '@/common/exceptions/api.exception';
 import { RoleInfo } from './role.class';
 import { SysMenuService } from '../menu/menu.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ErrorEnum } from '@/common/constants/error';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('角色模块')
@@ -57,7 +58,7 @@ export class SysRoleController {
   async delete(@Body() dto: RoleDeleteDto): Promise<void> {
     const count = await this.roleService.countUserIdByRole(dto.ids);
     if (count > 0) {
-      throw new ApiException(10008);
+      throw new ApiException(ErrorEnum.CODE_1008);
     }
     await this.roleService.delete(dto.ids);
     await this.menuService.refreshOnlineUserPerms();
