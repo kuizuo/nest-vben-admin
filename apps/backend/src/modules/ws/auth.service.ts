@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isEmpty } from 'lodash';
 import { SocketException } from 'src/common/exceptions/socket.exception';
-import { IAdminUser } from '../admin/admin.interface';
+import { IAdminUser } from '/@/interfaces/auth';
 
 @Injectable()
 export class AuthService {

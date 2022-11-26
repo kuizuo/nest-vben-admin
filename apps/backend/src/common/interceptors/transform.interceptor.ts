@@ -9,7 +9,7 @@ import { ResOp } from '../class/res.class';
 /**
  * 统一处理返回接口结果，如果不需要则添加@Keep装饰器
  */
-export class ApiTransformInterceptor implements NestInterceptor {
+export class TransformInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
     return next.handle().pipe(

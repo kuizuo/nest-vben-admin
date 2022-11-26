@@ -16,25 +16,27 @@ import {
 } from './user.dto';
 import { RegisterInfoDto } from '../../login/login.dto';
 import { AccountInfo, UserInfoPage } from './user.class';
-import { ROOT_ROLE_ID } from '@/modules/admin/admin.constants';
 import { RedisService } from '@/shared/services/redis.service';
 import { SysParamConfigService } from '../param-config/param-config.service';
 import { SYS_USER_INITPASSWORD } from '@/common/contants/param-config.contants';
 import { PageResult } from '@/common/class/res.class';
 import { QQService } from '@/shared/services/qq.service';
+import { AppConfigService } from '@/shared/services/app/app-config.service';
+import { AppGeneralService } from '/@/shared/services/app/app-general.service';
 
 @Injectable()
 export class SysUserService {
   constructor(
-    private redisService: RedisService,
-    private paramConfigService: SysParamConfigService,
-    @InjectRepository(SysUser) private userRepository: Repository<SysUser>,
-    @InjectRepository(SysRole) private roleRepository: Repository<SysRole>,
+    private readonly redisService: RedisService,
+    private readonly paramConfigService: SysParamConfigService,
+    @InjectRepository(SysUser) private readonly userRepository: Repository<SysUser>,
+    @InjectRepository(SysRole) private readonly roleRepository: Repository<SysRole>,
     @InjectRepository(SysUserRole) private userRoleRepository: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
-    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
-    private qqService: QQService,
-    private util: UtilService,
+    private readonly qqService: QQService,
+    private readonly util: UtilService,
+    private readonly generalService: AppGeneralService,
+    private readonly configService: AppConfigService,
   ) {}
 
   /**
@@ -180,7 +182,7 @@ export class SysUserService {
    * 更新用户信息
    */
   async update(param: UserUpdateDto): Promise<void> {
-    if (param.id === this.rootRoleId) {
+    if (this.generalService.isRootUser(param.id)) {
       throw new BadRequestException('不能更新超级管理员');
     }
 
@@ -270,10 +272,7 @@ export class SysUserService {
    * 查找超管的用户ID
    */
   async findRootUserId(): Promise<number> {
-    const result = await this.userRoleRepository.findOneBy({
-      roleId: this.rootRoleId,
-    });
-    return result.userId;
+    return this.configService.appConfig.rootUserId;
   }
 
   /**

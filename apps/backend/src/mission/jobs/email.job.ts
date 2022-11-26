@@ -1,6 +1,6 @@
 import { EmailService } from '@/shared/services/email.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { LoggerService } from 'src/shared/logger/logger.service';
+import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
 import { Mission } from '../mission.decorator';
 
 /**
@@ -11,7 +11,7 @@ import { Mission } from '../mission.decorator';
 export class EmailJob {
   constructor(
     private readonly emailService: EmailService,
-    private readonly logger: LoggerService,
+    private readonly logger: AppLoggerService,
   ) {}
 
   async send(config: any): Promise<void> {

@@ -1,20 +1,20 @@
-import { ISendMailOptions, MailerService, MailerTransportFactory } from '@nestjs-modules/mailer';
+import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { AppConfigService } from '/@/shared/services/app/app-config.service';
 
 @Injectable()
 export class EmailService {
   constructor(
     private readonly mailerService: MailerService,
-    private configService: ConfigService,
+    private configService: AppConfigService,
   ) {}
 
   async sendMail(to, subject, content): Promise<any> {
     return await this.mailerService.sendMail({
       to: to,
       from: {
-        name: this.configService.get<string>('appName'),
-        address: this.configService.get<string>('email.user'),
+        name: this.configService.appConfig.name,
+        address: this.configService.mailerConfig.auth.user,
       },
       subject: subject,
       text: content,
@@ -25,8 +25,8 @@ export class EmailService {
     return await this.mailerService.sendMail({
       to: to,
       from: {
-        name: this.configService.get<string>('appName'),
-        address: this.configService.get<string>('email.user'),
+        name: this.configService.appConfig.name,
+        address: this.configService.mailerConfig.auth.user,
       },
       subject: subject,
       html: html,
@@ -37,7 +37,7 @@ export class EmailService {
     const content = `尊敬的用户您好，您的验证码是${code}，请于5分钟内输入。`;
     const ret = await this.sendMail(
       to,
-      `[${this.configService.get<string>('appName')}] ` + '验证码通知',
+      `[${this.configService.appConfig.name}] ` + '验证码通知',
       content,
     );
 

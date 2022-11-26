@@ -2,14 +2,14 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from
 import { FastifyReply } from 'fastify';
 import { ApiException } from '../exceptions/api.exception';
 import { ResOp } from '../class/res.class';
-import { LoggerService } from '@/shared/logger/logger.service';
+import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
 
 /**
  * 异常接管，统一异常返回数据
  */
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  constructor(private logger: LoggerService) {}
+  constructor(private logger: AppLoggerService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash';
 import { MISSION_KEY_METADATA } from '@/common/contants/decorator.contants';
 import { ApiException } from '@/common/exceptions/api.exception';
 import SysTask from '@/entities/admin/sys-task.entity';
-import { LoggerService } from '@/shared/logger/logger.service';
+import { AppLoggerService } from '@/shared/services/app/app-logger.service';
 import { RedisService } from '@/shared/services/redis.service';
 import { Like, Repository } from 'typeorm';
 import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '../../admin.constants';
@@ -23,7 +23,7 @@ export class SysTaskService implements OnModuleInit {
     private moduleRef: ModuleRef,
     private reflector: Reflector,
     private redisService: RedisService,
-    private logger: LoggerService,
+    private logger: AppLoggerService,
   ) {}
 
   /**

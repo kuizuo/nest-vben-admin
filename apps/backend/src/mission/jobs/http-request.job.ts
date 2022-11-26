@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { LoggerService } from 'src/shared/logger/logger.service';
+import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
 import { Mission } from '../mission.decorator';
 
 /**
@@ -9,7 +9,10 @@ import { Mission } from '../mission.decorator';
 @Injectable()
 @Mission()
 export class HttpRequestJob {
-  constructor(private readonly httpService: HttpService, private readonly logger: LoggerService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly logger: AppLoggerService,
+  ) {}
 
   /**
    * 发起请求

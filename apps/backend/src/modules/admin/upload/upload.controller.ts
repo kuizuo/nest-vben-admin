@@ -10,10 +10,10 @@ import {
   getName,
   getSize,
   saveFile,
-} from '@/utils/file.util';
+} from '@/utils/file';
 import { StorageService } from '../tools/storage/storage.service';
 import { AdminUser } from '@/common/decorators/admin-user.decorator';
-import { IAdminUser } from '../admin.interface';
+import { IAdminUser } from '/@/interfaces/auth';
 import { FileUploadDto } from './upload.dto';
 
 @ApiTags('上传模块')

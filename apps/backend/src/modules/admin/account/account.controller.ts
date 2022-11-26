@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AdminUser } from '@/common/decorators/admin-user.decorator';
 import { ADMIN_PREFIX } from '@/modules/admin/admin.constants';
-import { IAdminUser } from '../admin.interface';
+import { IAdminUser } from '/@/interfaces/auth';
 import { PermissionOptional } from '@/common/decorators/permission-optional.decorator';
 import { LoginService } from '../login/login.service';
 import { AccountInfo } from '../system/user/user.class';

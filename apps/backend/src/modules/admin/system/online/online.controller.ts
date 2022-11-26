@@ -3,7 +3,7 @@ import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swag
 import { ApiException } from '@/common/exceptions/api.exception';
 import { AdminUser } from '@/common/decorators/admin-user.decorator';
 import { ADMIN_PREFIX } from '../../admin.constants';
-import { IAdminUser } from '../../admin.interface';
+import { IAdminUser } from '/@/interfaces/auth';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { OnlineUserInfo } from './online.class';
 import { KickDto } from './online.dto';

@@ -7,9 +7,10 @@ import SysMenu from '@/entities/admin/sys-menu.entity';
 import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
 import SysUserRole from '@/entities/admin/sys-user-role.entity';
 import { RoleCreateDto, RoleUpdateDto } from './role.dto';
-import { ROOT_ROLE_ID } from '@/modules/admin/admin.constants';
 import { RolePageDto } from './role.dto';
 import { PageResult } from '@/common/class/res.class';
+import { AppGeneralService } from '@/shared/services/app/app-general.service';
+import { AppConfigService } from '@/shared/services/app/app-config.service';
 
 @Injectable()
 export class SysRoleService {
@@ -19,7 +20,8 @@ export class SysRoleService {
     @InjectRepository(SysRoleMenu) private roleMenuRepository: Repository<SysRoleMenu>,
     @InjectRepository(SysUserRole) private userRoleRepository: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
-    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
+    private readonly configService: AppConfigService,
+    private readonly generalService: AppGeneralService,
   ) {}
 
   /**
@@ -37,9 +39,7 @@ export class SysRoleService {
    * 列举所有角色条数：除去超级管理员
    */
   async count(): Promise<number> {
-    const count = await this.roleRepository.countBy({
-      id: Not(this.rootRoleId),
-    });
+    const count = await this.roleRepository.countBy({});
     return count;
   }
 
@@ -58,9 +58,14 @@ export class SysRoleService {
    * 根据角色Id数组删除
    */
   async delete(roleIds: number[]): Promise<void> {
-    if (includes(roleIds, this.rootRoleId)) {
+    const rootUser = await this.userRoleRepository.findOneBy({
+      userId: this.configService.appConfig.rootUserId,
+    });
+
+    if (includes(roleIds, rootUser.roleId)) {
       throw new BadRequestException('不能删除超级管理员');
     }
+
     await this.entityManager.transaction(async (manager) => {
       await manager.delete(SysRole, roleIds);
       await manager.delete(SysRoleMenu, { roleId: In(roleIds) });
@@ -181,7 +186,11 @@ export class SysRoleService {
    * 根据角色ID列表查找关联用户ID
    */
   async countUserIdByRole(ids: number[]): Promise<number | never> {
-    if (includes(ids, this.rootRoleId)) {
+    const rootUser = await this.userRoleRepository.findOneBy({
+      userId: this.configService.appConfig.rootUserId,
+    });
+
+    if (includes(ids, rootUser.roleId)) {
       throw new BadRequestException('不支持删除根角色');
     }
     return await this.userRoleRepository.countBy({ roleId: In(ids) });

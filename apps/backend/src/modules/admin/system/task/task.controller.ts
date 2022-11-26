@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
 import { PageResult } from '@/common/class/res.class';
 import { ApiException } from '@/common/exceptions/api.exception';
@@ -11,6 +11,7 @@ import { ApiResult } from '@/common/decorators/api-result.decorator';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('任务调度模块')
+@ApiExtraModels(SysTask)
 @Controller('task')
 export class SysTaskController {
   constructor(private taskService: SysTaskService) {}

@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { concat, includes, isEmpty, uniq } from 'lodash';
-import { ROOT_ROLE_ID } from '@/modules/admin/admin.constants';
 import { ApiException } from '@/common/exceptions/api.exception';
 import SysMenu from '@/entities/admin/sys-menu.entity';
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
@@ -10,14 +9,15 @@ import { MenuItemAndParentInfoResult } from './menu.class';
 import { MenuCreateDto, MenuSearchDto } from './menu.dto';
 import { RedisService } from '@/shared/services/redis.service';
 import { generatorMenu, generatorRouters } from '@/common/permission';
+import { AppGeneralService } from '/@/shared/services/app/app-general.service';
 
 @Injectable()
 export class SysMenuService {
   constructor(
     @InjectRepository(SysMenu) private menuRepository: Repository<SysMenu>,
-    private redisService: RedisService,
-    @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private roleService: SysRoleService,
+    private redisService: RedisService,
+    private generalService: AppGeneralService,
   ) {}
 
   /**
@@ -52,7 +52,7 @@ export class SysMenuService {
   async getMenus(uid: number): Promise<string[]> {
     const roleIds = await this.roleService.getRoleIdByUser(uid);
     let menus: SysMenu[] = [];
-    if (includes(roleIds, this.rootRoleId)) {
+    if (this.generalService.isRootUser(uid)) {
       menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } });
     } else {
       menus = await this.menuRepository
@@ -144,7 +144,7 @@ export class SysMenuService {
     const roleIds = await this.roleService.getRoleIdByUser(uid);
     let permission: any[] = [];
     let result: any = null;
-    if (includes(roleIds, this.rootRoleId)) {
+    if (this.generalService.isRootUser(uid)) {
       result = await this.menuRepository.findBy({
         permission: Not(IsNull()),
         type: In([1, 2]),

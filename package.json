@@ -23,7 +23,9 @@
     "build:backend": "turbo run -C backend build",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "dev:frontend": "turbo run -C frontend dev",
+    "dev:backend": "turbo run -C backend dev"
   },
   "dependencies": {
     "@kuizuo/eslint-config-ts": "^1.0.1"

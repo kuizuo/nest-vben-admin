@@ -1,7 +1,7 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HttpModule } from '@nestjs/axios';
 import { Global, CacheModule, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailService } from './services/email.service';
 import { QQService } from './services/qq.service';
@@ -9,57 +9,46 @@ import { RedisModule } from './redis/redis.module';
 import { RedisService } from './services/redis.service';
 import { UtilService } from './services/util.service';
 import { IpService } from './services/ip.service';
+import { AppConfigService } from './services/app/app-config.service';
+import { AppLoggerService } from './services/app/app-logger.service';
+import { AppGeneralService } from './services/app/app-general.service';
 
-// common provider list
-const providers = [UtilService, RedisService, EmailService, QQService, IpService];
+const providers = [
+  AppConfigService,
+  AppLoggerService,
+  AppGeneralService,
+  UtilService,
+  RedisService,
+  EmailService,
+  QQService,
+  IpService,
+];
 
-/**
- * 全局共享模块
- */
 @Global()
 @Module({
   imports: [
-    HttpModule.register({
-      timeout: 5000,
-      maxRedirects: 5,
-    }),
+    HttpModule,
     // redis cache
     CacheModule.register(),
     // jwt
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt.secret'),
-      }),
-      inject: [ConfigService],
+      useFactory: (configService: AppConfigService) => configService.jwtConfig,
+      inject: [AppConfigService],
     }),
     // redis
     RedisModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        host: configService.get<string>('redis.host'),
-        port: configService.get<number>('redis.port'),
-        password: configService.get<string>('redis.password'),
-        db: configService.get<number>('redis.db'),
-      }),
-      inject: [ConfigService],
+      useFactory: (configService: AppConfigService) => configService.redisConfig,
+      inject: [AppConfigService],
     }),
-    // email
+    // mailer
     MailerModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        transport: {
-          host: configService.get<string>('email.host'),
-          port: configService.get<number>('email.port'),
-          ignoreTLS: true,
-          secure: true,
-          auth: {
-            user: configService.get<string>('email.user'),
-            pass: configService.get<string>('email.pass'),
-          },
-        },
+      useFactory: (configService: AppConfigService) => ({
+        transport: configService.mailerConfig,
       }),
-      inject: [ConfigService],
+      inject: [AppConfigService],
     }),
   ],
   providers: [...providers],
