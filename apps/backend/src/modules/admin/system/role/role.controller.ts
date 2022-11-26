@@ -15,8 +15,10 @@ import { RoleInfo } from './role.class';
 import { SysMenuService } from '../menu/menu.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
 @ApiTags('角色模块')
+@ApiSecurityAuth()
 @ApiExtraModels(RoleInfo)
 @Controller('role')
 export class SysRoleController {

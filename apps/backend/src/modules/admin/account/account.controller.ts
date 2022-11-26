@@ -1,10 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import {
-  ApiExtraModels,
-  ApiOperation,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from '@/common/decorators/auth-user.decorator';
 import { IAuthUser } from '/@/interfaces/auth';
 import { LoginService } from '../login/login.service';
@@ -18,8 +13,10 @@ import { SysUserService } from '../system/user/user.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { SysMenu } from '@/entities/admin/sys-menu.entity';
 import { AllowAnonPermission } from '@/common/decorators/allow-anon-permission.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
 @ApiTags('账户模块')
+@ApiSecurityAuth()
 @ApiExtraModels(AccountInfo)
 @Controller()
 export class AccountController {

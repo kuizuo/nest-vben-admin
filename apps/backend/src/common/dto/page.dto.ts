@@ -12,7 +12,8 @@ export class PaginateDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  readonly page: number = 1;
+  @IsOptional()
+  readonly page?: number = 1;
 
   @ApiProperty({
     description: '当前页包含数量',
@@ -23,7 +24,8 @@ export class PaginateDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  readonly pageSize: number = 10;
+  @IsOptional()
+  readonly pageSize?: number = 10;
 
   @ApiProperty({
     description: '时间戳',
@@ -32,5 +34,5 @@ export class PaginateDto {
   @Type(() => Number)
   @IsInt()
   @IsOptional()
-  readonly _t: number;
+  readonly _t?: number;
 }

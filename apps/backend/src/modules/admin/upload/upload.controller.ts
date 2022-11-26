@@ -15,8 +15,10 @@ import { StorageService } from '../tools/storage/storage.service';
 import { AuthUser } from '@/common/decorators/auth-user.decorator';
 import { IAuthUser } from '/@/interfaces/auth';
 import { FileUploadDto } from './upload.dto';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
 @ApiTags('上传模块')
+@ApiSecurityAuth()
 @Controller()
 export class UploadController {
   constructor(private storageService: StorageService) {}

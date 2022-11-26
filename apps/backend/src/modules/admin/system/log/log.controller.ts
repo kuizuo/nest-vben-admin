@@ -1,18 +1,15 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import {
-  ApiExtraModels,
-  ApiOperation,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PageResult } from '@/common/class/res.class';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { LoginLogInfo, TaskLogInfo } from './log.class';
 import { SysLogService } from './log.service';
 import { LoginLogPageDto, TaskLogPageDto } from './log.dto';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
 @ApiTags('日志模块')
+@ApiSecurityAuth()
 @ApiExtraModels(LoginLogInfo, TaskLogInfo)
 @Controller('log')
 export class SysLogController {
