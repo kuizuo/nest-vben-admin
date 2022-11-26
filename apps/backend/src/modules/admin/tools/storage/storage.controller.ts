@@ -14,7 +14,7 @@ export class StorageController {
   constructor(private storageService: StorageService) {}
 
   @ApiOperation({ summary: '获取本地存储列表' })
-  @ApiResult({ type: StorageInfo, isPage: true })
+  @ApiResult({ type: StorageInfo, struct: 'page' })
   @Get('list')
   async list(@Query() dto: StoragePageDto): Promise<PageResult<StorageInfo>> {
     const items = await this.storageService.page(dto);

@@ -16,7 +16,7 @@ export class SysLogController {
   constructor(private logService: SysLogService) {}
 
   @ApiOperation({ summary: '分页查询登录日志' })
-  @ApiResult({ type: [LoginLogInfo], isPage: true })
+  @ApiResult({ type: [LoginLogInfo], struct: 'page' })
   @LogDisabled()
   @Get('login/page')
   async loginLogPage(@Query() dto: LoginLogPageDto): Promise<PageResult<LoginLogInfo>> {
@@ -29,7 +29,7 @@ export class SysLogController {
   }
 
   @ApiOperation({ summary: '分页查询任务日志' })
-  @ApiResult({ type: [TaskLogInfo], isPage: true })
+  @ApiResult({ type: [TaskLogInfo], struct: 'page' })
   @LogDisabled()
   @Get('task/page')
   async taskPage(@Query() dto: TaskLogPageDto): Promise<PageResult<TaskLogInfo>> {

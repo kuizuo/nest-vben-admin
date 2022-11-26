@@ -9,16 +9,16 @@ const baseTypeNames = ['String', 'Number', 'Boolean'];
  */
 export const ApiResult = <TModel extends Type<any>>({
   type,
-  isPage,
+  struct,
   status,
 }: {
   type?: TModel | TModel[];
-  isPage?: boolean;
+  struct?: 'list' | 'page';
   status?: HttpStatus;
 }) => {
   let prop = null;
   if (Array.isArray(type)) {
-    if (isPage) {
+    if (struct === 'page') {
       prop = {
         type: 'object',
         properties: {
