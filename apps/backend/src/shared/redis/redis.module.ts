@@ -1,12 +1,23 @@
-import { DynamicModule, Module, OnModuleDestroy, Provider } from '@nestjs/common';
+import {
+  DynamicModule,
+  Module,
+  OnModuleDestroy,
+  Provider,
+} from '@nestjs/common';
 import IORedis, { Redis, Cluster } from 'ioredis';
 import { isEmpty } from 'lodash';
-import { REDIS_CLIENT, REDIS_DEFAULT_CLIENT_KEY, REDIS_MODULE_OPTIONS } from './redis.constants';
+import {
+  REDIS_CLIENT,
+  REDIS_DEFAULT_CLIENT_KEY,
+  REDIS_MODULE_OPTIONS,
+} from './redis.constants';
 import { RedisModuleAsyncOptions, RedisModuleOptions } from './redis.interface';
 
 @Module({})
 export class RedisModule implements OnModuleDestroy {
-  static register(options: RedisModuleOptions | RedisModuleOptions[]): DynamicModule {
+  static register(
+    options: RedisModuleOptions | RedisModuleOptions[],
+  ): DynamicModule {
     const clientProvider = this.createAysncProvider();
     return {
       module: RedisModule,
@@ -64,7 +75,8 @@ export class RedisModule implements OnModuleDestroy {
    * 创建IORedis实例
    */
   private static createClient(options: RedisModuleOptions): Redis | Cluster {
-    const { onClientReady, url, cluster, clusterOptions, nodes, ...opts } = options;
+    const { onClientReady, url, cluster, clusterOptions, nodes, ...opts } =
+      options;
     let client = null;
     // check url
     if (!isEmpty(url)) {

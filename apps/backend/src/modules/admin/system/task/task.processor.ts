@@ -1,6 +1,6 @@
 import { OnQueueCompleted, Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { SYS_TASK_QUEUE_NAME } from '../../admin.constants';
+import { SYS_TASK_QUEUE_NAME } from '/@/common/constants/task';
 import { SysLogService } from '../log/log.service';
 import { SysTaskService } from './task.service';
 
@@ -12,7 +12,10 @@ export interface ExecuteData {
 
 @Processor(SYS_TASK_QUEUE_NAME)
 export class SysTaskConsumer {
-  constructor(private taskService: SysTaskService, private taskLogService: SysLogService) {}
+  constructor(
+    private taskService: SysTaskService,
+    private taskLogService: SysLogService,
+  ) {}
 
   @Process()
   async handle(job: Job<ExecuteData>): Promise<void> {

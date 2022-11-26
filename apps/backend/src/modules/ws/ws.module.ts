@@ -3,8 +3,8 @@ import { AdminWSGateway } from './admin-ws.gateway';
 import { AuthService } from './auth.service';
 import { AdminWSService } from './admin-ws.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import SysUserRole from '@/entities/admin/sys-user-role.entity';
-import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
+import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
+import { SysRoleMenu } from '@/entities/admin/sys-role-menu.entity';
 
 const providers = [AdminWSGateway, AuthService, AdminWSService];
 

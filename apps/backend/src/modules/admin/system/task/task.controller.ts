@@ -1,15 +1,24 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
 import { PageResult } from '@/common/class/res.class';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysTask from '@/entities/admin/sys-task.entity';
-import { ADMIN_PREFIX } from '../../admin.constants';
-import { TaskCheckIdDto, TaskCreateDto, TaskUpdateDto, TaskPageDto } from './task.dto';
+import { SysTask } from '@/entities/admin/sys-task.entity';
+import {
+  TaskCheckIdDto,
+  TaskCreateDto,
+  TaskUpdateDto,
+  TaskPageDto,
+} from './task.dto';
 import { SysTaskService } from './task.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ErrorEnum } from '@/common/constants/error';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('任务调度模块')
 @ApiExtraModels(SysTask)
 @Controller('task')
@@ -53,7 +62,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.once(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 
@@ -64,7 +73,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.stop(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 
@@ -75,7 +84,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.start(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 
@@ -86,7 +95,7 @@ export class SysTaskController {
     if (!isEmpty(task)) {
       await this.taskService.delete(task);
     } else {
-      throw new ApiException(10020);
+      throw new ApiException(ErrorEnum.CODE_1304);
     }
   }
 }

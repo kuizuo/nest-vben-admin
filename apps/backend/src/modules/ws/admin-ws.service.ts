@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
-import SysUserRole from '@/entities/admin/sys-user-role.entity';
+import { SysRoleMenu } from '@/entities/admin/sys-role-menu.entity';
+import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
 import { RemoteSocket } from 'socket.io';
 import { EVENT_UPDATE_MENU } from './ws.event';
@@ -43,7 +43,9 @@ export class AdminWSService {
   /**
    * 根据uid数组过滤出socketid
    */
-  async filterSocketIdByUidArr(uids: number[]): Promise<RemoteSocket<unknown, any>[]> {
+  async filterSocketIdByUidArr(
+    uids: number[],
+  ): Promise<RemoteSocket<unknown, any>[]> {
     const onlineSockets = await this.getOnlineSockets();
     const sockets = onlineSockets.filter((socket) => {
       const token = socket.handshake.query?.token as string;
@@ -63,7 +65,9 @@ export class AdminWSService {
     const sockets = await this.filterSocketIdByUidArr(userIds);
     if (sockets) {
       // socket emit event
-      this.adminWsGateWay.socketServer.to(sockets.map((n) => n.id)).emit(EVENT_UPDATE_MENU);
+      this.adminWsGateWay.socketServer
+        .to(sockets.map((n) => n.id))
+        .emit(EVENT_UPDATE_MENU);
     }
   }
 

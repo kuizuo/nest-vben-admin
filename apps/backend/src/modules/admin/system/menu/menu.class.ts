@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import SysMenu from '@/entities/admin/sys-menu.entity';
+import { SysMenu } from '@/entities/admin/sys-menu.entity';
 
 export class MenuItemAndParentInfoResult {
   @ApiProperty({ description: '菜单' })

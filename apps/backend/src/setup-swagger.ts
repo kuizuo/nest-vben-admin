@@ -1,11 +1,14 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PageResult, ResOp } from './common/class/res.class';
-import { BaseEntity } from './entities/base.entity';
+import { AbstractEntity } from './common/abstract.entity';
 import { AppsModule } from './modules/apps/apps.module';
 import { AppConfigService } from './shared/services/app/app-config.service';
 
-export function setupSwagger(app: INestApplication, config: AppConfigService): void {
+export function setupSwagger(
+  app: INestApplication,
+  config: AppConfigService,
+): void {
   const { enable, path } = config.swaggerConfig;
   if (!enable) return;
 
@@ -19,7 +22,7 @@ export function setupSwagger(app: INestApplication, config: AppConfigService): v
     .build();
   const document = SwaggerModule.createDocument(app, options, {
     ignoreGlobalPrefix: false,
-    extraModels: [BaseEntity, ResOp, PageResult],
+    extraModels: [AbstractEntity, ResOp, PageResult],
   });
 
   SwaggerModule.setup(path, app, document);
@@ -33,7 +36,7 @@ export function setupSwagger(app: INestApplication, config: AppConfigService): v
   const document_apps = SwaggerModule.createDocument(app, options_apps, {
     include: [AppsModule],
     ignoreGlobalPrefix: false,
-    extraModels: [BaseEntity, ResOp, PageResult],
+    extraModels: [AbstractEntity, ResOp, PageResult],
   });
   SwaggerModule.setup(path + '/apps', app, document_apps);
 }

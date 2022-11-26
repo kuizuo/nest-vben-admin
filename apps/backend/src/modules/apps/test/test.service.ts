@@ -5,6 +5,7 @@ import Test from '@/entities/apps/test.entity';
 import { TestCreateDto, TestUpdateDto, TestPageDto } from './test.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { PageResult } from '@/common/class/res.class';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class TestService {
@@ -31,7 +32,7 @@ export class TestService {
 
   async detail(id: number): Promise<Test> {
     const item = await this.testRepository.findOneBy({ id });
-    if (!item) throw new ApiException(20004);
+    if (!item) throw new ApiException(ErrorEnum.CODE_2004);
 
     return item;
   }

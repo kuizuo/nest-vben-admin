@@ -8,7 +8,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
+import {
+  NestFastifyApplication,
+  FastifyAdapter,
+} from '@nestjs/platform-fastify';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { setupSwagger } from './setup-swagger';
 import { AppConfigService } from './shared/services/app/app-config.service';
@@ -18,9 +21,13 @@ import { TransformInterceptor as TransformInterceptor } from './common/intercept
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 
 export async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+    {
+      bufferLogs: true,
+    },
+  );
 
   // app config service
   const configService = app.get(AppConfigService);

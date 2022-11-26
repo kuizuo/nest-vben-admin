@@ -12,12 +12,12 @@ import {
   saveFile,
 } from '@/utils/file';
 import { StorageService } from '../tools/storage/storage.service';
-import { AdminUser } from '@/common/decorators/admin-user.decorator';
-import { IAdminUser } from '/@/interfaces/auth';
+import { AuthUser } from '@/common/decorators/auth-user.decorator';
+import { IAuthUser } from '/@/interfaces/auth';
 import { FileUploadDto } from './upload.dto';
 
 @ApiTags('上传模块')
-@Controller('upload')
+@Controller()
 export class UploadController {
   constructor(private storageService: StorageService) {}
 
@@ -26,7 +26,7 @@ export class UploadController {
   @ApiBody({
     type: FileUploadDto,
   })
-  async upload(@Req() req: FastifyRequest, @AdminUser() user: IAdminUser) {
+  async upload(@Req() req: FastifyRequest, @AuthUser() user: IAuthUser) {
     const file: MultipartFile = await req.file();
     const fileName = file.filename;
     const size = getSize(file.file.bytesRead);

@@ -16,7 +16,9 @@ import { EVENT_OFFLINE, EVENT_ONLINE } from './ws.event';
   path: '/' + process.env.WS_PATH,
   namespace: '/admin',
 })
-export class AdminWSGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+export class AdminWSGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   @WebSocketServer()
   private wss: Server;
 

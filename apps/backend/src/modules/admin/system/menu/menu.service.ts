@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { concat, includes, isEmpty, uniq } from 'lodash';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysMenu from '@/entities/admin/sys-menu.entity';
+import { SysMenu } from '@/entities/admin/sys-menu.entity';
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';
@@ -10,6 +10,7 @@ import { MenuCreateDto, MenuSearchDto } from './menu.dto';
 import { RedisService } from '@/shared/services/redis.service';
 import { generatorMenu, generatorRouters } from '@/common/permission';
 import { AppGeneralService } from '/@/shared/services/app/app-general.service';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class SysMenuService {
@@ -57,7 +58,11 @@ export class SysMenuService {
     } else {
       menus = await this.menuRepository
         .createQueryBuilder('menu')
-        .innerJoinAndSelect('sys_role_menu', 'role_menu', 'menu.id = role_menu.menu_id')
+        .innerJoinAndSelect(
+          'sys_role_menu',
+          'role_menu',
+          'menu.id = role_menu.menu_id',
+        )
         .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
         .orderBy('menu.order_no', 'ASC')
         .getMany();
@@ -73,16 +78,16 @@ export class SysMenuService {
   async check(dto: MenuCreateDto): Promise<void | never> {
     if (dto.type === 2 && !dto.parent) {
       // 无法直接创建权限，必须有parent
-      throw new ApiException(10005);
+      throw new ApiException(ErrorEnum.CODE_1005);
     }
     if (dto.type === 1 && dto.parent) {
       const parent = await this.getMenuItemInfo(dto.parent);
       if (isEmpty(parent)) {
-        throw new ApiException(10014);
+        throw new ApiException(ErrorEnum.CODE_1014);
       }
       if (parent && parent.type === 1) {
         // 当前新增为菜单但父节点也为菜单时为非法操作
-        throw new ApiException(10006);
+        throw new ApiException(ErrorEnum.CODE_1006);
       }
     }
   }
@@ -120,7 +125,9 @@ export class SysMenuService {
   /**
    * 获取某个菜单以及关联的父菜单的信息
    */
-  async getMenuItemAndParentInfo(mid: number): Promise<MenuItemAndParentInfoResult> {
+  async getMenuItemAndParentInfo(
+    mid: number,
+  ): Promise<MenuItemAndParentInfoResult> {
     const menu = await this.menuRepository.findOneBy({ id: mid });
     let parentMenu: SysMenu | undefined = undefined;
     if (menu && menu.parent) {
@@ -155,7 +162,11 @@ export class SysMenuService {
       }
       result = await this.menuRepository
         .createQueryBuilder('menu')
-        .innerJoinAndSelect('sys_role_menu', 'role_menu', 'menu.id = role_menu.menu_id')
+        .innerJoinAndSelect(
+          'sys_role_menu',
+          'role_menu',
+          'menu.id = role_menu.menu_id',
+        )
         .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
         .andWhere('menu.type IN (1,2)')
         .andWhere('menu.permission IS NOT NULL')
@@ -187,7 +198,9 @@ export class SysMenuService {
     const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
     if (online) {
       // 判断是否在线
-      await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
+      await this.redisService
+        .getRedis()
+        .set(`admin:perms:${uid}`, JSON.stringify(perms));
     }
   }
 
@@ -195,13 +208,17 @@ export class SysMenuService {
    * 刷新所有在线用户的权限
    */
   async refreshOnlineUserPerms(): Promise<void> {
-    const onlineUserIds: string[] = await this.redisService.getRedis().keys('admin:token:*');
+    const onlineUserIds: string[] = await this.redisService
+      .getRedis()
+      .keys('admin:token:*');
     if (onlineUserIds && onlineUserIds.length > 0) {
       for (let i = 0; i < onlineUserIds.length; i++) {
         const uid = onlineUserIds[i].split('admin:token:')[1];
         if (!uid) continue;
         const perms = await this.getPerms(parseInt(uid));
-        await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
+        await this.redisService
+          .getRedis()
+          .set(`admin:perms:${uid}`, JSON.stringify(perms));
       }
     }
   }

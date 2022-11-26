@@ -1,9 +1,9 @@
 import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity } from '../base.entity';
+import { AbstractEntity } from '../../common/abstract.entity';
 
 @Entity({ name: 'sys_user' })
-export default class SysUser extends BaseEntity {
+export class SysUser extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

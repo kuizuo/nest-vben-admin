@@ -58,10 +58,18 @@ function filterAsyncRoutes(menus, parentRoute) {
         realRoute.redirect = childRoutes[0].path;
         realRoute.children = childRoutes;
       }
-    } else if (parentRoute && parentRoute.id === menu.parent && menu.type === 1) {
+    } else if (
+      parentRoute &&
+      parentRoute.id === menu.parent &&
+      menu.type === 1
+    ) {
       // 子菜单
       realRoute = createRoute(menu, false);
-    } else if (parentRoute && parentRoute.id === menu.parent && menu.type === 0) {
+    } else if (
+      parentRoute &&
+      parentRoute.id === menu.parent &&
+      menu.type === 0
+    ) {
       // 如果还是目录，继续递归
       const childRoute = filterAsyncRoutes(menus, menu);
       realRoute = createRoute(menu, false);

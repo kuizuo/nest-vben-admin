@@ -2,10 +2,10 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { difference, filter, includes, isEmpty, map } from 'lodash';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
-import SysRole from '@/entities/admin/sys-role.entity';
-import SysMenu from '@/entities/admin/sys-menu.entity';
-import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
-import SysUserRole from '@/entities/admin/sys-user-role.entity';
+import { SysRole } from '@/entities/admin/sys-role.entity';
+import { SysMenu } from '@/entities/admin/sys-menu.entity';
+import { SysRoleMenu } from '@/entities/admin/sys-role-menu.entity';
+import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { RoleCreateDto, RoleUpdateDto } from './role.dto';
 import { RolePageDto } from './role.dto';
 import { PageResult } from '@/common/class/res.class';
@@ -17,8 +17,10 @@ export class SysRoleService {
   constructor(
     @InjectRepository(SysRole) private roleRepository: Repository<SysRole>,
     @InjectRepository(SysMenu) private menuRepository: Repository<SysMenu>,
-    @InjectRepository(SysRoleMenu) private roleMenuRepository: Repository<SysRoleMenu>,
-    @InjectRepository(SysUserRole) private userRoleRepository: Repository<SysUserRole>,
+    @InjectRepository(SysRoleMenu)
+    private roleMenuRepository: Repository<SysRoleMenu>,
+    @InjectRepository(SysUserRole)
+    private userRoleRepository: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly configService: AppConfigService,
     private readonly generalService: AppGeneralService,

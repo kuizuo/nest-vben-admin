@@ -4,16 +4,16 @@ import { FastifyRequest } from 'fastify';
 import { isEmpty } from 'lodash';
 import { JwtService } from '@nestjs/jwt';
 import { ApiException } from '@/common/exceptions/api.exception';
-import {
-  ADMIN_PREFIX,
-  ADMIN_USER,
-  PERMISSION_OPTIONAL_KEY_METADATA,
-  AUTHORIZE_KEY_METADATA,
-  API_TOKEN_KEY_METADATA,
-} from '@/modules/admin/admin.constants';
-import { SYS_API_TOKEN } from '@/common/contants/param-config.contants';
+import { SYS_API_TOKEN } from '@/common/constants/param-config';
 import { LoginService } from '@/modules/admin/login/login.service';
 import { SysParamConfigService } from '@/modules/admin/system/param-config/param-config.service';
+import { ErrorEnum } from '../constants/error';
+import {
+  SKIP_AUTH_DECORATOR_KEY,
+  API_TOKEN_DECORATOR_KEY,
+  ALLOW_ANON_PERMISSION_DECORATOR_KEY,
+} from '/@/common/decorators';
+import { AppConfigService } from '@/shared/services/app/app-config.service';
 
 /**
  * admin perm check guard
@@ -24,82 +24,94 @@ export class AuthGuard implements CanActivate {
     private reflector: Reflector,
     private jwtService: JwtService,
     private loginService: LoginService,
+    private configService: AppConfigService,
     private paramConfigService: SysParamConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // 检测是否是开放类型的，例如获取验证码类型的接口不需要校验，可以加入@Authorize可自动放过
-    const authorize = this.reflector.getAllAndOverride<boolean>(AUTHORIZE_KEY_METADATA, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    if (authorize) {
-      return true;
-    }
+    // 检测是否是开放类型的，例如获取验证码类型的接口不需要校验，可以加入@SkipAuth可自动放过
+    const isSkipAuth = this.reflector.getAllAndOverride<boolean>(
+      SKIP_AUTH_DECORATOR_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    if (isSkipAuth) return true;
 
     const request = context.switchToHttp().getRequest<FastifyRequest>();
-    const url = request.url;
-    const path = url.split('?')[0];
+
     const token = request.headers['authorization']?.replace('Bearer ', '');
     if (isEmpty(token)) {
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
 
     // 检查是否开启API TOKEN授权，当开启时，只有带API TOKEN可以正常访问
-    const apiToken = this.reflector.getAllAndOverride<boolean>(API_TOKEN_KEY_METADATA, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const apiToken = this.reflector.getAllAndOverride<boolean>(
+      API_TOKEN_DECORATOR_KEY,
+      [context.getHandler(), context.getClass()],
+    );
     if (apiToken) {
-      const result = await this.paramConfigService.findValueByKey(SYS_API_TOKEN);
+      const result = await this.paramConfigService.findValueByKey(
+        SYS_API_TOKEN,
+      );
       if (token === result) {
         return true;
       } else {
-        throw new ApiException(11003);
+        throw new ApiException(ErrorEnum.CODE_1103);
       }
     }
 
     try {
       // 挂载对象到当前请求上
-      request[ADMIN_USER] = this.jwtService.verify(token);
+      request.authUser = this.jwtService.verify(token);
     } catch (e) {
       // 无法通过token校验
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
-    if (isEmpty(request[ADMIN_USER])) {
-      throw new ApiException(11001);
+    if (isEmpty(request.authUser)) {
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
-    const pv = await this.loginService.getRedisPasswordVersionById(request[ADMIN_USER].uid);
-    if (pv !== `${request[ADMIN_USER].pv}`) {
+    const pv = await this.loginService.getRedisPasswordVersionById(
+      request.authUser.uid,
+    );
+    if (pv !== `${request.authUser.pv}`) {
       // 密码版本不一致，登录期间已更改过密码
-      throw new ApiException(11002);
+      throw new ApiException(ErrorEnum.CODE_1102);
     }
-    const redisToken = await this.loginService.getRedisTokenById(request[ADMIN_USER].uid);
+    const redisToken = await this.loginService.getRedisTokenById(
+      request.authUser.uid,
+    );
     if (token !== redisToken) {
       // 与redis保存不一致
-      throw new ApiException(11002);
+      throw new ApiException(ErrorEnum.CODE_1102);
     }
     // 注册该注解，Api则放行检测
     const notNeedPerm = this.reflector.get<boolean>(
-      PERMISSION_OPTIONAL_KEY_METADATA,
+      ALLOW_ANON_PERMISSION_DECORATOR_KEY,
       context.getHandler(),
     );
     // Token校验身份通过，判断是否需要权限的url，不需要权限则pass
     if (notNeedPerm) {
       return true;
     }
-    const perms: string = await this.loginService.getRedisPermsById(request[ADMIN_USER].uid);
+    const perms: string = await this.loginService.getRedisPermsById(
+      request.authUser.uid,
+    );
     // 安全判空
     if (isEmpty(perms)) {
-      throw new ApiException(11001);
+      throw new ApiException(ErrorEnum.CODE_1101);
     }
     // 将sys:admin:user等转换成sys/admin/user
-    const permArray: string[] = (JSON.parse(perms) as string[]).map((e) => {
-      return e.replace(/:/g, '/');
-    });
+    const permArray: string[] = (JSON.parse(perms) as string[]).map((e) =>
+      e.replace(/:/g, '/'),
+    );
+
+    const prefixUrl = `/${this.configService.appConfig.globalPrefix}`;
+    const reg = new RegExp(`^${prefixUrl}/`);
+    const path = request.routerPath.replace(reg, '');
+
     // 遍历权限是否包含该url，不包含则无访问权限
-    if (!permArray.includes(path.replace(`/${process.env.PREFIX}/`, ''))) {
-      throw new ApiException(11003);
+    if (!permArray.includes(path)) {
+      throw new ApiException(ErrorEnum.CODE_1103);
     }
     // pass
     return true;

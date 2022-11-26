@@ -1,22 +1,29 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { ADMIN_PREFIX } from '@/modules/admin/admin.constants';
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolePageDto } from './role.dto';
 import { PageResult } from '@/common/class/res.class';
-import SysRole from '@/entities/admin/sys-role.entity';
+import { SysRole } from '@/entities/admin/sys-role.entity';
 import { SysRoleService } from './role.service';
-import { RoleCreateDto, RoleDeleteDto, RoleInfoDto, RoleUpdateDto } from './role.dto';
+import {
+  RoleCreateDto,
+  RoleDeleteDto,
+  RoleInfoDto,
+  RoleUpdateDto,
+} from './role.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { RoleInfo } from './role.class';
 import { SysMenuService } from '../menu/menu.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ErrorEnum } from '@/common/constants/error';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('角色模块')
 @ApiExtraModels(RoleInfo)
 @Controller('role')
 export class SysRoleController {
-  constructor(private roleService: SysRoleService, private menuService: SysMenuService) {}
+  constructor(
+    private roleService: SysRoleService,
+    private menuService: SysMenuService,
+  ) {}
 
   @ApiOperation({ summary: '获取角色列表' })
   @ApiResult({ type: [SysRole] })
@@ -57,7 +64,7 @@ export class SysRoleController {
   async delete(@Body() dto: RoleDeleteDto): Promise<void> {
     const count = await this.roleService.countUserIdByRole(dto.ids);
     if (count > 0) {
-      throw new ApiException(10008);
+      throw new ApiException(ErrorEnum.CODE_1008);
     }
     await this.roleService.delete(dto.ids);
     await this.menuService.refreshOnlineUserPerms();

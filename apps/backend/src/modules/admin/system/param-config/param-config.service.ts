@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysConfig from '@/entities/admin/sys-config.entity';
+import { SysConfig } from '@/entities/admin/sys-config.entity';
 import { Repository } from 'typeorm';
 import { ParamConfigCreateDto, ParamConfigUpdateDto } from './param-config.dto';
+import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
 export class SysParamConfigService {
@@ -66,12 +67,15 @@ export class SysParamConfigService {
   async isExistKey(key: string): Promise<void | never> {
     const result = await this.configRepository.findOneBy({ key });
     if (result) {
-      throw new ApiException(10021);
+      throw new ApiException(ErrorEnum.CODE_1021);
     }
   }
 
   async findValueByKey(key: string): Promise<string | null> {
-    const result = await this.configRepository.findOne({ where: { key }, select: ['value'] });
+    const result = await this.configRepository.findOne({
+      where: { key },
+      select: ['value'],
+    });
     if (result) {
       return result.value;
     }

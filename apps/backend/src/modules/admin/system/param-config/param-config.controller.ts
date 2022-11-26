@@ -1,9 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PageResult } from '@/common/class/res.class';
 import { PaginateDto } from '@/common/dto/page.dto';
-import SysConfig from '@/entities/admin/sys-config.entity';
-import { ADMIN_PREFIX } from '../../admin.constants';
+import { SysConfig } from '@/entities/admin/sys-config.entity';
 import {
   ParamConfigCreateDto,
   ParamConfigDeleteDto,
@@ -13,7 +12,6 @@ import {
 import { SysParamConfigService } from './param-config.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('参数配置模块')
 @Controller('param-config')
 export class SysParamConfigController {
@@ -23,7 +21,10 @@ export class SysParamConfigController {
   @ApiResult({ type: [SysConfig] })
   @Get('page')
   async page(@Query() dto: PaginateDto): Promise<PageResult<SysConfig>> {
-    const items = await this.paramConfigService.getConfigListByPage(dto.page - 1, dto.pageSize);
+    const items = await this.paramConfigService.getConfigListByPage(
+      dto.page - 1,
+      dto.pageSize,
+    );
     const count = await this.paramConfigService.countConfigList();
     return {
       items,

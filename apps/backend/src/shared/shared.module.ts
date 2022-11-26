@@ -1,7 +1,6 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HttpModule } from '@nestjs/axios';
 import { Global, CacheModule, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailService } from './services/email.service';
 import { QQService } from './services/qq.service';
@@ -32,19 +31,17 @@ const providers = [
     CacheModule.register(),
     // jwt
     JwtModule.registerAsync({
-      imports: [ConfigModule],
       useFactory: (configService: AppConfigService) => configService.jwtConfig,
       inject: [AppConfigService],
     }),
     // redis
     RedisModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: AppConfigService) => configService.redisConfig,
+      useFactory: (configService: AppConfigService) =>
+        configService.redisConfig,
       inject: [AppConfigService],
     }),
     // mailer
     MailerModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: (configService: AppConfigService) => ({
         transport: configService.mailerConfig,
       }),

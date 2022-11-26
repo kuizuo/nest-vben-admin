@@ -27,7 +27,7 @@ export class TestController {
 
   @Get('page')
   @ApiOperation({ summary: '分页获取Test列表' })
-  @ApiResult({ type: [Test], isPage: true })
+  @ApiResult({ type: [Test], struct: 'page' })
   async page(@Query() dto: TestPageDto): Promise<PageResult<Test>> {
     return await this.testService.page(dto);
   }

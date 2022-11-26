@@ -30,7 +30,7 @@ export class <%= Name %>Controller {
 
   @Get('page')
   @ApiOperation({ summary: '分页获取<%= Name %>列表' })
-  @ApiResult({ type: [<%= Name %>], isPage: true })
+  @ApiResult({ type: [<%= Name %>], struct: 'page' })
   async page(@Query() dto: <%= Name %>PageDto): Promise<PageResult<<%= Name %>>> {
     return await this.<%= name %>Service.page(dto);
   }
