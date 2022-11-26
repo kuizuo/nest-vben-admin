@@ -47,7 +47,6 @@ import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '/@/common/constants/
     ]),
     BullModule.registerQueueAsync({
       name: SYS_TASK_QUEUE_NAME,
-      imports: [ConfigModule],
       useFactory: (configService: AppConfigService) => ({
         redis: configService.redisConfig,
         prefix: SYS_TASK_QUEUE_PREFIX,
