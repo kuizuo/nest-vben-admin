@@ -1,7 +1,7 @@
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
-export abstract class BaseEntity {
+export abstract class AbstractEntity {
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   @ApiProperty()
   createdAt: Date;

@@ -3,7 +3,7 @@ import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swag
 import { isEmpty } from 'lodash';
 import { PageResult } from '@/common/class/res.class';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysTask from '@/entities/admin/sys-task.entity';
+import { SysTask } from '@/entities/admin/sys-task.entity';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { TaskCheckIdDto, TaskCreateDto, TaskUpdateDto, TaskPageDto } from './task.dto';
 import { SysTaskService } from './task.service';

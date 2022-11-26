@@ -7,7 +7,7 @@ import { Queue } from 'bull';
 import { isEmpty } from 'lodash';
 import { MISSION_KEY_METADATA } from '@/common/contants/decorator.contants';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysTask from '@/entities/admin/sys-task.entity';
+import { SysTask } from '@/entities/admin/sys-task.entity';
 import { AppLoggerService } from '@/shared/services/app/app-logger.service';
 import { RedisService } from '@/shared/services/redis.service';
 import { Like, Repository } from 'typeorm';

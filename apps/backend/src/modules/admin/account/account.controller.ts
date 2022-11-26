@@ -9,7 +9,7 @@ import { AccountInfo } from '../system/user/user.class';
 import { PasswordUpdateDto, UserInfoUpdateDto, UserExistDto } from '../system/user/user.dto';
 import { SysUserService } from '../system/user/user.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
-import SysMenu from '@/entities/admin/sys-menu.entity';
+import { SysMenu } from '@/entities/admin/sys-menu.entity';
 
 @ApiTags('账户模块')
 @ApiExtraModels(AccountInfo)

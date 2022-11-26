@@ -1,9 +1,9 @@
 import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity } from '../base.entity';
+import { AbstractEntity } from '../../common/abstract.entity';
 
 @Entity({ name: 'sys_menu' })
-export default class SysMenu extends BaseEntity {
+export class SysMenu extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

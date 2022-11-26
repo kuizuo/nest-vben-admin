@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { concat, includes, isEmpty, uniq } from 'lodash';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysMenu from '@/entities/admin/sys-menu.entity';
+import { SysMenu } from '@/entities/admin/sys-menu.entity';
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';

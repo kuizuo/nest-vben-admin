@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import SysRoleMenu from '@/entities/admin/sys-role-menu.entity';
-import SysUserRole from '@/entities/admin/sys-user-role.entity';
+import { SysRoleMenu } from '@/entities/admin/sys-role-menu.entity';
+import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
 import { RemoteSocket } from 'socket.io';
 import { EVENT_UPDATE_MENU } from './ws.event';

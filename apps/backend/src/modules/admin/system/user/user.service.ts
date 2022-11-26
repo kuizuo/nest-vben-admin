@@ -2,9 +2,9 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { findIndex, isEmpty } from 'lodash';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysUserRole from '@/entities/admin/sys-user-role.entity';
-import SysUser from '@/entities/admin/sys-user.entity';
-import SysRole from '@/entities/admin/sys-role.entity';
+import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
+import { SysUser } from '@/entities/admin/sys-user.entity';
+import { SysRole } from '@/entities/admin/sys-role.entity';
 import { UtilService } from '@/shared/services/util.service';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
 import {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysConfig from '@/entities/admin/sys-config.entity';
+import { SysConfig } from '@/entities/admin/sys-config.entity';
 import { Repository } from 'typeorm';
 import { ParamConfigCreateDto, ParamConfigUpdateDto } from './param-config.dto';
 

@@ -4,7 +4,7 @@ import { flattenDeep } from 'lodash';
 import { ADMIN_PREFIX, FORBIDDEN_OP_MENU_ID_INDEX } from '@/modules/admin/admin.constants';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiException } from '@/common/exceptions/api.exception';
-import SysMenu from '@/entities/admin/sys-menu.entity';
+import { SysMenu } from '@/entities/admin/sys-menu.entity';
 import { MenuItemAndParentInfoResult } from './menu.class';
 import {
   MenuCreateDto,
