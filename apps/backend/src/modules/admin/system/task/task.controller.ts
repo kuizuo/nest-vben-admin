@@ -4,13 +4,11 @@ import { isEmpty } from 'lodash';
 import { PageResult } from '@/common/class/res.class';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysTask } from '@/entities/admin/sys-task.entity';
-import { ADMIN_PREFIX } from '../../admin.constants';
 import { TaskCheckIdDto, TaskCreateDto, TaskUpdateDto, TaskPageDto } from './task.dto';
 import { SysTaskService } from './task.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('任务调度模块')
 @ApiExtraModels(SysTask)
 @Controller('task')

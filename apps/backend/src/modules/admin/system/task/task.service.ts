@@ -3,16 +3,16 @@ import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef, Reflector } from '@nestjs/core';
 import { UnknownElementException } from '@nestjs/core/errors/exceptions/unknown-element.exception';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Like, Repository } from 'typeorm';
 import { Queue } from 'bull';
 import { isEmpty } from 'lodash';
-import { MISSION_KEY_METADATA } from '@/common/constants/decorator';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysTask } from '@/entities/admin/sys-task.entity';
 import { AppLoggerService } from '@/shared/services/app/app-logger.service';
 import { RedisService } from '@/shared/services/redis.service';
-import { Like, Repository } from 'typeorm';
-import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '../../admin.constants';
+import { MISSION_DECORATOR_KEY } from '/@/mission/mission.decorator';
 import { TaskCreateDto, TaskPageDto, TaskUpdateDto } from './task.dto';
+import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '/@/common/constants/task';
 import { PageResult } from '@/common/class/res.class';
 import { ErrorEnum } from '@/common/constants/error';
 
@@ -276,11 +276,7 @@ export class SysTaskService implements OnModuleInit {
         throw new ApiException(ErrorEnum.CODE_1302);
       }
       // 检测是否有Mission注解
-      const hasMission = this.reflector.get<boolean>(
-        MISSION_KEY_METADATA,
-        // https://github.com/nestjs/nest/blob/e5f0815da52ce22e5077c461fe881e89c4b5d640/packages/core/helpers/context-utils.ts#L90
-        service.constructor,
-      );
+      const hasMission = this.reflector.get<boolean>(MISSION_DECORATOR_KEY, service.constructor);
       // 如果没有，则抛出错误
       if (!hasMission) {
         throw new ApiException(ErrorEnum.CODE_1301);

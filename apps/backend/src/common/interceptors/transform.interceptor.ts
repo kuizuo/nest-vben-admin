@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { FastifyReply } from 'fastify';
 import { map } from 'rxjs/operators';
-import { TRANSFORM_KEEP_KEY_METADATA } from '../constants/decorator';
+import { SKIP_TRANSFORM_DECORATOR_KEY } from '/@/common/decorators/skip-transform.decorator';
 import { ResOp } from '../class/res.class';
 
 /**
@@ -14,7 +14,10 @@ export class TransformInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        const keep = this.reflector.get<boolean>(TRANSFORM_KEEP_KEY_METADATA, context.getHandler());
+        const keep = this.reflector.get<boolean>(
+          SKIP_TRANSFORM_DECORATOR_KEY,
+          context.getHandler(),
+        );
         if (keep) {
           return data;
         } else {

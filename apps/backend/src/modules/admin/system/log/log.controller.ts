@@ -1,14 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PageResult } from '@/common/class/res.class';
-import { ADMIN_PREFIX } from '../../admin.constants';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { LoginLogInfo, TaskLogInfo } from './log.class';
 import { SysLogService } from './log.service';
 import { LoginLogPageDto, TaskLogPageDto } from './log.dto';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('日志模块')
 @ApiExtraModels(LoginLogInfo, TaskLogInfo)
 @Controller('log')

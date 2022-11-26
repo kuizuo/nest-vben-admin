@@ -1,7 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
-import { ADMIN_PREFIX, FORBIDDEN_OP_MENU_ID_INDEX } from '@/modules/admin/admin.constants';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysMenu } from '@/entities/admin/sys-menu.entity';
@@ -15,13 +14,13 @@ import {
 } from './menu.dto';
 import { SysMenuService } from './menu.service';
 import { ErrorEnum } from '@/common/constants/error';
+import { AppConfigService } from '@/shared/services/app/app-config.service';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('菜单权限模块')
 @ApiExtraModels(MenuItemAndParentInfoResult)
 @Controller('menu')
 export class SysMenuController {
-  constructor(private menuService: SysMenuService) {}
+  constructor(private menuService: SysMenuService, private configService: AppConfigService) {}
 
   @ApiOperation({ summary: '获取所有菜单列表' })
   @ApiResult({ type: [SysMenu] })
@@ -52,7 +51,7 @@ export class SysMenuController {
   @ApiOperation({ summary: '更新菜单或权限' })
   @Post('update')
   async update(@Body() dto: MenuUpdateDto): Promise<void> {
-    if (dto.id <= FORBIDDEN_OP_MENU_ID_INDEX) {
+    if (dto.id <= this.configService.appConfig.protectSysPermMenuMaxId) {
       // 系统内置功能不提供删除
       throw new ApiException(ErrorEnum.CODE_1016);
     }
@@ -76,7 +75,7 @@ export class SysMenuController {
   @Post('delete')
   async delete(@Body() dto: MenuDeleteDto): Promise<void> {
     // 68为内置init.sql中插入最后的索引编号
-    if (dto.id <= FORBIDDEN_OP_MENU_ID_INDEX) {
+    if (dto.id <= this.configService.appConfig.protectSysPermMenuMaxId) {
       // 系统内置功能不提供删除
       throw new ApiException(ErrorEnum.CODE_1016);
     }

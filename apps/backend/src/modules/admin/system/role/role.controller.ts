@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { ADMIN_PREFIX } from '@/modules/admin/admin.constants';
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolePageDto } from './role.dto';
 import { PageResult } from '@/common/class/res.class';
 import { SysRole } from '@/entities/admin/sys-role.entity';
@@ -12,7 +11,6 @@ import { SysMenuService } from '../menu/menu.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';
 
-@ApiSecurity(ADMIN_PREFIX)
 @ApiTags('角色模块')
 @ApiExtraModels(RoleInfo)
 @Controller('role')

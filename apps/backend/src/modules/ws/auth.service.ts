@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isEmpty } from 'lodash';
 import { SocketException } from 'src/common/exceptions/socket.exception';
-import { IAdminUser } from '/@/interfaces/auth';
+import { IAuthUser } from '/@/interfaces/auth';
 
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  checkAdminAuthToken(token: string | string[] | undefined): IAdminUser | never {
+  checkAdminAuthToken(token: string | string[] | undefined): IAuthUser | never {
     if (isEmpty(token)) {
       throw new SocketException(ErrorEnum.CODE_1101);
     }
