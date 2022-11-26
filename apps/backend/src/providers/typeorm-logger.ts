@@ -35,7 +35,12 @@ export class TypeORMLogger implements ITypeORMLogger {
     this.logger.error([`[FAILED QUERY]: ${sql}`, `[QUERY ERROR]: ${error}`]);
   }
 
-  logQuerySlow(time: number, query: string, parameters?: any[], _queryRunner?: QueryRunner) {
+  logQuerySlow(
+    time: number,
+    query: string,
+    parameters?: any[],
+    _queryRunner?: QueryRunner,
+  ) {
     const sql =
       query +
       (parameters && parameters.length
@@ -57,7 +62,11 @@ export class TypeORMLogger implements ITypeORMLogger {
     this.logger.log(message);
   }
 
-  log(level: 'warn' | 'info' | 'log', message: any, _queryRunner?: QueryRunner) {
+  log(
+    level: 'warn' | 'info' | 'log',
+    message: any,
+    _queryRunner?: QueryRunner,
+  ) {
     if (!this.isEnable(level)) return;
 
     switch (level) {

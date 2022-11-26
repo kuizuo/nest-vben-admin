@@ -17,8 +17,10 @@ export class SysRoleService {
   constructor(
     @InjectRepository(SysRole) private roleRepository: Repository<SysRole>,
     @InjectRepository(SysMenu) private menuRepository: Repository<SysMenu>,
-    @InjectRepository(SysRoleMenu) private roleMenuRepository: Repository<SysRoleMenu>,
-    @InjectRepository(SysUserRole) private userRoleRepository: Repository<SysUserRole>,
+    @InjectRepository(SysRoleMenu)
+    private roleMenuRepository: Repository<SysRoleMenu>,
+    @InjectRepository(SysUserRole)
+    private userRoleRepository: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly configService: AppConfigService,
     private readonly generalService: AppGeneralService,

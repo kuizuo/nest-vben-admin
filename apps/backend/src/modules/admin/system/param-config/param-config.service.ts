@@ -72,7 +72,10 @@ export class SysParamConfigService {
   }
 
   async findValueByKey(key: string): Promise<string | null> {
-    const result = await this.configRepository.findOne({ where: { key }, select: ['value'] });
+    const result = await this.configRepository.findOne({
+      where: { key },
+      select: ['value'],
+    });
     if (result) {
       return result.value;
     }

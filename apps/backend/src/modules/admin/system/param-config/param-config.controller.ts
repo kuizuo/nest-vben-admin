@@ -21,7 +21,10 @@ export class SysParamConfigController {
   @ApiResult({ type: [SysConfig] })
   @Get('page')
   async page(@Query() dto: PaginateDto): Promise<PageResult<SysConfig>> {
-    const items = await this.paramConfigService.getConfigListByPage(dto.page - 1, dto.pageSize);
+    const items = await this.paramConfigService.getConfigListByPage(
+      dto.page - 1,
+      dto.pageSize,
+    );
     const count = await this.paramConfigService.countConfigList();
     return {
       items,

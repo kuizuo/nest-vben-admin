@@ -43,7 +43,9 @@ export class AdminWSService {
   /**
    * 根据uid数组过滤出socketid
    */
-  async filterSocketIdByUidArr(uids: number[]): Promise<RemoteSocket<unknown, any>[]> {
+  async filterSocketIdByUidArr(
+    uids: number[],
+  ): Promise<RemoteSocket<unknown, any>[]> {
     const onlineSockets = await this.getOnlineSockets();
     const sockets = onlineSockets.filter((socket) => {
       const token = socket.handshake.query?.token as string;
@@ -63,7 +65,9 @@ export class AdminWSService {
     const sockets = await this.filterSocketIdByUidArr(userIds);
     if (sockets) {
       // socket emit event
-      this.adminWsGateWay.socketServer.to(sockets.map((n) => n.id)).emit(EVENT_UPDATE_MENU);
+      this.adminWsGateWay.socketServer
+        .to(sockets.map((n) => n.id))
+        .emit(EVENT_UPDATE_MENU);
     }
   }
 

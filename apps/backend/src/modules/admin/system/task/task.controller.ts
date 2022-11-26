@@ -1,10 +1,20 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
 import { PageResult } from '@/common/class/res.class';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysTask } from '@/entities/admin/sys-task.entity';
-import { TaskCheckIdDto, TaskCreateDto, TaskUpdateDto, TaskPageDto } from './task.dto';
+import {
+  TaskCheckIdDto,
+  TaskCreateDto,
+  TaskUpdateDto,
+  TaskPageDto,
+} from './task.dto';
 import { SysTaskService } from './task.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';

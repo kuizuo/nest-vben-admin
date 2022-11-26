@@ -32,7 +32,9 @@ export class AppConfigService {
       userPwdSalt: this.getString('USER_PWD_SALT'),
       userDefaultPwd: this.getString('USER_DEFAULT_PWD'),
       protectSysPermMenuMaxId: this.getNumber('PROTECT_SYS_PERMMENU_MAX_ID'),
-      protectSysDictionaryMaxId: this.getNumber('PROTECT_SYS_DICTIONARY_MAX_ID'),
+      protectSysDictionaryMaxId: this.getNumber(
+        'PROTECT_SYS_DICTIONARY_MAX_ID',
+      ),
     };
   }
 
@@ -70,7 +72,11 @@ export class AppConfigService {
     // webpack is not compatible with glob static paths (e.g., the entities property in TypeOrmModule).
     // support to hmr
     if (module.hot) {
-      const entityContext = require.context('./../../../entities', true, /\.entity\.ts$/);
+      const entityContext = require.context(
+        './../../../entities',
+        true,
+        /\.entity\.ts$/,
+      );
 
       // loading entity class
       entities = entityContext.keys().map((id) => {

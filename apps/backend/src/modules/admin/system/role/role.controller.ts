@@ -4,7 +4,12 @@ import { RolePageDto } from './role.dto';
 import { PageResult } from '@/common/class/res.class';
 import { SysRole } from '@/entities/admin/sys-role.entity';
 import { SysRoleService } from './role.service';
-import { RoleCreateDto, RoleDeleteDto, RoleInfoDto, RoleUpdateDto } from './role.dto';
+import {
+  RoleCreateDto,
+  RoleDeleteDto,
+  RoleInfoDto,
+  RoleUpdateDto,
+} from './role.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { RoleInfo } from './role.class';
 import { SysMenuService } from '../menu/menu.service';
@@ -15,7 +20,10 @@ import { ErrorEnum } from '@/common/constants/error';
 @ApiExtraModels(RoleInfo)
 @Controller('role')
 export class SysRoleController {
-  constructor(private roleService: SysRoleService, private menuService: SysMenuService) {}
+  constructor(
+    private roleService: SysRoleService,
+    private menuService: SysMenuService,
+  ) {}
 
   @ApiOperation({ summary: '获取角色列表' })
   @ApiResult({ type: [SysRole] })

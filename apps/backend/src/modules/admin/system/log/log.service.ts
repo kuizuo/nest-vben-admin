@@ -93,7 +93,12 @@ export class SysLogService {
   /**
    * 记录任务日志
    */
-  async recordTaskLog(tid: number, status: number, time?: number, err?: string): Promise<number> {
+  async recordTaskLog(
+    tid: number,
+    status: number,
+    time?: number,
+    err?: string,
+  ): Promise<number> {
     const result = await this.taskLogRepository.save({
       taskId: tid,
       status,

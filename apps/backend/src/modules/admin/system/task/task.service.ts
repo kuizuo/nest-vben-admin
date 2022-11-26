@@ -12,7 +12,10 @@ import { AppLoggerService } from '@/shared/services/app/app-logger.service';
 import { RedisService } from '@/shared/services/redis.service';
 import { MISSION_DECORATOR_KEY } from '/@/mission/mission.decorator';
 import { TaskCreateDto, TaskPageDto, TaskUpdateDto } from './task.dto';
-import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '/@/common/constants/task';
+import {
+  SYS_TASK_QUEUE_NAME,
+  SYS_TASK_QUEUE_PREFIX,
+} from '/@/common/constants/task';
 import { PageResult } from '@/common/class/res.class';
 import { ErrorEnum } from '@/common/constants/error';
 
@@ -263,7 +266,10 @@ export class SysTaskService implements OnModuleInit {
    * 检测service是否有注解定义
    * @param serviceName service
    */
-  async checkHasMissionMeta(nameOrInstance: string | unknown, exec: string): Promise<void | never> {
+  async checkHasMissionMeta(
+    nameOrInstance: string | unknown,
+    exec: string,
+  ): Promise<void | never> {
     try {
       let service: any;
       if (typeof nameOrInstance === 'string') {
@@ -276,7 +282,10 @@ export class SysTaskService implements OnModuleInit {
         throw new ApiException(ErrorEnum.CODE_1302);
       }
       // 检测是否有Mission注解
-      const hasMission = this.reflector.get<boolean>(MISSION_DECORATOR_KEY, service.constructor);
+      const hasMission = this.reflector.get<boolean>(
+        MISSION_DECORATOR_KEY,
+        service.constructor,
+      );
       // 如果没有，则抛出错误
       if (!hasMission) {
         throw new ApiException(ErrorEnum.CODE_1301);

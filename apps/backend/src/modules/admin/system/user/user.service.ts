@@ -30,9 +30,12 @@ export class SysUserService {
   constructor(
     private readonly redisService: RedisService,
     private readonly paramConfigService: SysParamConfigService,
-    @InjectRepository(SysUser) private readonly userRepository: Repository<SysUser>,
-    @InjectRepository(SysRole) private readonly roleRepository: Repository<SysRole>,
-    @InjectRepository(SysUserRole) private userRoleRepository: Repository<SysUserRole>,
+    @InjectRepository(SysUser)
+    private readonly userRepository: Repository<SysUser>,
+    @InjectRepository(SysRole)
+    private readonly roleRepository: Repository<SysRole>,
+    @InjectRepository(SysUserRole)
+    private userRoleRepository: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly qqService: QQService,
     private readonly util: UtilService,
@@ -146,14 +149,17 @@ export class SysUserService {
 
       let password;
       if (!param.password) {
-        const initPassword = await this.paramConfigService.findValueByKey(SYS_USER_INITPASSWORD);
+        const initPassword = await this.paramConfigService.findValueByKey(
+          SYS_USER_INITPASSWORD,
+        );
         password = this.util.md5(`${initPassword ?? 'a123456'}${salt}`);
       } else {
         password = this.util.md5(`${param.password ?? 'a123456'}${salt}`);
       }
 
       const avatar = await this.qqService.getAvater(param.qq);
-      const nickName = param.nickName || (await this.qqService.getNickname(param.qq));
+      const nickName =
+        param.nickName || (await this.qqService.getNickname(param.qq));
       const u = manager.create(SysUser, {
         username: param.username,
         password,
@@ -290,7 +296,11 @@ export class SysUserService {
     const rootUserId = await this.findRootUserId();
     const result = await this.userRepository
       .createQueryBuilder('user')
-      .innerJoinAndSelect('sys_user_role', 'user_role', 'user_role.user_id = user.id')
+      .innerJoinAndSelect(
+        'sys_user_role',
+        'user_role',
+        'user_role.user_id = user.id',
+      )
       .innerJoinAndSelect('sys_role', 'role', 'role.id = user_role.role_id')
       // .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
       .where(where)
@@ -325,7 +335,10 @@ export class SysUserService {
       }
     });
 
-    const total = await this.userRepository.createQueryBuilder('user').where(where).getCount();
+    const total = await this.userRepository
+      .createQueryBuilder('user')
+      .where(where)
+      .getCount();
 
     return {
       items: dealResult,
@@ -366,9 +379,13 @@ export class SysUserService {
    */
   async upgradePasswordV(id: number): Promise<void> {
     // admin:passwordVersion:${param.id}
-    const v = await this.redisService.getRedis().get(`admin:passwordVersion:${id}`);
+    const v = await this.redisService
+      .getRedis()
+      .get(`admin:passwordVersion:${id}`);
     if (!isEmpty(v)) {
-      await this.redisService.getRedis().set(`admin:passwordVersion:${id}`, parseInt(v) + 1);
+      await this.redisService
+        .getRedis()
+        .set(`admin:passwordVersion:${id}`, parseInt(v) + 1);
     }
   }
 
@@ -387,7 +404,9 @@ export class SysUserService {
    * 注册
    */
   async register(param: RegisterInfoDto): Promise<void> {
-    const exists = await this.userRepository.findOneBy({ username: param.username });
+    const exists = await this.userRepository.findOneBy({
+      username: param.username,
+    });
     if (!isEmpty(exists)) throw new ApiException(ErrorEnum.CODE_1001);
 
     await this.entityManager.transaction(async (manager) => {

@@ -1,4 +1,8 @@
-import type { IPaginationInfo, IPaginationRespData, IListRespData } from './response';
+import type {
+  IPaginationInfo,
+  IPaginationRespData,
+  IListRespData,
+} from './response';
 
 declare global {
   interface Fn<T = any, R = T> {

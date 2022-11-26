@@ -21,7 +21,8 @@ import { MissionModule } from './mission/mission.module';
       ],
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (configService: AppConfigService) => configService.typeormConfig,
+      useFactory: (configService: AppConfigService) =>
+        configService.typeormConfig,
       inject: [AppConfigService],
     }),
     SharedModule,

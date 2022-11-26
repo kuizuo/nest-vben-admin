@@ -62,7 +62,10 @@ export class SysOnlineService {
   /**
    * 根据用户id列表查找最近登录信息和用户信息
    */
-  async findLastLoginInfoList(ids: number[], currentUid: number): Promise<OnlineUserInfo[]> {
+  async findLastLoginInfoList(
+    ids: number[],
+    currentUid: number,
+  ): Promise<OnlineUserInfo[]> {
     const rootUserId = await this.userService.findRootUserId();
     const result = await this.entityManager.query(
       `

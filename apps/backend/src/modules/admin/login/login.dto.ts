@@ -44,7 +44,9 @@ export class LoginInfoDto {
 
   @ApiProperty({ description: '密码', example: 'a123456' })
   @IsString()
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, { message: '密码格式不正确' })
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+    message: '密码格式不正确',
+  })
   @MinLength(6)
   password: string;
 
@@ -69,7 +71,9 @@ export class RegisterInfoDto {
 
   @ApiProperty({ description: '密码', example: 'a123456' })
   @IsString()
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, { message: '密码格式不正确' })
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+    message: '密码格式不正确',
+  })
   @MinLength(4)
   @MaxLength(16)
   password: string;
@@ -79,7 +83,11 @@ export class RegisterInfoDto {
   // @IsOptional()
   // phone: string;
 
-  @ApiProperty({ required: false, description: '邮箱', example: 'hi@example.com' })
+  @ApiProperty({
+    required: false,
+    description: '邮箱',
+    example: 'hi@example.com',
+  })
   @IsEmail()
   email: string;
 

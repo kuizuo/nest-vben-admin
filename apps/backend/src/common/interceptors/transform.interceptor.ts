@@ -11,7 +11,10 @@ import { ResOp } from '../class/res.class';
  */
 export class TransformInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
-  intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<any>,
+  ): Observable<any> {
     return next.handle().pipe(
       map((data) => {
         const keep = this.reflector.get<boolean>(

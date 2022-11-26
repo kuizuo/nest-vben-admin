@@ -12,7 +12,10 @@ export interface ExecuteData {
 
 @Processor(SYS_TASK_QUEUE_NAME)
 export class SysTaskConsumer {
-  constructor(private taskService: SysTaskService, private taskLogService: SysLogService) {}
+  constructor(
+    private taskService: SysTaskService,
+    private taskLogService: SysLogService,
+  ) {}
 
   @Process()
   async handle(job: Job<ExecuteData>): Promise<void> {

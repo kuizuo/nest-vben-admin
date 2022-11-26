@@ -1,4 +1,9 @@
-import { ConsoleLogger, ConsoleLoggerOptions, Injectable, LogLevel } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  ConsoleLoggerOptions,
+  Injectable,
+  LogLevel,
+} from '@nestjs/common';
 import { AppConfigService } from './app-config.service';
 import { Appender, configure, getLogger, levels } from 'log4js';
 
@@ -18,7 +23,9 @@ export class AppLoggerService extends ConsoleLogger {
     const level = configService.loggerConfig.level;
     const levelIndex = LogLevelOrder.findIndex((e) => e === level);
     if (levelIndex === -1) {
-      throw new Error('Invalid logger level, configurable level ' + LogLevelOrder.join(','));
+      throw new Error(
+        'Invalid logger level, configurable level ' + LogLevelOrder.join(','),
+      );
     }
 
     super(context, {

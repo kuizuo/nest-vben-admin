@@ -6,7 +6,9 @@ export class QQService {
   constructor(private readonly http: HttpService) {}
 
   async getNickname(qq: string | number) {
-    const { data } = await this.http.axiosRef.get('https://api.kuizuo.cn/api/qqnick?qq=' + qq);
+    const { data } = await this.http.axiosRef.get(
+      'https://api.kuizuo.cn/api/qqnick?qq=' + qq,
+    );
     return data;
   }
 

@@ -181,7 +181,9 @@ export class UserPasswordDto {
   id: number;
 
   @ApiProperty({ description: '更改后的密码' })
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, { message: '密码格式不正确' })
+  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+    message: '密码格式不正确',
+  })
   password: string;
 }
 

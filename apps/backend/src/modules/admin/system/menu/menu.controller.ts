@@ -1,5 +1,10 @@
 import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiException } from '@/common/exceptions/api.exception';
@@ -20,7 +25,10 @@ import { AppConfigService } from '@/shared/services/app/app-config.service';
 @ApiExtraModels(MenuItemAndParentInfoResult)
 @Controller('menu')
 export class SysMenuController {
-  constructor(private menuService: SysMenuService, private configService: AppConfigService) {}
+  constructor(
+    private menuService: SysMenuService,
+    private configService: AppConfigService,
+  ) {}
 
   @ApiOperation({ summary: '获取所有菜单列表' })
   @ApiResult({ type: [SysMenu] })

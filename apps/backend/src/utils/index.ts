@@ -7,7 +7,18 @@ export function getRanChar() {
 }
 
 export function getRanMobile() {
-  const prefixArray = ['130', '131', '132', '133', '135', '137', '138', '170', '187', '189'];
+  const prefixArray = [
+    '130',
+    '131',
+    '132',
+    '133',
+    '135',
+    '137',
+    '138',
+    '170',
+    '187',
+    '189',
+  ];
   const i = parseInt((10 * Math.random()).toString());
   let prefix = prefixArray[i];
   for (let j = 0; j < 8; j++) {

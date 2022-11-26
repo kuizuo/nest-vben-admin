@@ -30,7 +30,10 @@ import { SysParamConfigController } from './param-config/param-config.controller
 import { SysParamConfigService } from './param-config/param-config.service';
 import { SysServeController } from './serve/serve.controller';
 import { SysServeService } from './serve/serve.service';
-import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '/@/common/constants/task';
+import {
+  SYS_TASK_QUEUE_NAME,
+  SYS_TASK_QUEUE_PREFIX,
+} from '/@/common/constants/task';
 
 @Module({
   imports: [

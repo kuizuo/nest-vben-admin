@@ -5,7 +5,10 @@ import { AbstractEntity } from './common/abstract.entity';
 import { AppsModule } from './modules/apps/apps.module';
 import { AppConfigService } from './shared/services/app/app-config.service';
 
-export function setupSwagger(app: INestApplication, config: AppConfigService): void {
+export function setupSwagger(
+  app: INestApplication,
+  config: AppConfigService,
+): void {
   const { enable, path } = config.swaggerConfig;
   if (!enable) return;
 

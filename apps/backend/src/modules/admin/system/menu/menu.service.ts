@@ -58,7 +58,11 @@ export class SysMenuService {
     } else {
       menus = await this.menuRepository
         .createQueryBuilder('menu')
-        .innerJoinAndSelect('sys_role_menu', 'role_menu', 'menu.id = role_menu.menu_id')
+        .innerJoinAndSelect(
+          'sys_role_menu',
+          'role_menu',
+          'menu.id = role_menu.menu_id',
+        )
         .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
         .orderBy('menu.order_no', 'ASC')
         .getMany();
@@ -121,7 +125,9 @@ export class SysMenuService {
   /**
    * 获取某个菜单以及关联的父菜单的信息
    */
-  async getMenuItemAndParentInfo(mid: number): Promise<MenuItemAndParentInfoResult> {
+  async getMenuItemAndParentInfo(
+    mid: number,
+  ): Promise<MenuItemAndParentInfoResult> {
     const menu = await this.menuRepository.findOneBy({ id: mid });
     let parentMenu: SysMenu | undefined = undefined;
     if (menu && menu.parent) {
@@ -156,7 +162,11 @@ export class SysMenuService {
       }
       result = await this.menuRepository
         .createQueryBuilder('menu')
-        .innerJoinAndSelect('sys_role_menu', 'role_menu', 'menu.id = role_menu.menu_id')
+        .innerJoinAndSelect(
+          'sys_role_menu',
+          'role_menu',
+          'menu.id = role_menu.menu_id',
+        )
         .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
         .andWhere('menu.type IN (1,2)')
         .andWhere('menu.permission IS NOT NULL')
@@ -188,7 +198,9 @@ export class SysMenuService {
     const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
     if (online) {
       // 判断是否在线
-      await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
+      await this.redisService
+        .getRedis()
+        .set(`admin:perms:${uid}`, JSON.stringify(perms));
     }
   }
 
@@ -196,13 +208,17 @@ export class SysMenuService {
    * 刷新所有在线用户的权限
    */
   async refreshOnlineUserPerms(): Promise<void> {
-    const onlineUserIds: string[] = await this.redisService.getRedis().keys('admin:token:*');
+    const onlineUserIds: string[] = await this.redisService
+      .getRedis()
+      .keys('admin:token:*');
     if (onlineUserIds && onlineUserIds.length > 0) {
       for (let i = 0; i < onlineUserIds.length; i++) {
         const uid = onlineUserIds[i].split('admin:token:')[1];
         if (!uid) continue;
         const perms = await this.getPerms(parseInt(uid));
-        await this.redisService.getRedis().set(`admin:perms:${uid}`, JSON.stringify(perms));
+        await this.redisService
+          .getRedis()
+          .set(`admin:perms:${uid}`, JSON.stringify(perms));
       }
     }
   }

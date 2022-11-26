@@ -1,5 +1,10 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { AuthUser } from '@/common/decorators/auth-user.decorator';
 import { IAuthUser } from '/@/interfaces/auth';

@@ -1,10 +1,19 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthUser } from '@/common/decorators/auth-user.decorator';
 import { IAuthUser } from '/@/interfaces/auth';
 import { LoginService } from '../login/login.service';
 import { AccountInfo } from '../system/user/user.class';
-import { PasswordUpdateDto, UserInfoUpdateDto, UserExistDto } from '../system/user/user.dto';
+import {
+  PasswordUpdateDto,
+  UserInfoUpdateDto,
+  UserExistDto,
+} from '../system/user/user.dto';
 import { SysUserService } from '../system/user/user.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { SysMenu } from '@/entities/admin/sys-menu.entity';
@@ -14,7 +23,10 @@ import { AllowAnonPermission } from '@/common/decorators/allow-anon-permission.d
 @ApiExtraModels(AccountInfo)
 @Controller()
 export class AccountController {
-  constructor(private userService: SysUserService, private loginService: LoginService) {}
+  constructor(
+    private userService: SysUserService,
+    private loginService: LoginService,
+  ) {}
 
   @Get('info')
   @ApiOperation({ summary: '获取账户资料' })
@@ -27,14 +39,20 @@ export class AccountController {
   @Post('update')
   @ApiOperation({ summary: '更改账户资料' })
   @AllowAnonPermission()
-  async update(@Body() dto: UserInfoUpdateDto, @AuthUser() user: IAuthUser): Promise<void> {
+  async update(
+    @Body() dto: UserInfoUpdateDto,
+    @AuthUser() user: IAuthUser,
+  ): Promise<void> {
     await this.userService.updateAccountInfo(user.uid, dto);
   }
 
   @Post('password')
   @ApiOperation({ summary: '更改账户密码' })
   @AllowAnonPermission()
-  async password(@Body() dto: PasswordUpdateDto, @AuthUser() user: IAuthUser): Promise<void> {
+  async password(
+    @Body() dto: PasswordUpdateDto,
+    @AuthUser() user: IAuthUser,
+  ): Promise<void> {
     await this.userService.updatePassword(user.uid, dto);
   }
 

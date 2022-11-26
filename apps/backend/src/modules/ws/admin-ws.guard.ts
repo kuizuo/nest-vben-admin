@@ -9,7 +9,9 @@ import { AuthService } from './auth.service';
 export class AdminWsGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const client = context.switchToWs().getClient<Socket>();
     const token = client?.handshake?.query?.token;
     try {

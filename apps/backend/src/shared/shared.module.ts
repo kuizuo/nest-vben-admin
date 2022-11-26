@@ -1,7 +1,6 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HttpModule } from '@nestjs/axios';
 import { Global, CacheModule, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailService } from './services/email.service';
 import { QQService } from './services/qq.service';
@@ -37,7 +36,8 @@ const providers = [
     }),
     // redis
     RedisModule.registerAsync({
-      useFactory: (configService: AppConfigService) => configService.redisConfig,
+      useFactory: (configService: AppConfigService) =>
+        configService.redisConfig,
       inject: [AppConfigService],
     }),
     // mailer
