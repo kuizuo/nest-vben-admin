@@ -9,18 +9,18 @@ import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 export class <%= Name %>CreateDto {}
 
 export class <%= Name %>UpdateDto extends PartialType(<%= Name %>CreateDto) {
-  @ApiProperty({ description: 'ID', example: 1 })
-  @Type(() => Number)
+  @ApiProperty({ description: 'ID' })
   @IsInt()
   @Min(1)
+  @Type(() => Number)
   id: number;
 }
 
 export class <%= Name %>DeleteDto {
-  @ApiProperty({ description: 'ID', example: 1 })
-  @Type(() => Number)
+  @ApiProperty({ description: 'ID' })
   @IsInt()
   @Min(1)
+  @Type(() => Number)
   id: number;
 }
 

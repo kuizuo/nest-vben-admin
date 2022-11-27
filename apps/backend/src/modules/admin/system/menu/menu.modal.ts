@@ -5,6 +5,6 @@ export class MenuItemAndParentInfoResult {
   @ApiProperty({ description: '菜单' })
   menu?: SysMenu;
 
-  @ApiProperty({ description: '父级菜单', required: false })
+  @ApiProperty({ description: '父级菜单' })
   parentMenu?: SysMenu;
 }

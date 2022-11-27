@@ -1,9 +1,11 @@
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 import { EmailService } from '@/shared/services/email.service';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { EmailSendDto } from './email.dto';
 
-@ApiTags('邮箱模块')
+@ApiTags('System - 邮箱模块')
+@ApiSecurityAuth()
 @Controller('email')
 export class EmailController {
   constructor(private emailService: EmailService) {}

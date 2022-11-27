@@ -1,9 +1,9 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PageResult, ResOp } from './common/class/res.class';
 import { AbstractEntity } from './common/abstract.entity';
-import { AppsModule } from './modules/apps/apps.module';
 import { AppConfigService } from './shared/services/app/app-config.service';
+import { API_SECURITY_AUTH } from './common/decorators/swagger.decorator';
 
 export function setupSwagger(
   app: INestApplication,
@@ -13,30 +13,30 @@ export function setupSwagger(
   if (!enable) return;
 
   // 配置 Swagger 文档
-  const options = new DocumentBuilder()
-    // .addBearerAuth() // 开启 BearerAuth 授权认证
+  const documentBuilder = new DocumentBuilder()
     .setTitle(config.appConfig.name)
     .setDescription(`${config.appConfig.name} API 接口文档`)
     .setVersion('1.0')
-    .setLicense('MIT', 'https://github.com/kuizuo/kz-admin')
-    .build();
-  const document = SwaggerModule.createDocument(app, options, {
+    .setLicense('MIT', 'https://github.com/kuizuo/kz-admin');
+
+  // auth security
+  documentBuilder.addSecurity(API_SECURITY_AUTH, {
+    description: 'Auth',
+    type: 'apiKey',
+    in: 'header',
+    name: 'Authorization',
+  });
+
+  const document = SwaggerModule.createDocument(app, documentBuilder.build(), {
     ignoreGlobalPrefix: false,
     extraModels: [AbstractEntity, ResOp, PageResult],
   });
 
   SwaggerModule.setup(path, app, document);
 
-  // 业务 api文档
-  const options_apps = new DocumentBuilder()
-    .setTitle(`${config.appConfig.name} 业务 API document`)
-    .setDescription(`${config.appConfig.name} 业务 API document`)
-    .setVersion('1.0')
-    .build();
-  const document_apps = SwaggerModule.createDocument(app, options_apps, {
-    include: [AppsModule],
-    ignoreGlobalPrefix: false,
-    extraModels: [AbstractEntity, ResOp, PageResult],
-  });
-  SwaggerModule.setup(path + '/apps', app, document_apps);
+  // started log
+  const logger = new Logger('SwaggerModule');
+  logger.log(
+    `Document running on http://127.0.0.1:${config.appConfig.port}/${path}`,
+  );
 }

@@ -16,7 +16,7 @@ import {
   RegisterInfoDto,
   sendCodeDto,
 } from './login.dto';
-import { ImageCaptcha, LoginToken } from './login.class';
+import { ImageCaptcha, LoginToken } from './login.model';
 import { LoginService } from './login.service';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { UtilService } from '@/shared/services/util.service';
@@ -24,7 +24,7 @@ import { ResOp } from '@/common/class/res.class';
 import { SkipTransform } from '@/common/decorators/skip-transform.decorator';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 
-@ApiTags('登录模块')
+@ApiTags('System - 登录模块')
 @ApiExtraModels(ImageCaptcha, LoginToken)
 @Controller()
 export class LoginController {

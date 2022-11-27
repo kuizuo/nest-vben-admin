@@ -4,7 +4,7 @@ import { SysLoginLog } from '@/entities/admin/sys-login-log.entity';
 import { SysTaskLog } from '@/entities/admin/sys-task-log.entity';
 import { Between, Like, Repository } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
-import { LoginLogInfo, TaskLogInfo } from './log.class';
+import { LoginLogInfo, TaskLogInfo } from './log.modal';
 import { LoginLogPageDto } from './log.dto';
 import { SysUserService } from '../user/user.service';
 import { IpService } from '@/shared/services/ip.service';

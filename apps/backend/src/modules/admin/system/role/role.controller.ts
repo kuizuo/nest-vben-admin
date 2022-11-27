@@ -11,12 +11,14 @@ import {
   RoleUpdateDto,
 } from './role.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
-import { RoleInfo } from './role.class';
+import { RoleInfo } from './role.modal';
 import { SysMenuService } from '../menu/menu.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('角色模块')
+@ApiTags('System - 角色模块')
+@ApiSecurityAuth()
 @ApiExtraModels(RoleInfo)
 @Controller('role')
 export class SysRoleController {

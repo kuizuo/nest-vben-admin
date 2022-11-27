@@ -11,8 +11,10 @@ import { ServeStatInfo } from './serve.class';
 import { SysServeService } from './serve.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { AllowAnonPermission } from '@/common/decorators';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('服务监控')
+@ApiTags('System - 服务监控')
+@ApiSecurityAuth()
 @ApiExtraModels(ServeStatInfo)
 @Controller('serve')
 @UseInterceptors(CacheInterceptor)

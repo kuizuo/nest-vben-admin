@@ -1,11 +1,9 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import {
-  ApiExtraModels,
-  ApiOperation,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PageResult } from '@/common/class/res.class';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
+
 import {
   UserCreateDto,
   UserDeleteDto,
@@ -14,13 +12,13 @@ import {
   UserPasswordDto,
   UserUpdateDto,
 } from './user.dto';
-import { UserInfoPage, UserDetailInfo } from './user.class';
+import { UserInfoPage, UserDetailInfo } from './user.modal';
 import { SysUserService } from './user.service';
 import { SysMenuService } from '../menu/menu.service';
-import { ApiResult } from '@/common/decorators/api-result.decorator';
 
-@ApiTags('用户模块')
-@ApiExtraModels(UserInfoPage)
+@ApiTags('System - 用户模块')
+@ApiSecurityAuth()
+@ApiExtraModels(UserInfoPage, UserDetailInfo)
 @Controller('user')
 export class SysUserController {
   constructor(

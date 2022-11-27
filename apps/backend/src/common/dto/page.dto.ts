@@ -9,10 +9,11 @@ export class PaginateDto {
     default: 1,
     example: 1,
   })
-  @Type(() => Number)
+  @IsOptional()
   @IsInt()
   @Min(1)
-  readonly page: number = 1;
+  @Type(() => Number)
+  page?: number = 1;
 
   @ApiProperty({
     description: '当前页包含数量',
@@ -20,17 +21,19 @@ export class PaginateDto {
     default: 10,
     example: 10,
   })
-  @Type(() => Number)
+  @IsOptional()
   @IsInt()
   @Min(1)
-  readonly pageSize: number = 10;
+  @Min(100)
+  @Type(() => Number)
+  pageSize?: number = 10;
 
   @ApiProperty({
     description: '时间戳',
     required: false,
   })
-  @Type(() => Number)
-  @IsInt()
   @IsOptional()
-  readonly _t: number;
+  @IsInt()
+  @Type(() => Number)
+  _t?: number;
 }

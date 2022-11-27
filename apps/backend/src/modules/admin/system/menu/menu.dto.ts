@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsBoolean,
   IsIn,
   IsInt,
   IsOptional,
@@ -12,9 +11,6 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-/**
- * 增加菜单
- */
 export class MenuCreateDto {
   @ApiProperty({ description: '菜单类型' })
   @IsIn([0, 1, 2])
@@ -39,94 +35,89 @@ export class MenuCreateDto {
   @ValidateIf((o) => o.type !== 2)
   path: string;
 
-  @ApiProperty({ description: '是否外链', required: false, default: 1 })
-  @IsIn([0, 1])
+  @ApiProperty({ description: '是否外链', default: 1 })
   @ValidateIf((o) => o.type !== 2)
-  readonly external: number;
-
-  @ApiProperty({ description: '菜单是否显示', required: false, default: 1 })
   @IsIn([0, 1])
+  external: number;
+
+  @ApiProperty({ description: '菜单是否显示', default: 1 })
   @ValidateIf((o) => o.type !== 2)
-  readonly show: number;
-
-  @ApiProperty({ description: '开启页面缓存', required: false, default: 1 })
   @IsIn([0, 1])
+  show: number;
+
+  @ApiProperty({ description: '开启页面缓存', default: 1 })
   @ValidateIf((o) => o.type === 1)
-  readonly keepalive: number;
-
-  @ApiProperty({ description: '状态', required: false, default: 1 })
   @IsIn([0, 1])
-  readonly status: number;
+  keepalive: number;
 
-  @ApiProperty({ description: '菜单图标', required: false })
-  @IsString()
+  @ApiProperty({ description: '状态', default: 1 })
+  @IsIn([0, 1])
+  status: number;
+
+  @ApiProperty({ description: '菜单图标' })
   @IsOptional()
   @ValidateIf((o) => o.type !== 2)
-  icon: string;
+  @IsString()
+  icon?: string;
 
   @ApiProperty({ description: '对应权限' })
+  @ValidateIf((o) => o.type === 2)
   @IsString()
   @IsOptional()
-  @ValidateIf((o) => o.type === 2)
   permission: string;
 
   @ApiProperty({ description: '菜单路由路径或外链' })
   @ValidateIf((o) => o.type !== 2)
   @IsString()
   @IsOptional()
-  component: string;
+  component?: string;
 }
 
 export class MenuUpdateDto extends MenuCreateDto {
   @ApiProperty({ description: '更新的菜单ID' })
   @IsInt()
-  @Min(0)
+  @Min(1)
   id: number;
 }
 
-/**
- * 删除菜单
- */
 export class MenuDeleteDto {
   @ApiProperty({ description: '删除的菜单ID' })
   @IsInt()
-  @Min(0)
+  @Min(1)
+  @Type(() => Number)
   id: number;
 }
 
-/**
- * 查询菜单
- */
 export class MenuInfoDto {
   @ApiProperty({ description: '查询的菜单ID' })
   @IsInt()
-  @Min(0)
+  @Min(1)
   @Type(() => Number)
   menuId: number;
 }
 
 export class MenuSearchDto {
   @ApiProperty({ description: '菜单名称' })
-  @IsOptional()
   @IsString()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @ApiProperty({ description: '路由' })
   @IsString()
   @IsOptional()
-  path: string;
+  path?: string;
 
   @ApiProperty({ description: '权限标识' })
   @IsString()
   @IsOptional()
-  permission: string;
+  permission?: string;
 
   @ApiProperty({ description: '组件' })
   @IsString()
   @IsOptional()
-  component: string;
+  component?: string;
 
   @ApiProperty({ description: '状态' })
   @IsOptional()
-  status: number;
+  status?: number;
 }

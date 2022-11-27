@@ -8,7 +8,7 @@ import { EVENT_KICK } from '@/modules/ws/ws.event';
 import { EntityManager } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import { SysUserService } from '../user/user.service';
-import { OnlineUserInfo } from './online.class';
+import { OnlineUserInfo } from './online.modal';
 import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()

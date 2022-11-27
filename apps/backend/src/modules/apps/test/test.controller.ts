@@ -12,7 +12,7 @@ import Test from '@/entities/apps/test.entity';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { PageResult } from '@/common/class/res.class';
 
-@ApiTags('Test模块')
+@ApiTags('System - Test模块')
 @ApiExtraModels(Test)
 @Controller('test')
 export class TestController {

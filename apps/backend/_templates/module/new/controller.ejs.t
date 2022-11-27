@@ -15,7 +15,7 @@ import <%= Name %> from '@/entities/apps/<%= name %>.entity';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { PageResult } from '@/common/class/res.class';
 
-@ApiTags('<%= Name %>模块')
+@ApiTags('System - <%= Name %>模块')
 @ApiExtraModels(<%= Name %>)
 @Controller('<%= name %>')
 export class <%= Name %>Controller {
