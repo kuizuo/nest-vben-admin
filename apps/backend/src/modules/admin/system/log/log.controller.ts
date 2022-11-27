@@ -2,13 +2,13 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PageResult } from '@/common/class/res.class';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
-import { LoginLogInfo, TaskLogInfo } from './log.class';
+import { LoginLogInfo, TaskLogInfo } from './log.modal';
 import { SysLogService } from './log.service';
 import { LoginLogPageDto, TaskLogPageDto } from './log.dto';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('日志模块')
+@ApiTags('System - 日志模块')
 @ApiSecurityAuth()
 @ApiExtraModels(LoginLogInfo, TaskLogInfo)
 @Controller('log')

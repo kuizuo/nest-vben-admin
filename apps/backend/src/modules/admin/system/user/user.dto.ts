@@ -12,7 +12,6 @@ import {
   IsString,
   Matches,
   MaxLength,
-  Min,
   MinLength,
   ValidateIf,
 } from 'class-validator';
@@ -21,8 +20,8 @@ import { PaginateDto } from '@/common/dto/page.dto';
 
 export class UserInfoUpdateDto {
   @ApiProperty({ description: '用户呢称' })
-  @IsString()
   @IsOptional()
+  @IsString()
   nickName: string;
 
   @ApiProperty({ description: '用户邮箱' })
@@ -31,26 +30,26 @@ export class UserInfoUpdateDto {
   email: string;
 
   @ApiProperty({ description: '用户QQ' })
+  @IsOptional()
   @IsString()
   @Matches(/^[0-9]+$/)
   @MinLength(5)
   @MaxLength(11)
-  @IsOptional()
   qq: string;
 
   @ApiProperty({ description: '用户手机号' })
-  @IsString()
   @IsOptional()
+  @IsString()
   phone: string;
 
   @ApiProperty({ description: '用户头像' })
-  @IsString()
   @IsOptional()
+  @IsString()
   avatar: string;
 
   @ApiProperty({ description: '用户备注' })
-  @IsString()
   @IsOptional()
+  @IsString()
   remark: string;
 }
 
@@ -78,10 +77,10 @@ export class UserCreateDto {
   username: string;
 
   @ApiProperty({ description: '登录密码', example: 'a123456' })
+  @IsOptional()
   @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
     message: '密码必须包含数字、字母，长度为6-16',
   })
-  @IsOptional()
   password: string;
 
   @ApiProperty({ description: '归属角色', type: [Number] })
@@ -91,8 +90,8 @@ export class UserCreateDto {
   roles: number[];
 
   @ApiProperty({ description: '呢称', example: 'kz-admin' })
-  @IsString()
   @IsOptional()
+  @IsString()
   nickName: string;
 
   @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
@@ -101,22 +100,22 @@ export class UserCreateDto {
   email: string;
 
   @ApiProperty({ description: '手机号' })
-  @IsString()
   @IsOptional()
-  phone: string;
+  @IsString()
+  phone?: string;
 
   @ApiProperty({ description: 'QQ' })
+  @IsOptional()
   @IsString()
   @Matches(/^[1-9][0-9]{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
-  @IsOptional()
-  qq: string;
+  qq?: string;
 
   @ApiProperty({ description: '备注' })
-  @IsString()
   @IsOptional()
-  remark: string;
+  @IsString()
+  remark?: string;
 
   @ApiProperty({ description: '状态' })
   @IsIn([0, 1])
@@ -126,14 +125,12 @@ export class UserCreateDto {
 export class UserUpdateDto extends UserCreateDto {
   @ApiProperty({ description: '用户ID' })
   @IsInt()
-  @Min(0)
   id: number;
 }
 
 export class UserInfoDto {
   @ApiProperty({ description: '用户ID' })
   @IsInt()
-  @Min(0)
   @Type(() => Number)
   id: number;
 }
@@ -149,35 +146,36 @@ export class UserPageDto extends PaginateDto {
   @ApiProperty({ description: '用户名' })
   @IsOptional()
   @IsString()
-  username: string;
+  username?: string;
 
   @ApiProperty({ description: '昵称' })
-  @IsString()
   @IsOptional()
-  nickName: string;
+  @IsString()
+  nickName?: string;
 
   @ApiProperty({ description: 'qq' })
+  @IsOptional()
   @IsString()
   @Matches(/^[1-9][0-9]{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
-  @IsOptional()
-  qq: string;
+  qq?: string;
 
   @ApiProperty({ description: '邮箱' })
-  @IsString()
   @IsOptional()
-  email: string;
+  @IsString()
+  email?: string;
 
   @ApiProperty({ description: '状态' })
   @IsOptional()
-  status: number;
+  @IsIn([0, 1])
+  @Type(() => Number)
+  status?: number;
 }
 
 export class UserPasswordDto {
   @ApiProperty({ description: '管理员ID' })
   @IsInt()
-  @Min(0)
   id: number;
 
   @ApiProperty({ description: '更改后的密码' })

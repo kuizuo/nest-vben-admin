@@ -4,14 +4,14 @@ import { ApiException } from '@/common/exceptions/api.exception';
 import { AuthUser } from '@/common/decorators/auth-user.decorator';
 import { IAuthUser } from '/@/interfaces/auth';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
-import { OnlineUserInfo } from './online.class';
+import { OnlineUserInfo } from './online.modal';
 import { KickDto } from './online.dto';
 import { SysOnlineService } from './online.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('在线用户模块')
+@ApiTags('System - 在线用户模块')
 @ApiSecurityAuth()
 @ApiExtraModels(OnlineUserInfo)
 @Controller('online')

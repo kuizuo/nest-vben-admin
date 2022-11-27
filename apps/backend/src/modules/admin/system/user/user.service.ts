@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { findIndex, isEmpty } from 'lodash';
 import { ApiException } from '@/common/exceptions/api.exception';
@@ -15,7 +15,7 @@ import {
   UserInfoUpdateDto,
 } from './user.dto';
 import { RegisterInfoDto } from '../../login/login.dto';
-import { AccountInfo, UserInfoPage } from './user.class';
+import { AccountInfo, UserInfoPage } from './user.modal';
 import { RedisService } from '@/shared/services/redis.service';
 import { SysParamConfigService } from '../param-config/param-config.service';
 import { SYS_USER_INITPASSWORD } from '@/common/constants/param-config';

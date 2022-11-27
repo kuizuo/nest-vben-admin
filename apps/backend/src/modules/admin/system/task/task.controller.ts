@@ -15,7 +15,7 @@ import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ErrorEnum } from '@/common/constants/error';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('任务调度模块')
+@ApiTags('System - 任务调度模块')
 @ApiSecurityAuth()
 @ApiExtraModels(SysTask)
 @Controller('task')

@@ -73,10 +73,12 @@ export class TaskCreateDto {
   @ValidateIf((o) => !isEmpty(o.endTime))
   endTime: string;
 
-  @ApiPropertyOptional({ description: '限制执行次数，负数则无限制' })
-  @IsInt()
+  @ApiPropertyOptional({
+    description: '限制执行次数，负数则无限制',
+  })
   @IsOptional()
-  readonly limit: number = -1;
+  @IsInt()
+  limit?: number = -1;
 
   @ApiProperty({ description: 'cron表达式' })
   @Validate(IsCronExpression)
@@ -87,30 +89,28 @@ export class TaskCreateDto {
   @IsInt()
   @Min(100)
   @ValidateIf((o) => o.type === 1)
-  every: number;
+  every?: number;
 
   @ApiPropertyOptional({ description: '执行参数' })
-  @IsString()
   @IsOptional()
-  data: string;
+  @IsString()
+  data?: string;
 
   @ApiPropertyOptional({ description: '任务备注' })
   @IsOptional()
   @IsString()
-  remark: string;
+  remark?: string;
 }
 
 export class TaskUpdateDto extends TaskCreateDto {
   @ApiProperty({ description: '需要更新的任务ID' })
   @IsInt()
-  @Min(0)
   id: number;
 }
 
 export class TaskCheckIdDto {
   @ApiProperty({ description: '任务ID' })
   @IsInt()
-  @Min(0)
   @Type(() => Number)
   id: number;
 }
@@ -119,21 +119,21 @@ export class TaskPageDto extends PaginateDto {
   @ApiProperty({ description: '任务名称' })
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiProperty({ description: '调用的服务' })
-  @IsString()
   @IsOptional()
+  @IsString()
   @MinLength(1)
   service: string;
 
   @ApiProperty({ description: '任务类别：cron | interval' })
   @IsOptional()
   @IsIn([0, 1])
-  type: number;
+  type?: number;
 
   @ApiProperty({ description: '任务状态' })
   @IsOptional()
   @IsIn([0, 1])
-  status: number;
+  status?: number;
 }

@@ -14,25 +14,15 @@ import {
 } from 'class-validator';
 
 export class ImageCaptchaDto {
-  @ApiProperty({
-    required: false,
-    default: 100,
-    description: '验证码宽度',
-  })
-  @Type(() => Number)
   @IsInt()
   @IsOptional()
-  readonly width: number = 100;
+  @Type(() => Number)
+  width?: number = 100;
 
-  @ApiProperty({
-    required: false,
-    default: 50,
-    description: '验证码宽度',
-  })
-  @Type(() => Number)
   @IsInt()
   @IsOptional()
-  readonly height: number = 50;
+  @Type(() => Number)
+  height?: number = 50;
 }
 
 export class LoginInfoDto {
@@ -78,31 +68,31 @@ export class RegisterInfoDto {
   @MaxLength(16)
   password: string;
 
-  // @ApiProperty({ required: false, description: '手机号' })
+  // @ApiProperty({ description: '手机号' })
   // @IsString()
   // @IsOptional()
-  // phone: string;
+  // phone?: string;
 
   @ApiProperty({
-    required: false,
     description: '邮箱',
     example: 'hi@example.com',
+    required: true,
   })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ required: false, description: '验证码' })
+  @ApiProperty({ description: '验证码' })
   @IsString()
   @Length(4, 4)
   code: string;
 
-  @ApiProperty({ required: false, description: 'QQ' })
+  @ApiProperty({ description: 'QQ' })
+  @IsOptional()
   @IsString()
   @Matches(/^[1-9][0-9]{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
-  @IsOptional()
-  qq: string;
+  qq?: string;
 }
 
 export class sendCodeDto {

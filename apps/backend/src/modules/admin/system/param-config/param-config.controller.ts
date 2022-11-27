@@ -13,7 +13,7 @@ import { SysParamConfigService } from './param-config.service';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('参数配置模块')
+@ApiTags('System - 参数配置模块')
 @ApiSecurityAuth()
 @Controller('param-config')
 export class SysParamConfigController {

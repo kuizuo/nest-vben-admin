@@ -17,7 +17,7 @@ import { IAuthUser } from '/@/interfaces/auth';
 import { FileUploadDto } from './upload.dto';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('上传模块')
+@ApiTags('System - 上传模块')
 @ApiSecurityAuth()
 @Controller()
 export class UploadController {

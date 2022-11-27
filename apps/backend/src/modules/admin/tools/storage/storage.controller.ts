@@ -3,12 +3,12 @@ import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { StorageInfo } from './storage.class';
+import { StorageInfo } from './storage.modal';
 
 import { StorageDeleteDto, StoragePageDto } from './storage.dto';
 import { StorageService } from './storage.service';
 
-@ApiTags('存储模块')
+@ApiTags('System - 存储模块')
 @ApiSecurityAuth()
 @ApiExtraModels(StorageInfo)
 @Controller('storage')

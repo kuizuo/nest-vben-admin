@@ -4,7 +4,7 @@ import { Between, Like, Repository } from 'typeorm';
 import ToolStorage from '@/entities/admin/tool-storage.entity';
 import { StorageCreateDto, StoragePageDto } from './storage.dto';
 import { deleteFile } from '@/utils/file';
-import { StorageInfo } from './storage.class';
+import { StorageInfo } from './storage.modal';
 import { SysUser } from '@/entities/admin/sys-user.entity';
 
 @Injectable()

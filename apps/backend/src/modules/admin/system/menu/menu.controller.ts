@@ -4,7 +4,7 @@ import { flattenDeep } from 'lodash';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysMenu } from '@/entities/admin/sys-menu.entity';
-import { MenuItemAndParentInfoResult } from './menu.class';
+import { MenuItemAndParentInfoResult } from './menu.modal';
 import {
   MenuCreateDto,
   MenuDeleteDto,
@@ -17,7 +17,7 @@ import { ErrorEnum } from '@/common/constants/error';
 import { AppConfigService } from '@/shared/services/app/app-config.service';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
-@ApiTags('菜单权限模块')
+@ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
 @ApiExtraModels(MenuItemAndParentInfoResult)
 @Controller('menu')

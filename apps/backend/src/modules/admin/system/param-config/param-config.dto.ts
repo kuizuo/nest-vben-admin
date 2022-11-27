@@ -24,10 +24,10 @@ export class ParamConfigCreateDto {
   @IsString()
   value: string;
 
-  @ApiProperty({ required: false, description: '备注' })
-  @IsString()
+  @ApiProperty({ description: '备注' })
   @IsOptional()
-  remark: string;
+  @IsString()
+  remark?: string;
 }
 
 export class ParamConfigUpdateDto {
@@ -44,10 +44,10 @@ export class ParamConfigUpdateDto {
   @IsString()
   value: string;
 
-  @ApiProperty({ required: false, description: '备注' })
-  @IsString()
+  @ApiProperty({ description: '备注' })
   @IsOptional()
-  remark: string;
+  @IsString()
+  remark?: string;
 }
 
 export class ParamConfigDeleteDto {
@@ -60,7 +60,6 @@ export class ParamConfigDeleteDto {
 export class ParamConfigInfoDto {
   @ApiProperty({ description: '需要查询的配置编号' })
   @IsInt()
-  @Min(0)
   @Type(() => Number)
   id: number;
 }

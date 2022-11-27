@@ -9,7 +9,6 @@ import {
   IsOptional,
   IsString,
   Matches,
-  Min,
   MinLength,
 } from 'class-validator';
 
@@ -20,38 +19,35 @@ export class RoleCreateDto {
   name: string;
 
   @ApiProperty({ description: '角色值' })
+  @IsString()
   @Matches(/^[a-z0-9A-Z]+$/)
   @MinLength(2)
-  @IsString()
   value: string;
 
-  @ApiProperty({ description: '角色备注', required: false })
-  @IsString()
+  @ApiProperty({ description: '角色备注' })
   @IsOptional()
-  remark: string;
+  @IsString()
+  remark?: string;
 
   @ApiProperty({ description: '状态' })
   @IsIn([0, 1])
-  @IsOptional()
   status: number;
 
-  @ApiProperty({ description: '关联菜单、权限编号', required: false })
+  @ApiProperty({ description: '关联菜单、权限编号' })
   @IsOptional()
   @IsArray()
-  menus: number[];
+  menus?: number[];
 }
 
 export class RoleUpdateDto extends RoleCreateDto {
   @ApiProperty({ description: '关联部门编号' })
   @IsInt()
-  @Min(0)
   id: number;
 }
 
 export class RoleInfoDto {
   @ApiProperty({ description: '需要查找的角色ID' })
   @IsInt()
-  @Min(0)
   @Type(() => Number)
   id: number;
 }
@@ -67,14 +63,14 @@ export class RolePageDto extends PaginateDto {
   @ApiProperty({ description: '角色名称' })
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiProperty({ description: '角色值' })
-  @IsString()
   @IsOptional()
-  value: string;
+  @IsString()
+  value?: string;
 
   @ApiProperty({ description: '状态' })
   @IsOptional()
-  status: number;
+  status?: number;
 }

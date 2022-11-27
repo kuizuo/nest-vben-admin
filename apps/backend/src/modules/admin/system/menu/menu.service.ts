@@ -5,7 +5,7 @@ import { ApiException } from '@/common/exceptions/api.exception';
 import { SysMenu } from '@/entities/admin/sys-menu.entity';
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
-import { MenuItemAndParentInfoResult } from './menu.class';
+import { MenuItemAndParentInfoResult } from './menu.modal';
 import { MenuCreateDto, MenuSearchDto } from './menu.dto';
 import { RedisService } from '@/shared/services/redis.service';
 import { generatorMenu, generatorRouters } from '@/common/permission';

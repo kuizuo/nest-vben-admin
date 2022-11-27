@@ -12,11 +12,11 @@ import {
   UserPasswordDto,
   UserUpdateDto,
 } from './user.dto';
-import { UserInfoPage, UserDetailInfo } from './user.class';
+import { UserInfoPage, UserDetailInfo } from './user.modal';
 import { SysUserService } from './user.service';
 import { SysMenuService } from '../menu/menu.service';
 
-@ApiTags('用户模块')
+@ApiTags('System - 用户模块')
 @ApiSecurityAuth()
 @ApiExtraModels(UserInfoPage, UserDetailInfo)
 @Controller('user')
