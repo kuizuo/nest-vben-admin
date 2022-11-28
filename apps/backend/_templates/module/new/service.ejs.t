@@ -14,18 +14,18 @@ import { ErrorEnum } from '@/common/constants/error';
 export class <%= Name %>Service {
   constructor(
     @InjectRepository(<%= Name %>)
-    private <%= name %>Repository: Repository<<%= Name %>>,
+    private <%= name %>Repo: Repository<<%= Name %>>,
   ) {}
 
   async list(): Promise<<%= Name %>[]> {
-    return await this.<%= name %>Repository.find();
+    return await this.<%= name %>Repo.find();
   }
 
   async page(dto: <%= Name %>PageDto): Promise<PageResult<<%= Name %>>> {
     const { page, pageSize } = dto;
 
-    const [items, total] = await this.<%= name %>Repository
-      .createQueryBuilder(this.<%= name %>Repository.metadata.tableName)
+    const [items, total] = await this.<%= name %>Repo
+      .createQueryBuilder(this.<%= name %>Repo.metadata.tableName)
       .skip(pageSize * (page - 1))
       .take(pageSize)
       .getManyAndCount();
@@ -34,7 +34,7 @@ export class <%= Name %>Service {
   }
 
   async detail(id: number): Promise<<%= Name %>> {
-    const item = await this.<%= name %>Repository.findOneBy({ id });
+    const item = await this.<%= name %>Repo.findOneBy({ id });
     if (!item) throw new ApiException(ErrorEnum.CODE_2004);
 
     return item;
@@ -44,19 +44,19 @@ export class <%= Name %>Service {
     let <%= name %> = new <%= Name %>();
     <%= name %> = Object.assign(dto);
 
-    await this.<%= name %>Repository.save(<%= name %>);
+    await this.<%= name %>Repo.save(<%= name %>);
   }
 
   async update(dto: <%= Name %>UpdateDto) {
     const item = await this.detail(id);
 
     const <%= name %>: <%= Name %> = Object.assign(item, dto);
-    await this.<%= name %>Repository.save(<%= name %>);
+    await this.<%= name %>Repo.save(<%= name %>);
   }
 
   async delete(id: number) {
     const item = await this.detail(id);
 
-    await this.<%= name %>Repository.remove(item);
+    await this.<%= name %>Repo.remove(item);
   }
 }

@@ -15,7 +15,7 @@ import { ErrorEnum } from '@/common/constants/error';
 @Injectable()
 export class SysMenuService {
   constructor(
-    @InjectRepository(SysMenu) private menuRepository: Repository<SysMenu>,
+    @InjectRepository(SysMenu) private menuRepo: Repository<SysMenu>,
     private roleService: SysRoleService,
     private redisService: RedisService,
     private generalService: AppGeneralService,
@@ -33,7 +33,7 @@ export class SysMenuService {
     //   ...(component ? { component: Like(`%${component}%`) } : null),
     //   ...(status ? { status: status } : null),
     // };
-    const menus = await this.menuRepository.find({
+    const menus = await this.menuRepo.find({
       order: { orderNo: 'ASC' },
     });
     const menuList = generatorMenu(menus);
@@ -44,7 +44,7 @@ export class SysMenuService {
    * 保存或新增菜单
    */
   async save(menu: MenuCreateDto & { id?: number }): Promise<void> {
-    await this.menuRepository.save(menu);
+    await this.menuRepo.save(menu);
   }
 
   /**
@@ -54,9 +54,9 @@ export class SysMenuService {
     const roleIds = await this.roleService.getRoleIdByUser(uid);
     let menus: SysMenu[] = [];
     if (this.generalService.isRootUser(uid)) {
-      menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } });
+      menus = await this.menuRepo.find({ order: { orderNo: 'ASC' } });
     } else {
-      menus = await this.menuRepository
+      menus = await this.menuRepo
         .createQueryBuilder('menu')
         .innerJoinAndSelect(
           'sys_role_menu',
@@ -97,7 +97,7 @@ export class SysMenuService {
    */
   async findChildMenus(mid: number): Promise<any> {
     const allMenus: any = [];
-    const menus = await this.menuRepository.findBy({ parent: mid });
+    const menus = await this.menuRepo.findBy({ parent: mid });
     // if (_.isEmpty(menus)) {
     //   return allMenus;
     // }
@@ -118,7 +118,7 @@ export class SysMenuService {
    * @param mid menu id
    */
   async getMenuItemInfo(mid: number): Promise<SysMenu> {
-    const menu = await this.menuRepository.findOneBy({ id: mid });
+    const menu = await this.menuRepo.findOneBy({ id: mid });
     return menu;
   }
 
@@ -128,10 +128,10 @@ export class SysMenuService {
   async getMenuItemAndParentInfo(
     mid: number,
   ): Promise<MenuItemAndParentInfoResult> {
-    const menu = await this.menuRepository.findOneBy({ id: mid });
+    const menu = await this.menuRepo.findOneBy({ id: mid });
     let parentMenu: SysMenu | undefined = undefined;
     if (menu && menu.parent) {
-      parentMenu = await this.menuRepository.findOneBy({ id: menu.parent });
+      parentMenu = await this.menuRepo.findOneBy({ id: menu.parent });
     }
     return { menu, parentMenu };
   }
@@ -140,7 +140,7 @@ export class SysMenuService {
    * 查找节点路由是否存在
    */
   async findRouterExist(path: string): Promise<boolean> {
-    const menus = await this.menuRepository.findOneBy({ path });
+    const menus = await this.menuRepo.findOneBy({ path });
     return !isEmpty(menus);
   }
 
@@ -152,7 +152,7 @@ export class SysMenuService {
     let permission: any[] = [];
     let result: any = null;
     if (this.generalService.isRootUser(uid)) {
-      result = await this.menuRepository.findBy({
+      result = await this.menuRepo.findBy({
         permission: Not(IsNull()),
         type: In([1, 2]),
       });
@@ -160,7 +160,7 @@ export class SysMenuService {
       if (isEmpty(roleIds)) {
         return permission;
       }
-      result = await this.menuRepository
+      result = await this.menuRepo
         .createQueryBuilder('menu')
         .innerJoinAndSelect(
           'sys_role_menu',
@@ -187,7 +187,7 @@ export class SysMenuService {
    * 删除多项菜单
    */
   async deleteMenuItem(mids: number[]): Promise<void> {
-    await this.menuRepository.delete(mids);
+    await this.menuRepo.delete(mids);
   }
 
   /**

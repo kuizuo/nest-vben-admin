@@ -23,7 +23,6 @@ import { BadRequestException } from '@nestjs/common';
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })
 export class IsCronExpression implements ValidatorConstraintInterface {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   validate(value: string, args: ValidationArguments) {
     try {
       if (isEmpty(value)) {
@@ -36,9 +35,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defaultMessage(_args: ValidationArguments) {
-    // here you can provide default error message if validation failed
     return 'this cron expression ($value) invalid';
   }
 }

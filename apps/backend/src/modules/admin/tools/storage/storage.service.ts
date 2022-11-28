@@ -11,16 +11,16 @@ import { SysUser } from '@/entities/admin/sys-user.entity';
 export class StorageService {
   constructor(
     @InjectRepository(ToolStorage)
-    private storageRepository: Repository<ToolStorage>,
+    private storageRepo: Repository<ToolStorage>,
     @InjectRepository(SysUser)
-    private userRepository: Repository<SysUser>,
+    private userRepo: Repository<SysUser>,
   ) {}
 
   /**
    * 保存文件上传记录
    */
   async save(file: StorageCreateDto & { userId: number }): Promise<void> {
-    await this.storageRepository.save({
+    await this.storageRepo.save({
       name: file.name,
       fileName: file.fileName,
       extName: file.extName,
@@ -35,8 +35,8 @@ export class StorageService {
    * 删除文件
    */
   async delete(fileIds: number[]): Promise<void> {
-    const items = await this.storageRepository.findByIds(fileIds);
-    await this.storageRepository.delete(fileIds);
+    const items = await this.storageRepo.findByIds(fileIds);
+    await this.storageRepo.delete(fileIds);
 
     items.forEach((el) => {
       deleteFile(el.path);
@@ -55,11 +55,11 @@ export class StorageService {
     };
 
     if (username) {
-      const user = await this.userRepository.findOneBy({ username: username });
+      const user = await this.userRepo.findOneBy({ username: username });
       where['userId'] = user?.id;
     }
 
-    const result = await this.storageRepository
+    const result = await this.storageRepo
       .createQueryBuilder('storage')
       .leftJoinAndSelect('sys_user', 'user', 'storage.user_id = user.id')
       .where(where)
@@ -83,6 +83,6 @@ export class StorageService {
   }
 
   async count(): Promise<number> {
-    return await this.storageRepository.count();
+    return await this.storageRepo.count();
   }
 }

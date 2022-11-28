@@ -22,7 +22,7 @@ import { ErrorEnum } from '@/common/constants/error';
 @Injectable()
 export class SysTaskService implements OnModuleInit {
   constructor(
-    @InjectRepository(SysTask) private taskRepository: Repository<SysTask>,
+    @InjectRepository(SysTask) private taskRepo: Repository<SysTask>,
     @InjectQueue(SYS_TASK_QUEUE_NAME) private taskQueue: Queue,
     private moduleRef: ModuleRef,
     private reflector: Reflector,
@@ -67,7 +67,7 @@ export class SysTaskService implements OnModuleInit {
       await jobs[i].remove();
     }
     // 查找所有需要运行的任务
-    const tasks = await this.taskRepository.findBy({ status: 1 });
+    const tasks = await this.taskRepo.findBy({ status: 1 });
     if (tasks && tasks.length > 0) {
       for (const t of tasks) {
         await this.start(t);
@@ -89,7 +89,7 @@ export class SysTaskService implements OnModuleInit {
       ...(status ? { status: status } : null),
     };
 
-    const [items, total] = await this.taskRepository
+    const [items, total] = await this.taskRepo
       .createQueryBuilder('task')
       .where(where)
       .orderBy('task.id', 'ASC')
@@ -104,14 +104,14 @@ export class SysTaskService implements OnModuleInit {
    * count task
    */
   async count(): Promise<number> {
-    return await this.taskRepository.count();
+    return await this.taskRepo.count();
   }
 
   /**
    * task info
    */
   async info(id: number): Promise<SysTask> {
-    return await this.taskRepository.findOneBy({ id });
+    return await this.taskRepo.findOneBy({ id });
   }
 
   /**
@@ -122,7 +122,7 @@ export class SysTaskService implements OnModuleInit {
       throw new BadRequestException('Task is Empty');
     }
     await this.stop(task);
-    await this.taskRepository.delete(task.id);
+    await this.taskRepo.delete(task.id);
   }
 
   /**
@@ -143,7 +143,7 @@ export class SysTaskService implements OnModuleInit {
    * 添加任务
    */
   async addOrUpdate(param: TaskCreateDto | TaskUpdateDto): Promise<void> {
-    const result = await this.taskRepository.save(param);
+    const result = await this.taskRepo.save(param);
     const task = await this.info(result.id);
     if (result.status === 0) {
       await this.stop(task);
@@ -188,14 +188,14 @@ export class SysTaskService implements OnModuleInit {
       { jobId: task.id, removeOnComplete: true, removeOnFail: true, repeat },
     );
     if (job && job.opts) {
-      await this.taskRepository.update(task.id, {
+      await this.taskRepo.update(task.id, {
         jobOpts: JSON.stringify(job.opts.repeat),
         status: 1,
       });
     } else {
       // update status to 0，标识暂停任务，因为启动失败
       job && (await job.remove());
-      await this.taskRepository.update(task.id, { status: 0 });
+      await this.taskRepo.update(task.id, { status: 0 });
       throw new BadRequestException('Task Start failed');
     }
   }
@@ -209,7 +209,7 @@ export class SysTaskService implements OnModuleInit {
     }
     const exist = await this.existJob(task.id.toString());
     if (!exist) {
-      await this.taskRepository.update(task.id, { status: 0 });
+      await this.taskRepo.update(task.id, { status: 0 });
       return;
     }
     const jobs = await this.taskQueue.getJobs([
@@ -225,7 +225,7 @@ export class SysTaskService implements OnModuleInit {
         await jobs[i].remove();
       }
     }
-    await this.taskRepository.update(task.id, { status: 0 });
+    await this.taskRepo.update(task.id, { status: 0 });
     // if (task.jobOpts) {
     //   await this.app.queue.sys.removeRepeatable(JSON.parse(task.jobOpts));
     //   // update status
@@ -250,7 +250,7 @@ export class SysTaskService implements OnModuleInit {
    */
   async updateTaskCompleteStatus(tid: number): Promise<void> {
     const jobs = await this.taskQueue.getRepeatableJobs();
-    const task = await this.taskRepository.findOneBy({ id: tid });
+    const task = await this.taskRepo.findOneBy({ id: tid });
     // 如果下次执行时间小于当前时间，则表示已经执行完成。
     for (const job of jobs) {
       const currentTime = new Date().getTime();

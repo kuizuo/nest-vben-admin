@@ -13,9 +13,9 @@ export class AdminWSService {
   constructor(
     private jwtService: JwtService,
     @InjectRepository(SysRoleMenu)
-    private roleMenuRepository: Repository<SysRoleMenu>,
+    private roleMenuRepo: Repository<SysRoleMenu>,
     @InjectRepository(SysUserRole)
-    private userRoleRepository: Repository<SysUserRole>,
+    private userRoleRepo: Repository<SysUserRole>,
     private adminWsGateWay: AdminWSGateway,
   ) {}
 
@@ -75,7 +75,7 @@ export class AdminWSService {
    * 通过menuIds通知用户更新权限菜单
    */
   async noticeUserToUpdateMenusByMenuIds(menuIds: number[]): Promise<void> {
-    const roleMenus = await this.roleMenuRepository.findBy({
+    const roleMenus = await this.roleMenuRepo.findBy({
       menuId: In(menuIds),
     });
     const roleIds = roleMenus.map((n) => n.roleId);
@@ -86,7 +86,7 @@ export class AdminWSService {
    * 通过roleIds通知用户更新权限菜单
    */
   async noticeUserToUpdateMenusByRoleIds(roleIds: number[]): Promise<void> {
-    const users = await this.userRoleRepository.findBy({
+    const users = await this.userRoleRepo.findBy({
       roleId: In(roleIds),
     });
     if (users) {
