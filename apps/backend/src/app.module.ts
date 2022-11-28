@@ -8,6 +8,7 @@ import { SharedModule } from './shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { MissionModule } from './mission/mission.module';
+import { ConstraintModule } from './common/constraints/constraint.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { MissionModule } from './mission/mission.module';
     AdminModule,
     AppsModule,
     WSModule,
+    // 自定义约束模块
+    ConstraintModule,
   ],
 })
 export class AppModule {}

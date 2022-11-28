@@ -13,9 +13,9 @@ import { IpService } from '@/shared/services/ip.service';
 export class SysLogService {
   constructor(
     @InjectRepository(SysLoginLog)
-    private loginLogRepository: Repository<SysLoginLog>,
+    private loginLogRepo: Repository<SysLoginLog>,
     @InjectRepository(SysTaskLog)
-    private taskLogRepository: Repository<SysTaskLog>,
+    private taskLogRepo: Repository<SysTaskLog>,
     private userService: SysUserService,
     private ipService: IpService,
   ) {}
@@ -26,7 +26,7 @@ export class SysLogService {
   async saveLoginLog(uid: number, ip: string, ua: string): Promise<void> {
     const address = await this.ipService.getAddress(ip);
 
-    await this.loginLogRepository.save({
+    await this.loginLogRepo.save({
       ip,
       userId: uid,
       ua,
@@ -38,7 +38,7 @@ export class SysLogService {
    * 计算登录日志日志总数
    */
   async countLoginLog(): Promise<number> {
-    return await this.loginLogRepository.count();
+    return await this.loginLogRepo.count();
   }
 
   /**
@@ -58,7 +58,7 @@ export class SysLogService {
       where['userId'] = user?.id;
     }
 
-    const result = await this.loginLogRepository
+    const result = await this.loginLogRepo
       .createQueryBuilder('login_log')
       .innerJoinAndSelect('sys_user', 'user', 'login_log.user_id = user.id')
       .where(where)
@@ -86,7 +86,7 @@ export class SysLogService {
    * 清空表中的所有数据
    */
   async clearLoginLog(): Promise<void> {
-    await this.loginLogRepository.clear();
+    await this.loginLogRepo.clear();
   }
   // ----- task
 
@@ -99,7 +99,7 @@ export class SysLogService {
     time?: number,
     err?: string,
   ): Promise<number> {
-    const result = await this.taskLogRepository.save({
+    const result = await this.taskLogRepo.save({
       taskId: tid,
       status,
       detail: err,
@@ -111,14 +111,14 @@ export class SysLogService {
    * 计算日志总数
    */
   async countTaskLog(): Promise<number> {
-    return await this.taskLogRepository.count();
+    return await this.taskLogRepo.count();
   }
 
   /**
    * 分页加载日志信息
    */
   async page(page: number, count: number): Promise<TaskLogInfo[]> {
-    const result = await this.taskLogRepository
+    const result = await this.taskLogRepo
       .createQueryBuilder('task_log')
       .leftJoinAndSelect('sys_task', 'task', 'task_log.task_id = task.id')
       .orderBy('task_log.id', 'DESC')
@@ -142,6 +142,6 @@ export class SysLogService {
    * 清空表中的所有数据
    */
   async clearTaskLog(): Promise<void> {
-    await this.taskLogRepository.clear();
+    await this.taskLogRepo.clear();
   }
 }

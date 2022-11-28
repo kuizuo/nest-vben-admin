@@ -10,14 +10,14 @@ import { ErrorEnum } from '@/common/constants/error';
 export class SysParamConfigService {
   constructor(
     @InjectRepository(SysConfig)
-    private configRepository: Repository<SysConfig>,
+    private configRepo: Repository<SysConfig>,
   ) {}
 
   /**
    * 罗列所有配置
    */
   async getConfigListByPage(page: number, count: number): Promise<SysConfig[]> {
-    return this.configRepository.find({
+    return this.configRepo.find({
       order: {
         id: 'ASC',
       },
@@ -30,21 +30,21 @@ export class SysParamConfigService {
    * 获取参数总数
    */
   async countConfigList(): Promise<number> {
-    return this.configRepository.count();
+    return this.configRepo.count();
   }
 
   /**
    * 新增
    */
   async add(dto: ParamConfigCreateDto): Promise<void> {
-    await this.configRepository.insert(dto);
+    await this.configRepo.insert(dto);
   }
 
   /**
    * 更新
    */
   async update(dto: ParamConfigUpdateDto): Promise<void> {
-    await this.configRepository.update(
+    await this.configRepo.update(
       { id: dto.id },
       { name: dto.name, value: dto.value, remark: dto.remark },
     );
@@ -54,25 +54,25 @@ export class SysParamConfigService {
    * 删除
    */
   async delete(ids: number[]): Promise<void> {
-    await this.configRepository.delete(ids);
+    await this.configRepo.delete(ids);
   }
 
   /**
    * 查询单个
    */
   async findOne(id: number): Promise<SysConfig> {
-    return await this.configRepository.findOneBy({ id });
+    return await this.configRepo.findOneBy({ id });
   }
 
   async isExistKey(key: string): Promise<void | never> {
-    const result = await this.configRepository.findOneBy({ key });
+    const result = await this.configRepo.findOneBy({ key });
     if (result) {
       throw new ApiException(ErrorEnum.CODE_1021);
     }
   }
 
   async findValueByKey(key: string): Promise<string | null> {
-    const result = await this.configRepository.findOne({
+    const result = await this.configRepo.findOne({
       where: { key },
       select: ['value'],
     });

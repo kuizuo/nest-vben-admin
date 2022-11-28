@@ -31,11 +31,11 @@ export class SysUserService {
     private readonly redisService: RedisService,
     private readonly paramConfigService: SysParamConfigService,
     @InjectRepository(SysUser)
-    private readonly userRepository: Repository<SysUser>,
+    private readonly userRepo: Repository<SysUser>,
     @InjectRepository(SysRole)
-    private readonly roleRepository: Repository<SysRole>,
+    private readonly roleRepo: Repository<SysRole>,
     @InjectRepository(SysUserRole)
-    private userRoleRepository: Repository<SysUserRole>,
+    private userRoleRepo: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly qqService: QQService,
     private readonly util: UtilService,
@@ -47,7 +47,7 @@ export class SysUserService {
    * 根据用户名查找已经启用的用户
    */
   async findUserByUserName(username: string): Promise<SysUser | undefined> {
-    return await this.userRepository.findOneBy({
+    return await this.userRepo.findOneBy({
       username: username,
       status: 1,
     });
@@ -58,7 +58,7 @@ export class SysUserService {
    * @param uid user id
    */
   async getAccountInfo(uid: number): Promise<AccountInfo> {
-    const user: SysUser = await this.userRepository.findOneBy({ id: uid });
+    const user: SysUser = await this.userRepo.findOneBy({ id: uid });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
@@ -77,7 +77,7 @@ export class SysUserService {
    * 更新个人信息
    */
   async updateAccountInfo(uid: number, info: UserInfoUpdateDto): Promise<void> {
-    const user = await this.userRepository.findOneBy({ id: uid });
+    const user = await this.userRepo.findOneBy({ id: uid });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
@@ -98,14 +98,14 @@ export class SysUserService {
       }
     }
 
-    await this.userRepository.update(uid, data);
+    await this.userRepo.update(uid, data);
   }
 
   /**
    * 更改密码
    */
   async updatePassword(uid: number, dto: PasswordUpdateDto): Promise<void> {
-    const user = await this.userRepository.findOneBy({ id: uid });
+    const user = await this.userRepo.findOneBy({ id: uid });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
@@ -115,7 +115,7 @@ export class SysUserService {
       throw new ApiException(ErrorEnum.CODE_1011);
     }
     const password = this.util.md5(`${dto.newPassword}${user.psalt}`);
-    await this.userRepository.update({ id: uid }, { password });
+    await this.userRepo.update({ id: uid }, { password });
     await this.upgradePasswordV(user.id);
   }
 
@@ -123,12 +123,12 @@ export class SysUserService {
    * 直接更改密码
    */
   async forceUpdatePassword(uid: number, password: string): Promise<void> {
-    const user = await this.userRepository.findOneBy({ id: uid });
+    const user = await this.userRepo.findOneBy({ id: uid });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
     const newPassword = this.util.md5(`${password}${user.psalt}`);
-    await this.userRepository.update({ id: uid }, { password: newPassword });
+    await this.userRepo.update({ id: uid }, { password: newPassword });
     await this.upgradePasswordV(user.id);
   }
 
@@ -138,7 +138,7 @@ export class SysUserService {
    */
   async add(param: UserCreateDto): Promise<void> {
     // const insertData: any = { ...CreateUserDto };
-    const exists = await this.userRepository.findOneBy({
+    const exists = await this.userRepo.findOneBy({
       username: param.username,
     });
     if (!isEmpty(exists)) {
@@ -231,11 +231,11 @@ export class SysUserService {
    * @param id 用户id
    */
   async info(id: number): Promise<SysUser & { roles: number[] }> {
-    const user: SysUser = await this.userRepository.findOneBy({ id });
+    const user: SysUser = await this.userRepo.findOneBy({ id });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
-    const roleRows = await this.userRoleRepository.findBy({ userId: user.id });
+    const roleRows = await this.userRoleRepo.findBy({ userId: user.id });
     const roles = roleRows.map((e) => {
       return e.roleId;
     });
@@ -248,7 +248,7 @@ export class SysUserService {
    * 查找列表里的信息
    */
   async infoList(ids: number[]): Promise<SysUser[]> {
-    const users = await this.userRepository.findByIds(ids);
+    const users = await this.userRepo.findByIds(ids);
     return users;
   }
 
@@ -260,8 +260,8 @@ export class SysUserService {
     if (userIds.includes(rootUserId)) {
       throw new BadRequestException('不能删除root用户!');
     }
-    await this.userRepository.delete(userIds);
-    await this.userRoleRepository.delete({ userId: In(userIds) });
+    await this.userRepo.delete(userIds);
+    await this.userRoleRepo.delete({ userId: In(userIds) });
   }
 
   /**
@@ -270,7 +270,7 @@ export class SysUserService {
   async count(uid: number): Promise<number> {
     const rootUserId = await this.findRootUserId();
 
-    return await this.userRepository.countBy({
+    return await this.userRepo.countBy({
       id: Not(In([rootUserId, uid])),
     });
   }
@@ -294,7 +294,7 @@ export class SysUserService {
       ...(status ? { status: status } : null),
     };
     const rootUserId = await this.findRootUserId();
-    const result = await this.userRepository
+    const result = await this.userRepo
       .createQueryBuilder('user')
       .innerJoinAndSelect(
         'sys_user_role',
@@ -335,7 +335,7 @@ export class SysUserService {
       }
     });
 
-    const total = await this.userRepository
+    const total = await this.userRepo
       .createQueryBuilder('user')
       .where(where)
       .getCount();
@@ -393,7 +393,7 @@ export class SysUserService {
    * 判断用户名是否存在
    */
   async exist(username: string) {
-    const user = await this.userRepository.findOneBy({ username });
+    const user = await this.userRepo.findOneBy({ username });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1001);
     }
@@ -404,7 +404,7 @@ export class SysUserService {
    * 注册
    */
   async register(param: RegisterInfoDto): Promise<void> {
-    const exists = await this.userRepository.findOneBy({
+    const exists = await this.userRepo.findOneBy({
       username: param.username,
     });
     if (!isEmpty(exists)) throw new ApiException(ErrorEnum.CODE_1001);
@@ -427,7 +427,7 @@ export class SysUserService {
         psalt: salt,
       });
       const result = await manager.save(u);
-      const role = await this.roleRepository.findOneBy({ value: 'user' });
+      const role = await this.roleRepo.findOneBy({ value: 'user' });
       if (!role) throw new ApiException(ErrorEnum.CODE_1022);
 
       const r = manager.create(SysUserRole, {

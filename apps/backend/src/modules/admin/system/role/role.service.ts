@@ -15,12 +15,12 @@ import { AppConfigService } from '@/shared/services/app/app-config.service';
 @Injectable()
 export class SysRoleService {
   constructor(
-    @InjectRepository(SysRole) private roleRepository: Repository<SysRole>,
-    @InjectRepository(SysMenu) private menuRepository: Repository<SysMenu>,
+    @InjectRepository(SysRole) private roleRepo: Repository<SysRole>,
+    @InjectRepository(SysMenu) private menuRepo: Repository<SysMenu>,
     @InjectRepository(SysRoleMenu)
-    private roleMenuRepository: Repository<SysRoleMenu>,
+    private roleMenuRepo: Repository<SysRoleMenu>,
     @InjectRepository(SysUserRole)
-    private userRoleRepository: Repository<SysUserRole>,
+    private userRoleRepo: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly configService: AppConfigService,
     private readonly generalService: AppGeneralService,
@@ -30,7 +30,7 @@ export class SysRoleService {
    * 列举所有角色：除去超级管理员
    */
   async list(): Promise<SysRole[]> {
-    const result = await this.roleRepository.findBy({
+    const result = await this.roleRepo.findBy({
       // id: Not(this.rootRoleId),
     });
 
@@ -41,7 +41,7 @@ export class SysRoleService {
    * 列举所有角色条数：除去超级管理员
    */
   async count(): Promise<number> {
-    const count = await this.roleRepository.countBy({});
+    const count = await this.roleRepo.countBy({});
     return count;
   }
 
@@ -49,8 +49,8 @@ export class SysRoleService {
    * 根据角色获取角色信息
    */
   async info(rid: number): Promise<any> {
-    const info = await this.roleRepository.findOneBy({ id: rid });
-    const roleMenus = await this.roleMenuRepository.findBy({ roleId: rid });
+    const info = await this.roleRepo.findOneBy({ id: rid });
+    const roleMenus = await this.roleMenuRepo.findBy({ roleId: rid });
     const menus = roleMenus.map((m) => m.menuId);
 
     return { ...info, menus };
@@ -60,7 +60,7 @@ export class SysRoleService {
    * 根据角色Id数组删除
    */
   async delete(roleIds: number[]): Promise<void> {
-    const rootUser = await this.userRoleRepository.findOneBy({
+    const rootUser = await this.userRoleRepo.findOneBy({
       userId: this.configService.appConfig.rootUserId,
     });
 
@@ -79,7 +79,7 @@ export class SysRoleService {
    */
   async add(param: RoleCreateDto): Promise<{ roleId: number }> {
     const { name, value, remark, menus } = param;
-    const role = await this.roleRepository.insert({
+    const role = await this.roleRepo.insert({
       name,
       value,
       remark,
@@ -94,7 +94,7 @@ export class SysRoleService {
           menuId: m,
         };
       });
-      await this.roleMenuRepository.insert(insertRows);
+      await this.roleMenuRepo.insert(insertRows);
     }
     return { roleId };
   }
@@ -104,14 +104,14 @@ export class SysRoleService {
    */
   async update(param: RoleUpdateDto): Promise<SysRole> {
     const { id: roleId, name, value, remark, status, menus } = param;
-    const role = await this.roleRepository.save({
+    const role = await this.roleRepo.save({
       id: roleId,
       name,
       value,
       remark,
       status,
     });
-    const originMenuRows = await this.roleMenuRepository.findBy({ roleId });
+    const originMenuRows = await this.roleMenuRepo.findBy({ roleId });
     const originMenuIds = originMenuRows.map((e) => {
       return e.menuId;
     });
@@ -155,7 +155,7 @@ export class SysRoleService {
       ...(name ? { name: Like(`%${name}%`) } : null),
       ...(status ? { status: status } : null),
     };
-    const [items, total] = await this.roleRepository
+    const [items, total] = await this.roleRepo
       .createQueryBuilder('role')
       .where({
         // id: Not(this.rootRoleId),
@@ -173,7 +173,7 @@ export class SysRoleService {
    * 根据用户id查找角色信息
    */
   async getRoleIdByUser(id: number): Promise<number[]> {
-    const result = await this.userRoleRepository.findBy({
+    const result = await this.userRoleRepo.findBy({
       userId: id,
     });
     if (!isEmpty(result)) {
@@ -188,13 +188,13 @@ export class SysRoleService {
    * 根据角色ID列表查找关联用户ID
    */
   async countUserIdByRole(ids: number[]): Promise<number | never> {
-    const rootUser = await this.userRoleRepository.findOneBy({
+    const rootUser = await this.userRoleRepo.findOneBy({
       userId: this.configService.appConfig.rootUserId,
     });
 
     if (includes(ids, rootUser.roleId)) {
       throw new BadRequestException('不支持删除根角色');
     }
-    return await this.userRoleRepository.countBy({ roleId: In(ids) });
+    return await this.userRoleRepo.countBy({ roleId: In(ids) });
   }
 }
