@@ -5,7 +5,6 @@ import { ApiException } from '@/common/exceptions/api.exception';
 import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { SysUser } from '@/entities/admin/sys-user.entity';
 import { SysRole } from '@/entities/admin/sys-role.entity';
-import { UtilService } from '@/shared/services/util.service';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
 import {
   UserCreateDto,
@@ -24,6 +23,7 @@ import { QQService } from '@/shared/services/qq.service';
 import { AppConfigService } from '@/shared/services/app/app-config.service';
 import { AppGeneralService } from '/@/shared/services/app/app-general.service';
 import { ErrorEnum } from '@/common/constants/error';
+import { MD5, randomValue } from '@/utils';
 
 @Injectable()
 export class SysUserService {
@@ -38,7 +38,6 @@ export class SysUserService {
     private userRoleRepo: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly qqService: QQService,
-    private readonly util: UtilService,
     private readonly generalService: AppGeneralService,
     private readonly configService: AppConfigService,
   ) {}
@@ -109,12 +108,12 @@ export class SysUserService {
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
-    const comparePassword = this.util.md5(`${dto.oldPassword}${user.psalt}`);
+    const comparePassword = MD5(`${dto.oldPassword}${user.psalt}`);
     // 原密码不一致，不允许更改
     if (user.password !== comparePassword) {
       throw new ApiException(ErrorEnum.CODE_1011);
     }
-    const password = this.util.md5(`${dto.newPassword}${user.psalt}`);
+    const password = MD5(`${dto.newPassword}${user.psalt}`);
     await this.userRepo.update({ id: uid }, { password });
     await this.upgradePasswordV(user.id);
   }
@@ -127,7 +126,7 @@ export class SysUserService {
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
-    const newPassword = this.util.md5(`${password}${user.psalt}`);
+    const newPassword = MD5(`${password}${user.psalt}`);
     await this.userRepo.update({ id: uid }, { password: newPassword });
     await this.upgradePasswordV(user.id);
   }
@@ -145,16 +144,16 @@ export class SysUserService {
       throw new ApiException(ErrorEnum.CODE_1001);
     }
     await this.entityManager.transaction(async (manager) => {
-      const salt = this.util.generateRandomValue(32);
+      const salt = randomValue(32);
 
       let password;
       if (!param.password) {
         const initPassword = await this.paramConfigService.findValueByKey(
           SYS_USER_INITPASSWORD,
         );
-        password = this.util.md5(`${initPassword ?? 'a123456'}${salt}`);
+        password = MD5(`${initPassword ?? 'a123456'}${salt}`);
       } else {
-        password = this.util.md5(`${param.password ?? 'a123456'}${salt}`);
+        password = MD5(`${param.password ?? 'a123456'}${salt}`);
       }
 
       const avatar = await this.qqService.getAvater(param.qq);
@@ -410,9 +409,9 @@ export class SysUserService {
     if (!isEmpty(exists)) throw new ApiException(ErrorEnum.CODE_1001);
 
     await this.entityManager.transaction(async (manager) => {
-      const salt = this.util.generateRandomValue(32);
+      const salt = randomValue(32);
 
-      const password = this.util.md5(`${param.password ?? 'a123456'}${salt}`);
+      const password = MD5(`${param.password ?? 'a123456'}${salt}`);
       const avatar = await this.qqService.getAvater(param.qq);
       const nickName = await this.qqService.getNickname(param.qq);
       const u = manager.create(SysUser, {

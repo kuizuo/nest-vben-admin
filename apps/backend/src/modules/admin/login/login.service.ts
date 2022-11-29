@@ -4,15 +4,15 @@ import { ImageCaptcha } from './login.model';
 import { isEmpty } from 'lodash';
 import { ImageCaptchaDto, RegisterInfoDto } from './login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { UtilService } from '@/shared/services/util.service';
 import { SysMenuService } from '../system/menu/menu.service';
 import { SysUserService } from '../system/user/user.service';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysLogService } from '../system/log/log.service';
 import { RedisService } from '@/shared/services/redis.service';
 import { EmailService } from '@/shared/services/email.service';
-import dayjs from 'dayjs';
 import { ErrorEnum } from '@/common/constants/error';
+import dayjs from 'dayjs';
+import { generateUUID, MD5 } from '@/utils';
 
 @Injectable()
 export class LoginService {
@@ -22,7 +22,6 @@ export class LoginService {
     private userService: SysUserService,
     private logService: SysLogService,
     private emailService: EmailService,
-    private util: UtilService,
     private jwtService: JwtService,
   ) {}
 
@@ -44,7 +43,7 @@ export class LoginService {
       img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
         'base64',
       )}`,
-      id: this.util.generateUUID(),
+      id: generateUUID(),
     };
     // 5分钟过期时间
     await this.redisService
@@ -81,7 +80,7 @@ export class LoginService {
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1003);
     }
-    const comparePassword = this.util.md5(`${password}${user.psalt}`);
+    const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
       throw new ApiException(ErrorEnum.CODE_1003);
     }

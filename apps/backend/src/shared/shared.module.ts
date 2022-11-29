@@ -6,7 +6,6 @@ import { EmailService } from './services/email.service';
 import { QQService } from './services/qq.service';
 import { RedisModule } from './redis/redis.module';
 import { RedisService } from './services/redis.service';
-import { UtilService } from './services/util.service';
 import { IpService } from './services/ip.service';
 import { AppConfigService } from './services/app/app-config.service';
 import { AppLoggerService } from './services/app/app-logger.service';
@@ -16,7 +15,6 @@ const providers = [
   AppConfigService,
   AppLoggerService,
   AppGeneralService,
-  UtilService,
   RedisService,
   EmailService,
   QQService,
