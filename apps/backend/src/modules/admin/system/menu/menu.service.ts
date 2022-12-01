@@ -8,7 +8,7 @@ import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.modal';
 import { MenuCreateDto, MenuSearchDto } from './menu.dto';
 import { RedisService } from '@/shared/services/redis.service';
-import { generatorMenu, generatorRouters } from '@/common/permission';
+import { generatorMenu, generatorRouters } from '@/utils/permission';
 import { AppGeneralService } from '/@/shared/services/app/app-general.service';
 import { ErrorEnum } from '@/common/constants/error';
 

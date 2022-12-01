@@ -33,9 +33,9 @@ cd kz-admin
 pnpm install
 ```
 
-后端配置文件: [apps/backend/.env.development](./apps/backend/.env.development)
+后端配置文件: [apps/backend/.env](./apps/backend/.env)
 
-前端配置文件: [apps/frontend/.env.development](./apps/frontend/.env.development)
+前端配置文件: [apps/frontend/.env](./apps/frontend/.env)
 
 **运行**
 
@@ -43,9 +43,9 @@ pnpm install
 pnpm run dev
 ```
 
-前端页面:  https://localhost:3100
+前端页面: https://localhost:3100
 
-后端接口: http://127.0.0.1:5001/api
+后端接口: http://localhost:5001/api
 
 **打包**
 
