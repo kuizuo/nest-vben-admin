@@ -1,7 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { EntityExistConstraint } from './entity-exist.constraint';
+import { UniqueConstraint } from './unique.constraint';
 
-const providers = [EntityExistConstraint];
+const providers = [EntityExistConstraint, UniqueConstraint];
 
 @Global()
 @Module({

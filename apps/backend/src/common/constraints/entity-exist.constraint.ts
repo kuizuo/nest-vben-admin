@@ -8,6 +8,12 @@ import {
 } from 'class-validator';
 import { DataSource, ObjectType, Repository } from 'typeorm';
 
+type Condition = {
+  entity: ObjectType<any>;
+  // 如果没有指定字段则使用当前验证的属性作为查询依据
+  field?: string;
+};
+
 /**
  * 查询某个字段的值是否在数据表中存在
  */
@@ -43,6 +49,12 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
     return `All instance of ${args.constraints[0].name} must been exists in databse!`;
   }
 }
+
+/**
+ * 数据存在性验证
+ * @param params Entity类或验证条件对象
+ * @param validationOptions
+ */
 function IsEntityExist(
   entity: ObjectType<any>,
   validationOptions?: ValidationOptions,

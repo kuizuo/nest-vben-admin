@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { findIndex, isEmpty } from 'lodash';
+import { findIndex, isEmpty, isNil } from 'lodash';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { SysUser } from '@/entities/admin/sys-user.entity';
@@ -123,9 +123,7 @@ export class SysUserService {
    */
   async forceUpdatePassword(uid: number, password: string): Promise<void> {
     const user = await this.userRepo.findOneBy({ id: uid });
-    if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1017);
-    }
+
     const newPassword = MD5(`${password}${user.psalt}`);
     await this.userRepo.update({ id: uid }, { password: newPassword });
     await this.upgradePasswordV(user.id);
@@ -136,13 +134,6 @@ export class SysUserService {
    * @param param Object 对应SysUser实体类
    */
   async add(param: UserCreateDto): Promise<void> {
-    // const insertData: any = { ...CreateUserDto };
-    const exists = await this.userRepo.findOneBy({
-      username: param.username,
-    });
-    if (!isEmpty(exists)) {
-      throw new ApiException(ErrorEnum.CODE_1001);
-    }
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32);
 
@@ -231,9 +222,7 @@ export class SysUserService {
    */
   async info(id: number): Promise<SysUser & { roles: number[] }> {
     const user: SysUser = await this.userRepo.findOneBy({ id });
-    if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1017);
-    }
+
     const roleRows = await this.userRoleRepo.findBy({ userId: user.id });
     const roles = roleRows.map((e) => {
       return e.roleId;
@@ -393,7 +382,7 @@ export class SysUserService {
    */
   async exist(username: string) {
     const user = await this.userRepo.findOneBy({ username });
-    if (isEmpty(user)) {
+    if (isNil(user)) {
       throw new ApiException(ErrorEnum.CODE_1001);
     }
     return true;

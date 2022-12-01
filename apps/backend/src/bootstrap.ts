@@ -19,6 +19,7 @@ import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { TransformInterceptor as TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { useContainer } from 'class-validator';
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -34,6 +35,9 @@ export async function bootstrap() {
 
   // reflector
   const reflector = app.get(Reflector);
+
+  // class-validator 的 DTO 类中注入nestjs容器的依赖
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.useLogger(app.get(AppLoggerService));
   app.enableCors({ origin: '*', credentials: true });

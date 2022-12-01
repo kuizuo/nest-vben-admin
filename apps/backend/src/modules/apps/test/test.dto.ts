@@ -1,7 +1,9 @@
-import { PaginateDto } from '@/common/dto/page.dto';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsInt, Min } from 'class-validator';
+import { IsEntityExist } from '@/common/constraints/entity-exist.constraint';
+import { PaginateDto } from '@/common/dto/page.dto';
+import { Test } from '@/entities/apps/test.entity';
 
 export class TestCreateDto {}
 
@@ -10,6 +12,7 @@ export class TestUpdateDto extends PartialType(TestCreateDto) {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @IsEntityExist(Test, { message: 'Test不存在' })
   id: number;
 }
 
@@ -18,6 +21,7 @@ export class TestDeleteDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @IsEntityExist(Test, { message: 'Test不存在' })
   id: number;
 }
 

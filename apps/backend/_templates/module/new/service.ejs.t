@@ -35,7 +35,6 @@ export class <%= Name %>Service {
 
   async detail(id: number): Promise<<%= Name %>> {
     const item = await this.<%= name %>Repo.findOneBy({ id });
-    if (!item) throw new ApiException(ErrorEnum.CODE_2004);
 
     return item;
   }

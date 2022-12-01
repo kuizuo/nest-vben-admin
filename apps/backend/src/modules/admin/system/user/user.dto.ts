@@ -17,6 +17,9 @@ import {
 } from 'class-validator';
 import { isEmpty } from 'lodash';
 import { PaginateDto } from '@/common/dto/page.dto';
+import { IsEntityExist } from '@/common/constraints/entity-exist.constraint';
+import { SysUser } from '@/entities/admin/sys-user.entity';
+import { IsUnique } from '@/common/constraints/unique.constraint';
 
 export class UserInfoUpdateDto {
   @ApiProperty({ description: '用户呢称' })
@@ -26,7 +29,6 @@ export class UserInfoUpdateDto {
 
   @ApiProperty({ description: '用户邮箱' })
   @IsEmail()
-  @ValidateIf((o) => !isEmpty(o.email))
   email: string;
 
   @ApiProperty({ description: '用户QQ' })
@@ -70,6 +72,7 @@ export class PasswordUpdateDto {
 
 export class UserCreateDto {
   @ApiProperty({ description: '登录账号', example: 'kz-admin' })
+  @IsUnique(SysUser, { message: '该用户名已被注册' })
   @IsString()
   @Matches(/^[a-z0-9A-Z\W_]+$/)
   @MinLength(4)
@@ -95,6 +98,7 @@ export class UserCreateDto {
   nickName: string;
 
   @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
+  @IsUnique(SysUser, { message: '邮箱已被注册' })
   @IsEmail()
   @ValidateIf((o) => !isEmpty(o.email))
   email: string;
@@ -130,6 +134,7 @@ export class UserUpdateDto extends UserCreateDto {
 
 export class UserInfoDto {
   @ApiProperty({ description: '用户ID' })
+  @IsEntityExist(SysUser, { message: '用户不存在' })
   @IsInt()
   @Type(() => Number)
   id: number;
@@ -174,7 +179,8 @@ export class UserPageDto extends PaginateDto {
 }
 
 export class UserPasswordDto {
-  @ApiProperty({ description: '管理员ID' })
+  @ApiProperty({ description: '管理员/用户ID' })
+  @IsEntityExist(SysUser, { message: '用户不存在' })
   @IsInt()
   id: number;
 
