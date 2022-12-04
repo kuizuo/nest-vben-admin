@@ -8,7 +8,7 @@ import { SysRoleMenu } from '@/entities/admin/sys-role-menu.entity';
 import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { RoleCreateDto, RoleUpdateDto } from './role.dto';
 import { RolePageDto } from './role.dto';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { AppGeneralService } from '@/shared/services/app/app-general.service';
 import { AppConfigService } from '@/shared/services/app/app-config.service';
 
@@ -148,7 +148,7 @@ export class SysRoleService {
   /**
    * 分页加载角色信息
    */
-  async page(dto: RolePageDto): Promise<PageResult<SysRole>> {
+  async page(dto: RolePageDto): Promise<PageRespData<SysRole>> {
     const { page, pageSize, name, value, status } = dto;
     const where = {
       ...(value ? { value: Like(`%${value}%`) } : null),

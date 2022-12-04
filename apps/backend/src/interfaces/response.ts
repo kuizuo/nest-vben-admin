@@ -1,5 +1,5 @@
 export interface IBaseResponse<T = any> {
-  message: string;
+  msg: string;
   code: number;
   data?: T;
 }
@@ -10,10 +10,13 @@ export interface IListRespData<T = any> {
 
 export interface IPaginationInfo {
   page: number;
-  limit: number;
+  pageSize: number;
   total: number;
 }
 
-export interface IPaginationRespData<T = any> extends IListRespData<T> {
-  pagination: IPaginationInfo;
+export interface IPageRespData<T = any> extends IListRespData<T> {
+  total: number;
 }
+// export interface IPageRespData<T = any> extends IListRespData<T> {
+//   pagination: IPaginationInfo;
+// }

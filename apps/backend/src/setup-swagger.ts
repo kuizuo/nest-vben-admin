@@ -1,6 +1,6 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PageResult, ResOp } from './common/class/res.class';
+import { PageRespData, BaseResponse } from './common/response.modal';
 import { AbstractEntity } from './common/abstract.entity';
 import { AppConfigService } from './shared/services/app/app-config.service';
 import { API_SECURITY_AUTH } from './common/decorators/swagger.decorator';
@@ -29,7 +29,7 @@ export function setupSwagger(
 
   const document = SwaggerModule.createDocument(app, documentBuilder.build(), {
     ignoreGlobalPrefix: false,
-    extraModels: [AbstractEntity, ResOp, PageResult],
+    extraModels: [AbstractEntity, BaseResponse, PageRespData],
   });
 
   SwaggerModule.setup(path, app, document);

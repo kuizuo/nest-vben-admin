@@ -17,7 +17,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { PaginateDto } from '@/common/dto/page.dto';
+import { PageOptionDto } from '@/common/paginate.dto';
 import { BadRequestException } from '@nestjs/common';
 
 // cron 表达式验证，bull lib下引用了cron-parser
@@ -112,7 +112,7 @@ export class TaskCheckIdDto {
   id: number;
 }
 
-export class TaskPageDto extends PaginateDto {
+export class TaskPageDto extends PageOptionDto {
   @ApiProperty({ description: '任务名称' })
   @IsOptional()
   @IsString()

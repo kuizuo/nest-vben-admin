@@ -42,7 +42,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
     // 返回基础响应结果
     const resBody: IBaseResponse = {
       code: apiErrorCode,
-      message: errorMessage,
+      msg: errorMessage,
       data: null,
     };
 

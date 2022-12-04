@@ -16,7 +16,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { isEmpty } from 'lodash';
-import { PaginateDto } from '@/common/dto/page.dto';
+import { PageOptionDto } from '@/common/paginate.dto';
 import { IsEntityExist } from '@/common/constraints/entity-exist.constraint';
 import { SysUser } from '@/entities/admin/sys-user.entity';
 import { IsUnique } from '@/common/constraints/unique.constraint';
@@ -147,7 +147,7 @@ export class UserDeleteDto {
   ids: number[];
 }
 
-export class UserPageDto extends PaginateDto {
+export class UserPageDto extends PageOptionDto {
   @ApiProperty({ description: '用户名' })
   @IsOptional()
   @IsString()

@@ -16,7 +16,7 @@ import {
   SYS_TASK_QUEUE_NAME,
   SYS_TASK_QUEUE_PREFIX,
 } from '/@/common/constants/task';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
@@ -80,7 +80,7 @@ export class SysTaskService implements OnModuleInit {
   /**
    * 分页查询
    */
-  async page(dto: TaskPageDto): Promise<PageResult<SysTask>> {
+  async page(dto: TaskPageDto): Promise<PageRespData<SysTask>> {
     const { page, pageSize, name, service, type, status } = dto;
     const where = {
       ...(name ? { name: Like(`%${name}%`) } : null),

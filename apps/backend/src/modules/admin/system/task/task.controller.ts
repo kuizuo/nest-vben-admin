@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { SysTask } from '@/entities/admin/sys-task.entity';
 import {
@@ -25,7 +25,7 @@ export class SysTaskController {
   @ApiOperation({ summary: '获取任务列表' })
   @ApiResult({ type: [SysTask] })
   @Get('page')
-  async page(@Query() dto: TaskPageDto): Promise<PageResult<SysTask>> {
+  async page(@Query() dto: TaskPageDto): Promise<PageRespData<SysTask>> {
     return await this.taskService.page(dto);
   }
 

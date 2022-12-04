@@ -17,16 +17,6 @@ export abstract class AbstractService {
   }
 
   /**
-   * Executes raw SQL query and returns raw database results
-   */
-  protected async nativeQuery<T = any>(
-    sql: string,
-    parameters?: any[],
-  ): Promise<T> {
-    return await this.entityManager.query(sql, parameters);
-  }
-
-  /**
    * Get entity table name in the database
    */
   protected getTableName(target: any): string {

@@ -1,5 +1,5 @@
 export interface UploadApiResult {
-  message: string;
+  msg: string;
   code: number;
   url: string;
 }

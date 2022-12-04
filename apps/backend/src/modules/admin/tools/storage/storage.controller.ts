@@ -1,4 +1,4 @@
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
@@ -18,7 +18,7 @@ export class StorageController {
   @ApiOperation({ summary: '获取本地存储列表' })
   @ApiResult({ type: StorageInfo, struct: 'page' })
   @Get('list')
-  async list(@Query() dto: StoragePageDto): Promise<PageResult<StorageInfo>> {
+  async list(@Query() dto: StoragePageDto): Promise<PageRespData<StorageInfo>> {
     const items = await this.storageService.page(dto);
     const count = await this.storageService.count();
     return {

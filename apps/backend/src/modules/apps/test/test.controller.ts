@@ -10,7 +10,7 @@ import {
 } from './test.dto';
 import { Test } from '@/entities/apps/test.entity';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 
 @ApiTags('Business - Test模块')
 @ApiExtraModels(Test)
@@ -28,7 +28,7 @@ export class TestController {
   @Get('page')
   @ApiOperation({ summary: '分页获取Test列表' })
   @ApiResult({ type: [Test], struct: 'page' })
-  async page(@Query() dto: TestPageDto): Promise<PageResult<Test>> {
+  async page(@Query() dto: TestPageDto): Promise<PageRespData<Test>> {
     return await this.testService.page(dto);
   }
 

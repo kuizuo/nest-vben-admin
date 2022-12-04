@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 
@@ -49,7 +49,7 @@ export class SysUserController {
   @Get('list')
   @ApiOperation({ summary: '获取用户列表' })
   @ApiResult({ type: [UserInfoPage] })
-  async list(@Query() dto: UserPageDto): Promise<PageResult<UserInfoPage>> {
+  async list(@Query() dto: UserPageDto): Promise<PageRespData<UserInfoPage>> {
     return await this.userService.page(dto);
   }
 

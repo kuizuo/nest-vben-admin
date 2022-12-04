@@ -1,6 +1,6 @@
 import { Type, applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiResponse, getSchemaPath } from '@nestjs/swagger';
-import { ResOp } from '@/common/class/res.class';
+import { BaseResponse } from '@/common/response.modal';
 
 const baseTypeNames = ['String', 'Number', 'Boolean'];
 
@@ -53,7 +53,7 @@ export const ApiResult = <TModel extends Type<any>>({
       status: status,
       schema: {
         allOf: [
-          { $ref: getSchemaPath(ResOp) },
+          { $ref: getSchemaPath(BaseResponse) },
           {
             properties: {
               data: prop,

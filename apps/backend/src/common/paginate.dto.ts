@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
-export class PaginateDto {
+export class PageOptionDto {
   @ApiProperty({
     description: '当前页',
     required: false,
@@ -24,7 +24,7 @@ export class PaginateDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Min(100)
+  @Max(100)
   @Type(() => Number)
   pageSize?: number = 10;
 

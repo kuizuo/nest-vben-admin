@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString } from 'class-validator';
-import { PaginateDto } from '@/common/dto/page.dto';
+import { PageOptionDto } from '@/common/paginate.dto';
 
-export class LoginLogPageDto extends PaginateDto {
+export class LoginLogPageDto extends PageOptionDto {
   @ApiProperty({ description: '用户名' })
   @IsOptional()
   @IsString()
@@ -24,7 +24,7 @@ export class LoginLogPageDto extends PaginateDto {
   time?: string[];
 }
 
-export class TaskLogPageDto extends PaginateDto {
+export class TaskLogPageDto extends PageOptionDto {
   @ApiProperty({ description: '用户名' })
   @IsOptional()
   @IsString()

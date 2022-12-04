@@ -10,7 +10,6 @@ import {
 import { ImageCaptcha, LoginToken } from './login.model';
 import { LoginService } from './login.service';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
-import { ResOp } from '@/common/class/res.class';
 import { SkipTransform } from '@/common/decorators/skip-transform.decorator';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { Ip } from '@/common/decorators';
@@ -36,13 +35,7 @@ export class LoginController {
   @LogDisabled()
   async sendCode(@Body() dto: sendCodeDto, @Ip() ip: string): Promise<any> {
     // await this.loginService.checkImgCaptcha(dto.captchaId, dto.verifyCode);
-    try {
-      await this.loginService.sendCode(dto.email, ip);
-      return ResOp.success();
-    } catch (error) {
-      console.log(error);
-      return ResOp.error(500, error?.response);
-    }
+    await this.loginService.sendCode(dto.email, ip);
   }
 
   @Post('login')

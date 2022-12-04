@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PageResult } from '@/common/class/res.class';
-import { PaginateDto } from '@/common/dto/page.dto';
+import { PageRespData } from '@/common/response.modal';
+import { PageOptionDto } from '@/common/paginate.dto';
 import { SysConfig } from '@/entities/admin/sys-config.entity';
 import {
   ParamConfigCreateDto,
@@ -22,7 +22,7 @@ export class SysParamConfigController {
   @ApiOperation({ summary: '分页获取参数配置列表' })
   @ApiResult({ type: [SysConfig] })
   @Get('page')
-  async page(@Query() dto: PaginateDto): Promise<PageResult<SysConfig>> {
+  async page(@Query() dto: PageOptionDto): Promise<PageRespData<SysConfig>> {
     const items = await this.paramConfigService.getConfigListByPage(
       dto.page - 1,
       dto.pageSize,

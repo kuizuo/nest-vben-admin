@@ -18,7 +18,7 @@ import { AccountInfo, UserInfoPage } from './user.modal';
 import { RedisService } from '@/shared/services/redis.service';
 import { SysParamConfigService } from '../param-config/param-config.service';
 import { SYS_USER_INITPASSWORD } from '@/common/constants/param-config';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { QQService } from '@/shared/services/qq.service';
 import { AppConfigService } from '@/shared/services/app/app-config.service';
 import { AppGeneralService } from '/@/shared/services/app/app-general.service';
@@ -273,7 +273,7 @@ export class SysUserService {
   /**
    * 分页查询用户列表
    */
-  async page(dto: UserPageDto): Promise<PageResult<UserInfoPage>> {
+  async page(dto: UserPageDto): Promise<PageRespData<UserInfoPage>> {
     const { page, pageSize, username, nickName, email, status } = dto;
     const where = {
       ...(username ? { username: Like(`%${username}%`) } : null),

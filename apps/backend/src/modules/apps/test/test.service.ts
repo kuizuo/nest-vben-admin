@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Test } from '@/entities/apps/test.entity';
 import { TestCreateDto, TestUpdateDto, TestPageDto } from './test.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { ErrorEnum } from '@/common/constants/error';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class TestService {
     return await this.testRepo.find();
   }
 
-  async page(dto: TestPageDto): Promise<PageResult<Test>> {
+  async page(dto: TestPageDto): Promise<PageRespData<Test>> {
     const { page, pageSize } = dto;
 
     const [items, total] = await this.testRepo

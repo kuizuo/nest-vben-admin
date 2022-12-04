@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolePageDto } from './role.dto';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { SysRole } from '@/entities/admin/sys-role.entity';
 import { SysRoleService } from './role.service';
 import {
@@ -37,7 +37,7 @@ export class SysRoleController {
   @ApiOperation({ summary: '分页查询角色信息' })
   @ApiResult({ type: [SysRole] })
   @Get('page')
-  async page(@Query() dto: RolePageDto): Promise<PageResult<SysRole>> {
+  async page(@Query() dto: RolePageDto): Promise<PageRespData<SysRole>> {
     return await this.roleService.page(dto);
   }
 

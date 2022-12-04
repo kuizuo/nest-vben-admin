@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PageResult } from '@/common/class/res.class';
+import { PageRespData } from '@/common/response.modal';
 import { LogDisabled } from '@/common/decorators/log-disabled.decorator';
 import { LoginLogInfo, TaskLogInfo } from './log.modal';
 import { SysLogService } from './log.service';
@@ -21,7 +21,7 @@ export class SysLogController {
   @Get('login/page')
   async loginLogPage(
     @Query() dto: LoginLogPageDto,
-  ): Promise<PageResult<LoginLogInfo>> {
+  ): Promise<PageRespData<LoginLogInfo>> {
     const items = await this.logService.pageGetLoginLog(dto);
     const count = await this.logService.countLoginLog();
     return {
@@ -36,7 +36,7 @@ export class SysLogController {
   @Get('task/page')
   async taskPage(
     @Query() dto: TaskLogPageDto,
-  ): Promise<PageResult<TaskLogInfo>> {
+  ): Promise<PageRespData<TaskLogInfo>> {
     const items = await this.logService.page(dto.page - 1, dto.pageSize);
     const count = await this.logService.countTaskLog();
     return {
