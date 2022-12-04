@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import Test from '@/entities/apps/test.entity';
+import { Test } from '@/entities/apps/test.entity';
 import { TestCreateDto, TestUpdateDto, TestPageDto } from './test.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { PageResult } from '@/common/class/res.class';

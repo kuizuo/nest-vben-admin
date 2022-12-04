@@ -4,7 +4,7 @@ to: src/modules/apps/<%= name %>/<%= name %>.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import <%= Name %> from '@/entities/apps/<%= name %>.entity';
+import { <%= Name %> } from '@/entities/apps/<%= name %>.entity';
 import { <%= Name %>CreateDto, <%= Name %>UpdateDto, <%= Name %>PageDto } from './<%= name %>.dto';
 import { ApiException } from '@/common/exceptions/api.exception';
 import { PageResult } from '@/common/class/res.class';

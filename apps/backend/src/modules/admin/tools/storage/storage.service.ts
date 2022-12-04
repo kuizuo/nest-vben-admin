@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository } from 'typeorm';
-import ToolStorage from '@/entities/admin/tool-storage.entity';
+import { ToolStorage } from '@/entities/admin/tool-storage.entity';
 import { StorageCreateDto, StoragePageDto } from './storage.dto';
 import { deleteFile } from '@/utils/file';
 import { StorageInfo } from './storage.modal';

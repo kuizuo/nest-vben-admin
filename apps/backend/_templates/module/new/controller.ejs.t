@@ -11,7 +11,7 @@ import {
   <%= Name %>DetailDto,
   <%= Name %>PageDto,
 } from './<%= name %>.dto';
-import <%= Name %> from '@/entities/apps/<%= name %>.entity';
+import { <%= Name %> } from '@/entities/apps/<%= name %>.entity';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { PageResult } from '@/common/class/res.class';
 

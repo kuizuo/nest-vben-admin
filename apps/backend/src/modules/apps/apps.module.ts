@@ -1,4 +1,4 @@
-import Test from '@/entities/apps/test.entity';
+import { Test } from '@/entities/apps/test.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SystemModule } from '../admin/system/system.module';

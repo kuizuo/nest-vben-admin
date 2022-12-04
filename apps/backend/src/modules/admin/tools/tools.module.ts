@@ -4,7 +4,7 @@ import { EmailService } from '@/shared/services/email.service';
 import { StorageService } from './storage/storage.service';
 import { StorageController } from './storage/storage.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import ToolStorage from '@/entities/admin/tool-storage.entity';
+import { ToolStorage } from '@/entities/admin/tool-storage.entity';
 import { SysUser } from '@/entities/admin/sys-user.entity';
 
 @Module({

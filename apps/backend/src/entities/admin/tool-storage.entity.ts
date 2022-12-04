@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AbstractEntity } from '../../common/abstract.entity';
 
 @Entity({ name: 'tool-storage' })
-export default class ToolStorage extends AbstractEntity {
+export class ToolStorage extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

@@ -8,7 +8,7 @@ import {
   TestDetailDto,
   TestPageDto,
 } from './test.dto';
-import Test from '@/entities/apps/test.entity';
+import { Test } from '@/entities/apps/test.entity';
 import { ApiResult } from '@/common/decorators/api-result.decorator';
 import { PageResult } from '@/common/class/res.class';
 
