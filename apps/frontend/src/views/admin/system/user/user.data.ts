@@ -35,6 +35,11 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '部门',
+    dataIndex: 'deptName',
+    width: 120,
+  },
+  {
     title: '角色',
     dataIndex: 'roleNames',
     width: 180,
@@ -156,6 +161,21 @@ export const formSchema: FormSchema[] = [
     },
     colProps: { span: 24 },
     itemProps: { validateTrigger: 'blur' },
+    required: true,
+  },
+  {
+    field: 'deptId',
+    label: '所属部门',
+    component: 'TreeSelect',
+    componentProps: {
+      fieldNames: {
+        label: 'name',
+        key: 'id',
+        value: 'id',
+      },
+    },
+    colProps: { span: 24 },
+    // itemProps: { validateTrigger: 'blur' },
     required: true,
   },
   {

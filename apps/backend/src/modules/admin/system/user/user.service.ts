@@ -161,6 +161,7 @@ export class SysUserService {
         remark: param.remark,
         status: param.status,
         psalt: salt,
+        deptId: param.deptId,
       });
       const result = await manager.save(u);
       const { roles } = param;
@@ -198,10 +199,11 @@ export class SysUserService {
         phone: param.phone,
         remark: param.remark,
         status: param.status,
+        ...(param.deptId && { deptId: param.deptId }),
       });
       // 先删除原来的角色关系
       await manager.delete(SysUserRole, { userId: param.id });
-      const insertRoles = param.roles.map((e) => {
+      const insertRoles = param.roles?.map((e) => {
         return {
           roleId: e,
           userId: param.id,
@@ -274,12 +276,13 @@ export class SysUserService {
    * 分页查询用户列表
    */
   async page(dto: UserPageDto): Promise<PageRespData<UserInfoPage>> {
-    const { page, pageSize, username, nickName, email, status } = dto;
+    const { page, pageSize, username, nickName, deptId, email, status } = dto;
     const where = {
-      ...(username ? { username: Like(`%${username}%`) } : null),
-      ...(nickName ? { nickName: Like(`%${nickName}%`) } : null),
-      ...(email ? { email: Like(`%${email}%`) } : null),
-      ...(status ? { status: status } : null),
+      ...(username && { username: Like(`%${username}%`) }),
+      ...(nickName && { nickName: Like(`%${nickName}%`) }),
+      ...(email && { email: Like(`%${email}%`) }),
+      ...(status && { status: status }),
+      ...(deptId && { deptId: deptId }),
     };
     const rootUserId = await this.findRootUserId();
     const result = await this.userRepo
@@ -289,6 +292,7 @@ export class SysUserService {
         'user_role',
         'user_role.user_id = user.id',
       )
+      .innerJoinAndSelect('sys_dept', 'dept', 'dept.id = user.deptId')
       .innerJoinAndSelect('sys_role', 'role', 'role.id = user_role.role_id')
       // .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
       .where(where)
@@ -315,6 +319,7 @@ export class SysUserService {
           status: e.user_status,
           updatedAt: e.user_updated_at,
           username: e.user_username,
+          deptName: e.dept_name,
           roleNames: [e.role_name],
         });
       } else {

@@ -8,7 +8,10 @@ import { SysTaskLog } from '@/entities/admin/sys-task-log.entity';
 import { SysTask } from '@/entities/admin/sys-task.entity';
 import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { SysUser } from '@/entities/admin/sys-user.entity';
+import { SysRoleDept } from '@/entities/admin/sys-role-dept.entity';
+import { SysDept } from '@/entities/admin/sys-dept.entity';
 import { SysConfig } from '@/entities/admin/sys-config.entity';
+
 import { SysLogController } from './log/log.controller';
 import { SysLogService } from './log/log.service';
 import { SysMenuController } from './menu/menu.controller';
@@ -17,11 +20,12 @@ import { SysRoleController } from './role/role.controller';
 import { SysRoleService } from './role/role.service';
 import { SysUserController } from './user/user.controller';
 import { SysUserService } from './user/user.service';
+import { SysDeptController } from './dept/dept.controller';
+import { SysDeptService } from './dept/dept.service';
 import { BullModule } from '@nestjs/bull';
 import { WSModule } from '@/modules/ws/ws.module';
 import { SysTaskController } from './task/task.controller';
 import { SysTaskService } from './task/task.service';
-import { ConfigModule } from '@nestjs/config';
 import { AppConfigService } from '@/shared/services/app/app-config.service';
 import { SysTaskConsumer } from './task/task.processor';
 import { SysOnlineController } from './online/online.controller';
@@ -35,14 +39,41 @@ import {
   SYS_TASK_QUEUE_PREFIX,
 } from '/@/common/constants/task';
 
+const controllers = [
+  SysUserController,
+  SysRoleController,
+  SysMenuController,
+  SysDeptController,
+  SysLogController,
+  SysTaskController,
+  SysOnlineController,
+  SysParamConfigController,
+  SysServeController,
+];
+
+const services = [
+  SysUserService,
+  SysRoleService,
+  SysMenuService,
+  SysDeptService,
+  SysLogService,
+  SysTaskService,
+  SysTaskConsumer,
+  SysOnlineService,
+  SysParamConfigService,
+  SysServeService,
+];
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       SysUser,
+      SysRole,
       SysUserRole,
       SysMenu,
       SysRoleMenu,
-      SysRole,
+      SysDept,
+      SysRoleDept,
       SysLoginLog,
       SysTask,
       SysTaskLog,
@@ -58,34 +89,8 @@ import {
     }),
     WSModule,
   ],
-  controllers: [
-    SysUserController,
-    SysRoleController,
-    SysMenuController,
-    SysLogController,
-    SysTaskController,
-    SysOnlineController,
-    SysParamConfigController,
-    SysServeController,
-  ],
-  providers: [
-    SysUserService,
-    SysRoleService,
-    SysMenuService,
-    SysLogService,
-    SysTaskService,
-    SysTaskConsumer,
-    SysOnlineService,
-    SysParamConfigService,
-    SysServeService,
-  ],
-  exports: [
-    TypeOrmModule,
-    SysUserService,
-    SysMenuService,
-    SysLogService,
-    SysOnlineService,
-    SysParamConfigService,
-  ],
+  controllers,
+  providers: [...services],
+  exports: [TypeOrmModule, ...services],
 })
 export class SystemModule {}

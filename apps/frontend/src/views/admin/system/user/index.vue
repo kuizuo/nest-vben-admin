@@ -1,6 +1,8 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <BasicTable @register="registerTable">
+    <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
+
+    <BasicTable @register="registerTable" class="w-3/4 xl:w-4/5" :searchInfo="searchInfo">
       <template #toolbar>
         <a-button type="primary" @click="handleCreate">新增账号</a-button>
       </template>
@@ -34,15 +36,18 @@
   </PageWrapper>
 </template>
 <script lang="ts" setup name="用户管理">
+  import { reactive } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { PageWrapper } from '/@/components/Page';
   import { useGo } from '/@/hooks/web/usePage';
   import { useModal } from '/@/components/Modal';
+  import DeptTree from './DeptTree.vue';
   import UserModal from './UserModal.vue';
   import { getUserList, deleteUser } from '/@/api/admin/system/user';
   import { columns, searchFormSchema } from './user.data';
 
   const go = useGo();
+  const searchInfo = reactive<Recordable>({});
   const [registerModal, { openModal }] = useModal();
   const [registerTable, { reload, updateTableDataRecord, deleteTableDataRecord }] = useTable({
     title: '账号列表',
@@ -89,6 +94,11 @@
     } else {
       reload();
     }
+  }
+
+  function handleSelect(deptId) {
+    searchInfo.deptId = deptId;
+    reload();
   }
 
   function handleView(record: Recordable) {

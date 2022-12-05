@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -72,7 +72,7 @@ export class PasswordUpdateDto {
 
 export class UserCreateDto {
   @ApiProperty({ description: '登录账号', example: 'kz-admin' })
-  @IsUnique(SysUser, { message: '该用户名已被注册' })
+  // @IsUnique(SysUser, { message: '该用户名已被注册' })
   @IsString()
   @Matches(/^[a-z0-9A-Z\W_]+$/)
   @MinLength(4)
@@ -124,9 +124,14 @@ export class UserCreateDto {
   @ApiProperty({ description: '状态' })
   @IsIn([0, 1])
   status: number;
+
+  @ApiProperty({ description: '部门ID' })
+  @Type(() => Number)
+  @IsInt()
+  deptId: number;
 }
 
-export class UserUpdateDto extends UserCreateDto {
+export class UserUpdateDto extends PartialType(UserCreateDto) {
   @ApiProperty({ description: '用户ID' })
   @IsInt()
   id: number;
@@ -176,6 +181,11 @@ export class UserPageDto extends PageOptionDto {
   @IsIn([0, 1])
   @Type(() => Number)
   status?: number;
+
+  @ApiProperty({ description: '部门ID' })
+  @Type(() => Number)
+  @IsInt()
+  deptId: number;
 }
 
 export class UserPasswordDto {

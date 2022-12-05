@@ -9,6 +9,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createUser, updateUser, getUserInfo } from '/@/api/admin/system/user';
   import { formSchema } from './user.data';
+  import { getDeptList } from '/@/api/admin/system/dept';
 
   const emit = defineEmits(['success', 'register']);
 
@@ -50,6 +51,14 @@
         },
       ]);
     }
+
+    const treeData = await getDeptList();
+    updateSchema([
+      {
+        field: 'deptId',
+        componentProps: { treeData },
+      },
+    ]);
   });
 
   async function handleSubmit() {

@@ -88,6 +88,6 @@
   }
 
   function onFetchSuccess() {
-    nextTick(expandAll);
+    // nextTick(expandAll);
   }
 </script>

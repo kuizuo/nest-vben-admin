@@ -11,7 +11,7 @@ import { AppConfigService } from './services/app/app-config.service';
 import { AppLoggerService } from './services/app/app-logger.service';
 import { AppGeneralService } from './services/app/app-general.service';
 
-const providers = [
+const services = [
   AppConfigService,
   AppLoggerService,
   AppGeneralService,
@@ -46,7 +46,7 @@ const providers = [
       inject: [AppConfigService],
     }),
   ],
-  providers: [...providers],
-  exports: [HttpModule, CacheModule, JwtModule, ...providers],
+  providers: [...services],
+  exports: [HttpModule, CacheModule, JwtModule, ...services],
 })
 export class SharedModule {}

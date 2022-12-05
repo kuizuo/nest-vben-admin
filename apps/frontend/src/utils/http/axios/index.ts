@@ -72,8 +72,8 @@ const transform: AxiosTransform = {
         userStore.setToken(undefined);
         userStore.logout(true);
         break;
-      case 11001:
-      case 11002:
+      case 1101:
+      case 1102:
         timeoutMsg = msg;
         userStore.setToken(undefined);
         userStore.logout(true);

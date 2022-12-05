@@ -172,14 +172,25 @@ export class SysRoleService {
   /**
    * 根据用户id查找角色信息
    */
-  async getRoleIdByUser(id: number): Promise<number[]> {
+  async getRoleIdByUser(uid: number): Promise<number[]> {
     const result = await this.userRoleRepo.findBy({
-      userId: id,
+      userId: uid,
     });
     if (!isEmpty(result)) {
-      return map(result, (v) => {
-        return v.roleId;
-      });
+      return result.map((e) => e.roleId);
+    }
+    return [];
+  }
+
+  /**
+   * 根据角色id返回所有用户id
+   */
+  async getUserIdsByRole(rid: number): Promise<number[]> {
+    const result = await this.userRoleRepo.findBy({
+      roleId: rid,
+    });
+    if (!isEmpty(result)) {
+      return result.map((v) => v.userId);
     }
     return [];
   }

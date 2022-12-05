@@ -61,6 +61,9 @@ export class UserInfoPage {
   @ApiProperty({ description: '用户名' })
   username: string;
 
+  @ApiProperty({ description: '部门名' })
+  deptName: string;
+
   @ApiProperty({ type: [String], description: '角色' })
   roleNames: string[];
 }

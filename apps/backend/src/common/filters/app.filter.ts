@@ -12,7 +12,7 @@ import { AppConfigService } from '/@/shared/services/app/app-config.service';
 import { ErrorEnum } from '/@/common/constants/error';
 
 @Catch()
-export class ApiExceptionFilter implements ExceptionFilter {
+export class AppFilter implements ExceptionFilter {
   constructor(private readonly configService: AppConfigService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {

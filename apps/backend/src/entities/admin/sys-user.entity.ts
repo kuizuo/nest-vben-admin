@@ -47,4 +47,8 @@ export class SysUser extends AbstractEntity {
   @Column({ type: 'tinyint', nullable: true, default: 1 })
   @ApiProperty()
   status: number;
+
+  @Column()
+  @ApiProperty({ description: '部门ID' })
+  deptId: number;
 }

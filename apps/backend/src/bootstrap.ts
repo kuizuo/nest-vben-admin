@@ -16,7 +16,7 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { setupSwagger } from './setup-swagger';
 import { AppConfigService } from './shared/services/app/app-config.service';
 import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
-import { ApiExceptionFilter } from './common/filters/api-exception.filter';
+import { AppFilter } from './common/filters/app.filter';
 import { TransformInterceptor as TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { useContainer } from 'class-validator';
@@ -52,7 +52,7 @@ export async function bootstrap() {
   });
 
   // 处理异常请求
-  app.useGlobalFilters(new ApiExceptionFilter(app.get(AppLoggerService)));
+  app.useGlobalFilters(new AppFilter(app.get(AppLoggerService)));
 
   app.useGlobalInterceptors(
     // 请求超时处理
@@ -65,23 +65,23 @@ export async function bootstrap() {
   // websocket
   app.useWebSocketAdapter(new IoAdapter());
 
-  // 使用全局管道验证数据
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-      exceptionFactory: (errors) =>
-        new UnprocessableEntityException(
-          errors.map((e) => {
-            const rule = Object.keys(e.constraints)[0];
-            const msg = e.constraints[rule];
-            return `property ${e.property} validation failed: ${msg}, following constraints: ${rule}`;
-          })[0],
-        ),
-    }),
-  );
+  // // 使用全局管道验证数据
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     transform: true,
+  //     whitelist: true,
+  //     // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
+  //     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+  //     exceptionFactory: (errors) =>
+  //       new UnprocessableEntityException(
+  //         errors.map((e) => {
+  //           const rule = Object.keys(e.constraints)[0];
+  //           const msg = e.constraints[rule];
+  //           return `property ${e.property} validation failed: ${msg}, following constraints: ${rule}`;
+  //         })[0],
+  //       ),
+  //   }),
+  // );
 
   // global prefix
   const { globalPrefix, port } = configService.appConfig;
