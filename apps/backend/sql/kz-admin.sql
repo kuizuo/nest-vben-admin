@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 07/11/2022 13:56:28
+ Date: 05/12/2022 15:49:09
 */
 
 SET NAMES utf8mb4;
@@ -36,8 +36,37 @@ CREATE TABLE `sys_config`  (
 -- ----------------------------
 -- Records of sys_config
 -- ----------------------------
-INSERT INTO `sys_config` VALUES (1, 'sys_user_initPassword', '初始密码', 'a123456', '创建管理员账号的初始密码', '2022-04-18 13:51:59.021771', '2022-04-18 13:51:59.176361');
+INSERT INTO `sys_config` VALUES (1, 'sys_user_initPassword', '初始密码', '123456', '创建管理员账号的初始密码', '2022-04-18 13:51:59.021771', '2022-04-18 13:51:59.176361');
 INSERT INTO `sys_config` VALUES (2, 'sys_api_token', 'API Token', 'kz-admin', '用于请求 @ApiToken 的控制器', '2022-10-13 00:10:51.146746', '2022-10-13 00:12:29.000000');
+
+-- ----------------------------
+-- Table structure for sys_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dept`;
+CREATE TABLE `sys_dept`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `orderNo` int(11) NULL DEFAULT 0,
+  `mpath` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+  `parentId` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `FK_c75280b01c49779f2323536db67`(`parentId`) USING BTREE,
+  CONSTRAINT `FK_c75280b01c49779f2323536db67` FOREIGN KEY (`parentId`) REFERENCES `sys_dept` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_dept
+-- ----------------------------
+INSERT INTO `sys_dept` VALUES (1, '2022-12-05 01:56:36.454842', '2022-12-05 01:56:36.000000', '华东分部', 1, '1.', NULL);
+INSERT INTO `sys_dept` VALUES (2, '2022-12-05 01:56:51.609649', '2022-12-05 01:56:51.000000', '研发部', 1, '1.2.', 1);
+INSERT INTO `sys_dept` VALUES (3, '2022-12-05 01:57:02.171144', '2022-12-05 01:57:02.000000', '市场部', 2, '1.3.', 1);
+INSERT INTO `sys_dept` VALUES (4, '2022-12-05 01:57:09.787832', '2022-12-05 01:57:09.000000', '商务部', 3, '1.4.', 1);
+INSERT INTO `sys_dept` VALUES (5, '2022-12-05 01:57:18.070162', '2022-12-05 01:57:18.000000', '财务部', 4, '1.5.', 1);
+INSERT INTO `sys_dept` VALUES (6, '2022-12-05 01:57:32.261756', '2022-12-05 01:57:32.000000', '华南分部', 2, '6.', NULL);
+INSERT INTO `sys_dept` VALUES (7, '2022-12-05 01:57:49.769066', '2022-12-05 01:57:49.000000', '西北分部', 3, '7.', NULL);
+INSERT INTO `sys_dept` VALUES (8, '2022-12-05 01:57:59.323718', '2022-12-05 01:57:59.000000', '研发部', 1, '6.8.', 6);
 
 -- ----------------------------
 -- Table structure for sys_login_log
@@ -53,7 +82,7 @@ CREATE TABLE `sys_login_log`  (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_login_log
@@ -110,6 +139,45 @@ INSERT INTO `sys_login_log` VALUES (61, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Wind
 INSERT INTO `sys_login_log` VALUES (62, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:54:01.477348', '2022-11-07 12:54:01.477348', ' 本机地址');
 INSERT INTO `sys_login_log` VALUES (63, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 12:54:01.545497', '2022-11-07 12:54:01.545497', ' 本机地址');
 INSERT INTO `sys_login_log` VALUES (64, 1, '127.0.0.1', NULL, '', '2022-11-07 13:40:48.996788', '2022-11-07 13:40:48.996788', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (65, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 13:59:13.486983', '2022-11-07 13:59:13.486983', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (66, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 13:59:13.554552', '2022-11-07 13:59:13.554552', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (67, 1, '127.0.0.1', NULL, '', '2022-11-07 14:21:37.231744', '2022-11-07 14:21:37.231744', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (68, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 15:37:58.753126', '2022-11-07 15:37:58.753126', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (69, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 15:38:00.125835', '2022-11-07 15:38:00.125835', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (70, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 15:38:00.846110', '2022-11-07 15:38:00.846110', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (71, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 15:38:59.849169', '2022-11-07 15:38:59.849169', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (72, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 15:39:16.547277', '2022-11-07 15:39:16.547277', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (73, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.35', '2022-11-07 15:39:16.614087', '2022-11-07 15:39:16.614087', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (74, 1, '127.0.0.1', NULL, '', '2022-11-26 15:57:04.657473', '2022-11-26 15:57:04.657473', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (75, 1, '127.0.0.1', NULL, '', '2022-11-26 15:57:04.752585', '2022-11-26 15:57:04.752585', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (76, 1, '127.0.0.1', NULL, '', '2022-11-26 15:57:08.422146', '2022-11-26 15:57:08.422146', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (77, 1, '127.0.0.1', NULL, '', '2022-11-26 15:57:10.061229', '2022-11-26 15:57:10.061229', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (78, 1, '127.0.0.1', NULL, '', '2022-11-26 15:57:56.676087', '2022-11-26 15:57:56.676087', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (79, 1, '127.0.0.1', NULL, '', '2022-11-26 15:58:04.553299', '2022-11-26 15:58:04.553299', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (80, 1, '127.0.0.1', NULL, '', '2022-11-26 17:01:36.210175', '2022-11-26 17:01:36.210175', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (81, 1, '127.0.0.1', NULL, '', '2022-11-26 20:48:41.231206', '2022-11-26 20:48:41.231206', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (82, 1, '127.0.0.1', NULL, '', '2022-11-26 22:06:48.594422', '2022-11-26 22:06:48.594422', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (83, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:37.242862', '2022-11-27 01:35:37.242862', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (84, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:38.387048', '2022-11-27 01:35:38.387048', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (85, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:39.332949', '2022-11-27 01:35:39.332949', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (86, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:39.999632', '2022-11-27 01:35:39.999632', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (87, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:44.314032', '2022-11-27 01:35:44.314032', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (88, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:45.595382', '2022-11-27 01:35:45.595382', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (89, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:35:48.592366', '2022-11-27 01:35:48.592366', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (90, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:36:01.736387', '2022-11-27 01:36:01.736387', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (91, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:36:25.974168', '2022-11-27 01:36:25.974168', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (92, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42', '2022-11-27 01:36:26.049644', '2022-11-27 01:36:26.049644', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (93, 1, '127.0.0.1', NULL, '', '2022-11-27 02:51:18.247591', '2022-11-27 02:51:18.247591', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (94, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-04 17:30:50.411835', '2022-12-04 17:30:50.411835', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (95, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-04 17:30:50.502393', '2022-12-04 17:30:50.502393', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (96, 1, '127.0.0.1', NULL, '', '2022-12-04 18:06:54.585153', '2022-12-04 18:06:54.585153', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (97, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-04 20:38:47.891225', '2022-12-04 20:38:47.891225', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (98, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-05 01:47:34.373737', '2022-12-05 01:47:34.373737', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (99, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-05 01:47:34.596282', '2022-12-05 01:47:34.596282', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (100, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-05 01:49:35.102707', '2022-12-05 01:49:35.102707', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (101, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-05 01:49:35.321044', '2022-12-05 01:49:35.321044', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (102, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-05 01:52:17.987180', '2022-12-05 01:52:17.987180', ' 本机地址');
+INSERT INTO `sys_login_log` VALUES (103, 1, '127.0.0.1', NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.62', '2022-12-05 01:52:18.198881', '2022-12-05 01:52:18.198881', ' 本机地址');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -132,7 +200,7 @@ CREATE TABLE `sys_menu`  (
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `external` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -155,7 +223,7 @@ INSERT INTO `sys_menu` VALUES ('2022-05-05 00:47:18.653750', '2022-05-05 15:16:3
 INSERT INTO `sys_menu` VALUES ('2022-05-05 12:40:23.328931', '2022-05-05 15:14:36.736848', 16, NULL, '/dashboard', '仪表盘', NULL, 0, 'ion:grid-outline', 0, 'LAYOUT', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 12:41:24.136217', '2022-05-05 15:16:33.686876', 17, 16, '/dashboard/workbench', '工作台', 'dashboard:workbench', 1, '', 2, '/dashboard/workbench/index', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 12:42:45.781049', '2022-05-05 15:16:35.792168', 18, 16, '/dashboard/analysis', '分析页', 'dashboard:analysis', 1, '', 1, '/dashboard/analysis/index', 1, 1, 1, 0);
-INSERT INTO `sys_menu` VALUES ('2022-05-05 21:47:57.744418', '2022-05-05 14:26:02.429730', 19, 1, '/system/user_detail/:id', '用户详情', 'sys:user:detail', 1, '', 3, '/admin/system/user/UserDetail', 1, 0, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-05-05 21:47:57.744418', '2022-12-05 01:37:37.523461', 19, 1, '/system/user_detail/:id', '用户详情', 'sys:user:detail', 1, '', 10, '/admin/system/user/UserDetail', 1, 0, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 14:29:42.984193', '2022-05-05 14:30:53.424785', 20, 2, NULL, '新增', 'sys:user:add', 2, '', 0, NULL, 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 14:32:50.757513', '2022-05-05 14:32:50.757513', 21, 2, '', '删除', 'sys:user:delete', 2, '', 0, '', 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-05-05 14:32:50.765599', '2022-05-05 14:34:09.576671', 22, 2, '', '更新', 'sys:user:update', 2, '', 0, '', 1, 1, 1, 0);
@@ -196,6 +264,11 @@ INSERT INTO `sys_menu` VALUES ('2022-10-13 00:14:34.220628', '2022-10-13 00:14:3
 INSERT INTO `sys_menu` VALUES ('2022-10-13 00:14:52.311703', '2022-10-13 00:14:52.311703', 58, 56, NULL, '更新', 'sys:param-config:update', 2, '', 2, NULL, 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-10-13 00:15:09.832903', '2022-10-13 00:15:09.832903', 59, 56, NULL, '删除', 'sys:param-config:delete', 2, '', 3, NULL, 1, 1, 1, 0);
 INSERT INTO `sys_menu` VALUES ('2022-10-13 00:15:36.452796', '2022-10-13 00:15:36.452796', 60, 56, NULL, '查询', 'sys:param-config:info', 2, '', 4, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-12-05 01:34:18.599016', '2022-12-05 01:48:56.000000', 61, 1, '/system/dept', '部门管理', 'sys:dept:list', 1, '', 3, '/admin/system/dept/index', 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-12-05 01:38:21.933874', '2022-12-05 01:52:11.000000', 62, 61, NULL, '新增', 'sys:dept:add', 2, '', 1, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-12-05 01:39:25.630217', '2022-12-05 01:39:25.630217', 63, 61, NULL, '更新', 'sys:dept:update', 2, '', 2, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-12-05 01:40:41.930385', '2022-12-05 01:40:41.930385', 64, 61, NULL, '删除', 'sys:dept:delete', 2, '', 3, NULL, 1, 1, 1, 0);
+INSERT INTO `sys_menu` VALUES ('2022-12-05 01:42:19.474973', '2022-12-05 01:42:19.474973', 65, 61, NULL, '详情', 'sys:dept:detail', 2, '', 4, NULL, 1, 1, 1, 0);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -220,6 +293,23 @@ CREATE TABLE `sys_role`  (
 INSERT INTO `sys_role` VALUES ('2022-04-18 13:51:57.000000', '2022-04-18 14:20:58.233567', 1, 'root', '超级管理员', NULL, 1);
 INSERT INTO `sys_role` VALUES ('2022-04-18 15:52:51.645691', '2022-05-05 14:04:03.913722', 2, 'user', '用户', '', 1);
 INSERT INTO `sys_role` VALUES ('2022-04-21 01:45:10.448676', '2022-05-05 14:04:01.437848', 3, 'test', '测试', '', 1);
+
+-- ----------------------------
+-- Table structure for sys_role_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_dept`;
+CREATE TABLE `sys_role_dept`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `role_id` int(11) NOT NULL,
+  `dept_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_role_dept
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -271,7 +361,7 @@ CREATE TABLE `sys_task`  (
 -- Records of sys_task
 -- ----------------------------
 INSERT INTO `sys_task` VALUES (2, '定时清空登录日志', 'SysLogClearJob.clearLoginLog', 0, 0, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:2:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":2}', '定时清空登录日志', '2022-04-18 13:51:58.066927', '2022-04-29 00:04:39.000000');
-INSERT INTO `sys_task` VALUES (3, '定时清空任务日志', 'SysLogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2022-04-18 13:51:58.066927', '2022-11-07 13:38:54.000000');
+INSERT INTO `sys_task` VALUES (3, '定时清空任务日志', 'SysLogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2022-04-18 13:51:58.066927', '2022-12-05 15:42:10.000000');
 INSERT INTO `sys_task` VALUES (4, '访问百度首页', 'HttpRequestJob.handle', 0, 0, NULL, NULL, 1, '* * * * * ?', NULL, '{\"url\":\"https://www.baidu.com\",\"method\":\"get\"}', NULL, '访问百度首页', '2022-04-29 00:34:59.365492', '2022-04-29 13:02:32.000000');
 INSERT INTO `sys_task` VALUES (5, '发送邮箱', 'EmailJob.send', 0, 0, NULL, NULL, -1, '0 0 0 1 * ?', NULL, '{\"subject\":\"这是标题\",\"to\":\"zeyu57@163.com\",\"content\":\"这是正文\"}', NULL, '每月发送邮箱', '2022-05-14 19:58:51.344360', '2022-05-14 19:58:51.000000');
 
@@ -288,13 +378,14 @@ CREATE TABLE `sys_task_log`  (
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_task_log
 -- ----------------------------
 INSERT INTO `sys_task_log` VALUES (1, 3, 1, NULL, 0, '2022-05-03 23:58:35.696042', '2022-05-03 23:58:35.696042');
 INSERT INTO `sys_task_log` VALUES (2, 5, 1, NULL, 0, '2022-05-14 19:58:56.289519', '2022-05-14 19:58:56.289519');
+INSERT INTO `sys_task_log` VALUES (3, 3, 0, 'Error: Nest could not find SysLogClearJob element (this provider does not exist in the current context)', 0, '2022-12-05 03:00:00.092995', '2022-12-05 03:00:00.092995');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -314,6 +405,7 @@ CREATE TABLE `sys_user`  (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `nick_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `qq` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `deptId` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `IDX_9e7164b2f1ea1348bc0eb0a7da`(`username`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
@@ -321,9 +413,9 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', 'a11571e778ee85e82caae2d980952546', 'https://vvbin.cn/doc-next/logo.png', 'hi@kuizuo.cn', NULL, '管理员', 'xQYCspvFb8cAW6GG1pOoUGTLqsuUSO3d', 1, '2022-04-18 13:51:58.000000', '2022-06-24 15:17:27.000000', '愧怍', '911993023');
-INSERT INTO `sys_user` VALUES (2, 'user', '98b6f2563e89b1a0e4af638345155527', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', 'kuizuo12@163.com', NULL, NULL, 'qlovDV7pL5dPYPI3QgFFo1HH74nP6sJe', 1, '2022-05-05 15:21:29.941577', '2022-06-06 15:17:22.000000', '用户', '911993023');
-INSERT INTO `sys_user` VALUES (3, 'kuizuo', 'f03fa2a99595127b9a39587421d471f6', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', '911993023@qq.com', NULL, NULL, 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '2022-05-27 00:49:42.341553', '2022-05-27 00:49:42.341553', '愧怍小儿', '911993023');
+INSERT INTO `sys_user` VALUES (1, 'admin', 'a11571e778ee85e82caae2d980952546', 'https://vvbin.cn/doc-next/logo.png', 'hi@kuizuo.cn', NULL, '管理员', 'xQYCspvFb8cAW6GG1pOoUGTLqsuUSO3d', 1, '2022-04-18 13:51:58.000000', '2022-12-05 02:19:20.628813', '愧怍', '911993023', 1);
+INSERT INTO `sys_user` VALUES (2, 'user', '98b6f2563e89b1a0e4af638345155527', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', 'kuizuo12@163.com', NULL, '无', 'qlovDV7pL5dPYPI3QgFFo1HH74nP6sJe', 1, '2022-05-05 15:21:29.941577', '2022-12-05 15:36:02.000000', '用户', '911993023', 6);
+INSERT INTO `sys_user` VALUES (8, 'kuizuo', 'f03fa2a99595127b9a39587421d471f6', 'https://q1.qlogo.cn/g?b=qq&s=100&nk=911993023', '911993023@qq.com', NULL, NULL, 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '2022-05-27 00:49:42.341553', '2022-12-05 02:19:22.235686', '愧怍小儿', '911993023', 3);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -336,16 +428,15 @@ CREATE TABLE `sys_user_role`  (
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `sys_user_role` VALUES (1, 1, 1, '2022-04-20 14:08:52.788308', '2022-05-05 15:25:49.157062');
 INSERT INTO `sys_user_role` VALUES (5, 8, 2, '2022-05-27 00:49:42.350411', '2022-05-27 00:49:42.350411');
-INSERT INTO `sys_user_role` VALUES (7, 2, 2, '2022-06-06 15:17:22.535453', '2022-06-06 15:17:22.535453');
-INSERT INTO `sys_user_role` VALUES (9, 3, 2, '2022-06-24 15:21:12.719440', '2022-06-24 15:21:12.719440');
 INSERT INTO `sys_user_role` VALUES (10, 9, 0, '2022-11-06 01:38:28.813422', '2022-11-06 01:38:28.813422');
+INSERT INTO `sys_user_role` VALUES (13, 1, 1, '2022-11-07 18:43:03.419574', '2022-11-07 18:43:03.419574');
+INSERT INTO `sys_user_role` VALUES (17, 2, 2, '2022-12-05 15:36:02.791278', '2022-12-05 15:36:02.791278');
 
 -- ----------------------------
 -- Table structure for test
