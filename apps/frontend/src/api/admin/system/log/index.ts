@@ -7,14 +7,14 @@ enum Api {
 }
 
 export const getLoginLogList = (params) =>
-  defHttp.get<API.TableListResult<API.LoginLogListResult>>({
+  defHttp.get<API.TableListResult<API.LoginLogList>>({
     url: Api.LoginLogList,
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
   });
 
 export const getTaskLogList = (params) =>
-  defHttp.get<API.TableListResult<API.TaskLogListResult>>({
+  defHttp.get<API.TableListResult<API.TaskLogList>>({
     url: Api.TaskLogList,
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),

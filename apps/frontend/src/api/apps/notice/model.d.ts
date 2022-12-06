@@ -1,5 +1,5 @@
 declare namespace API {
-  type NoticeListPageResultItem = {
+  type NoticeItem = {
     id: number;
     title: string;
     content: string;
@@ -8,10 +8,9 @@ declare namespace API {
     timestamp: string;
   };
 
-  type NoticeListPageResult = NoticeListPageResultItem[];
+  type NoticeList = NoticeItem[];
 
-  /** 创建公告参数 */
-  type CreateNoticeParams = {
+  type CreateNotice = {
     title?: string;
     content?: string;
     type?: number;
@@ -19,8 +18,7 @@ declare namespace API {
     timestamp?: string;
   };
 
-  /** 更新公告参数 */
-  type UpdateNoticeParams = CreateNoticeParams & {
+  type UpdateNotice = CreateNotice & {
     id: number;
   };
 }

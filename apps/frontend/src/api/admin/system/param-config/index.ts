@@ -10,7 +10,7 @@ enum Api {
 }
 
 export const getParamConfigList = (params) =>
-  defHttp.get<API.TableListResult<API.ParamConfigListResult>>({
+  defHttp.get<API.TableListResult<API.ParamConfigList>>({
     url: Api.Page,
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
@@ -19,7 +19,7 @@ export const getParamConfigList = (params) =>
 export const infoParamConfig = (params: { id: number }) =>
   defHttp.post({ url: Api.Info, params }, { successMsg: '获取成功' });
 
-export const createParamConfig = (params: API.CreateParamConfigParams) =>
+export const createParamConfig = (params: API.CreateParamConfig) =>
   defHttp.post({ url: Api.Add, params }, { successMsg: '创建成功' });
 
 export const updateParamConfig = (params: API.UpdateParamConfigParams) =>

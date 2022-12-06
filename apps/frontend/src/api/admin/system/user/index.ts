@@ -13,18 +13,18 @@ enum Api {
 }
 
 export const getUserList = (params?: API.PageParams) =>
-  defHttp.get<API.TableListResult<API.UserListPageResult>>({ url: Api.List, params });
+  defHttp.get<API.UserList>({ url: Api.List, params });
 
 export const getUserListByPage = (params?: API.PageParams) =>
-  defHttp.get<API.TableListResult<API.UserListPageResult>>({ url: Api.Page, params });
+  defHttp.get<API.TableListResult<API.UserList>>({ url: Api.Page, params });
 
 export const getUserInfo = (params: { id: number }) =>
-  defHttp.get<API.UserInfoResult>({ url: Api.Info, params });
+  defHttp.get<API.UserInfo>({ url: Api.Info, params });
 
-export const createUser = (params: API.CreateUserParams) =>
+export const createUser = (params: API.CreateUser) =>
   defHttp.post({ url: Api.Add, params }, { successMsg: '创建成功' });
 
-export const updateUser = (params: API.UpdateUserParams) =>
+export const updateUser = (params: API.UpdateUser) =>
   defHttp.post({ url: Api.Update, params }, { successMsg: '更新成功' });
 
 export const deleteUser = (params: { ids: number[] }) =>

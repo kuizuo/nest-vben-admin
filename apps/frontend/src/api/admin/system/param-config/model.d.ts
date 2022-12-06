@@ -1,5 +1,5 @@
 declare namespace API {
-  type ParamConfigListItemResult = {
+  type ParamConfigItem = {
     createTime: string;
     updateTime: string;
     id: number;
@@ -9,16 +9,16 @@ declare namespace API {
     remark?: string;
   };
 
-  type ParamConfigListResult = ParamConfigListItemResult[];
+  type ParamConfigList = ParamConfigItem[];
 
-  type CreateParamConfigParams = {
+  type CreateParamConfig = {
     name?: string;
     key?: string;
     value?: string;
     remark?: string;
   };
 
-  type UpdateParamConfigParams = CreateParamConfigParams & {
+  type UpdateParamConfigParams = CreateParamConfig & {
     id: number;
   };
 }

@@ -1,5 +1,5 @@
 declare namespace API {
-  type StorageListPageResultItem = {
+  type StorageItem = {
     id: number;
     name: string;
     fileName: string;
@@ -10,5 +10,5 @@ declare namespace API {
     username: string;
   };
 
-  type StorageListPageResult = StorageListPageResultItem[];
+  type StorageList = StorageItem[];
 }

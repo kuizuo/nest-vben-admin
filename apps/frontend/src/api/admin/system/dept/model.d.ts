@@ -1,5 +1,5 @@
 declare namespace API {
-  type DeptListResultItem = {
+  type DeptItem = {
     createAt: string;
     updatedAt: string;
     id: number;
@@ -8,23 +8,19 @@ declare namespace API {
     orderNo: number;
   };
 
-  /** 获取部门列表参数 */
-  type DeptListResult = DeptListResultItem[];
+  type DeptList = DeptItem[];
 
-  /** 新增部门参数 */
-  type DeptAddParams = {
+  type CreateDept = {
     parentId: number;
     name: string;
     orderNo: number;
   };
 
-  /** 更新某项部门参数 */
-  type DeptUpdateParams = DeptAddParams & {
+  type UpdateDept = CreateDept & {
     id: number;
   };
 
-  /** 获取部门详情结果 */
-  type DeptInfoResult = {
+  type DeptInfo = {
     createAt: string;
     updatedAt: string;
     id: number;

@@ -1,6 +1,6 @@
 declare namespace API {
   /** 任务列表项 */
-  export type SysTaskListItem = {
+  export type SysTaskItem = {
     createdAt: string;
     updatedAt: string;
     id: number;
@@ -18,7 +18,7 @@ declare namespace API {
     remark: string;
   };
   /** 添加任务参数 */
-  export type SysTaskAddParams = {
+  export type SysTaskAdd = {
     name: string;
     service: string;
     type: number;
@@ -33,11 +33,11 @@ declare namespace API {
   };
 
   /** 更新任务参数 */
-  export type SysTaskUpdateParams = SysTaskAddParams & {
+  export type SysTaskUpdate = SysTaskAdd & {
     id: number;
   };
   /** 获取任务详情返回结果 */
-  export type SysTaskInfoResult = {
+  export type SysTaskInfo = {
     createdAt: string;
     updatedAt: string;
     id: number;

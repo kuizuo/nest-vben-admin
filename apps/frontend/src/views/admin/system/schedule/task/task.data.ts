@@ -3,7 +3,7 @@ import { Tag, Badge } from 'ant-design-vue';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
-export type TableListItem = API.SysTaskListItem;
+export type TableListItem = API.SysTaskItem;
 
 const getStatusColor = (status) => {
   switch (status) {

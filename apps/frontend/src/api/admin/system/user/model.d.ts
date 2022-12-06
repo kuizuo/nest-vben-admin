@@ -1,5 +1,5 @@
 declare namespace API {
-  type UserListPageResultItem = {
+  type UserItem = {
     id: number;
     username: string;
     nickName: string;
@@ -14,11 +14,9 @@ declare namespace API {
     updatedAt: string;
   };
 
-  /** 获取用户列表结果 */
-  type UserListPageResult = UserListPageResultItem[];
+  type UserList = UserItem[];
 
-  /** 用户信息 */
-  type UserInfoResult = {
+  type UserInfo = {
     id: number;
     username: string;
     nickName: string;
@@ -33,8 +31,7 @@ declare namespace API {
     updatedAt: string;
   };
 
-  /** 创建用户参数 */
-  type CreateUserParams = {
+  type CreateUser = {
     username: string;
     password: string;
     roles: number[];
@@ -45,8 +42,7 @@ declare namespace API {
     status: number;
   };
 
-  /** 更新管理员用户参数 */
-  type UpdateUserParams = {
+  type UpdateUser = {
     id: number;
     username: string;
     password: string;
@@ -58,7 +54,6 @@ declare namespace API {
     status: number;
   };
 
-  /** 更新用户密码 */
   type UpdateUserPassword = {
     id: number;
     password: string;

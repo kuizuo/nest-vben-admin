@@ -1,6 +1,6 @@
 declare namespace API {
-  /** 登录日志项结果 */
-  type LoginLogListItemResult = {
+  // 登录日志
+  type LoginLogItem = {
     id: number;
     ip: string;
     os: string;
@@ -8,11 +8,10 @@ declare namespace API {
     time: string;
     username: string;
   };
-  /** 登录日志结果 */
-  type LoginLogListResult = LoginLogListItemResult[];
+  type LoginLogList = LoginLogItem[];
 
-  /** 请求日志项结果 */
-  type ReqLogListItemResult = {
+  // 操作日志
+  type ReqLogItem = {
     createTime: string;
     updateTime: string;
     id: number;
@@ -24,11 +23,10 @@ declare namespace API {
     status: number;
     consumeTime: number;
   };
-  /** 请求日志结果 */
-  type ReqLogListResult = ReqLogListItemResult[];
+  type ReqLogList = ReqLogItem[];
 
-  /** 任务日志项结果 */
-  type TaskLogListItemResult = {
+  // 任务日志
+  type TaskLogItem = {
     id: number;
     taskId: number;
     name: string;
@@ -37,6 +35,5 @@ declare namespace API {
     detail: string;
     status: number;
   };
-  /** 任务日志结果 */
-  type TaskLogListResult = TaskLogListItemResult[];
+  type TaskLogList = TaskLogItem[];
 }

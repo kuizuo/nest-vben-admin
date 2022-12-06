@@ -1,5 +1,5 @@
 declare namespace API {
-  type MenuListResultItem = {
+  type MenuItem = {
     createTime: string;
     updatedAt: string;
     id: number;
@@ -16,11 +16,9 @@ declare namespace API {
     show: number;
   };
 
-  /** 获取菜单列表参数 */
-  type MenuListResult = MenuListResultItem[];
+  type MenuList = MenuItem[];
 
-  /** 新增菜单参数 */
-  type MenuAddParams = {
+  type MenuAdd = {
     type: number;
     parent: number;
     name: string;
@@ -34,43 +32,12 @@ declare namespace API {
     keepalive: number;
   };
 
-  /** 更新某项菜单参数 */
-  type MenuUpdateParams = MenuAddParams & {
+  type MenuUpdate = MenuAdd & {
     id: number;
   };
 
-  /** 获取菜单详情结果 */
-  type MenuInfoResult = {
-    menu: {
-      createTime: string;
-      updateTime: string;
-      id: number;
-      parent: number;
-      name: string;
-      path: string;
-      permission: string;
-      type: number;
-      icon: string;
-      orderNo: number;
-      component: string;
-      keepalive: number;
-      external: number;
-      show: number;
-    };
-    parentMenu: {
-      createTime: string;
-      updateTime: string;
-      id: number;
-      parent: number;
-      name: string;
-      path: string;
-      permission: string;
-      type: number;
-      icon: string;
-      orderNo: number;
-      component: string;
-      keepalive: number;
-      show: number;
-    };
+  type MenuInfo = {
+    menu: MenuItem;
+    parentMenu: MenuItem;
   };
 }

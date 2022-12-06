@@ -33,14 +33,14 @@
   import { Popconfirm, Image, Tooltip } from 'ant-design-vue';
   import { BasicUpload } from '/@/components/Upload';
   import { BasicTable, useTable } from '/@/components/Table';
-  import { getStorageList, deleteStorage } from '/@/api/admin/tools/storage';
+  import { getStorageListByPage, deleteStorage } from '/@/api/admin/tools/storage';
   import { uploadApi } from '/@/api/sys/upload';
   import { columns, searchFormSchema } from './storage.data';
 
   const checkedKeys = ref<Array<number>>([]);
   const [registerTable, { deleteTableDataRecord }] = useTable({
     title: '存储列表',
-    api: getStorageList,
+    api: getStorageListByPage,
     useSearchForm: true,
     formConfig: {
       labelWidth: 80,

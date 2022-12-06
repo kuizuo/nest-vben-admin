@@ -16,15 +16,15 @@ type CommonParams = {
 };
 
 export const getTaskList = (params?: API.PageParams) =>
-  defHttp.get<API.TableListResult<API.SysTaskListItem[]>>({ url: Api.List, params });
+  defHttp.get<API.TableListResult<API.SysTaskItem[]>>({ url: Api.List, params });
 
 export const getTaskInfo = (params: CommonParams) =>
-  defHttp.get<API.SysTaskInfoResult>({ url: Api.Info, params });
+  defHttp.get<API.SysTaskInfo>({ url: Api.Info, params });
 
-export const taskAdd = (params?: API.SysTaskAddParams) =>
+export const taskAdd = (params?: API.SysTaskAdd) =>
   defHttp.post({ url: Api.Add, params }, { successMsg: '添加成功' });
 
-export const taskUpdate = (params?: API.SysTaskUpdateParams) =>
+export const taskUpdate = (params?: API.SysTaskUpdate) =>
   defHttp.post({ url: Api.Update, params }, { successMsg: '修改成功' });
 
 export const taskDelete = (params: CommonParams) => defHttp.post({ url: Api.Delete, params });

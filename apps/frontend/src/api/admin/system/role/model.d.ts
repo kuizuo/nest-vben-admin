@@ -1,13 +1,13 @@
 declare namespace API {
   /** 新增角色 */
-  type CreateRoleParams = {
+  type CreateRole = {
     name: string;
     value: string;
     remark: string;
     menus: Key[];
   };
   /** 更新角色 */
-  type UpdateRoleParams = CreateRoleParams & {
+  type UpdateRole = CreateRole & {
     id: number;
   };
 

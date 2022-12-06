@@ -1,6 +1,5 @@
 declare namespace API {
-  /** 在线用户列表项 */
-  type OnlineUserListItem = {
+  type OnlineUserItem = {
     id: number;
     ip: string;
     username: string;
@@ -10,6 +9,6 @@ declare namespace API {
     browser: string;
     disable: boolean;
   };
-  /** 在线用户列表 */
-  type OnlineUserListResult = OnlineUserListItem[];
+
+  type OnlineUserList = OnlineUserItem[];
 }
