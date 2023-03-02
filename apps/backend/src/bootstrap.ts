@@ -27,6 +27,7 @@ export async function bootstrap() {
     new FastifyAdapter(),
     {
       bufferLogs: true,
+      snapshot: true,
     },
   );
 
