@@ -1,7 +1,7 @@
 {
-  "name": "kz-admin",
+  "name": "nest-vben-admin",
   "version": "0.1.0",
-  "packageManager": "pnpm@7.14.0",
+  "packageManager": "pnpm@8.2.0",
   "description": "基于NestJs + TypeScript + TypeORM + Redis + MySql + Vben Admin编写的一款前后端分离的权限管理系统",
   "author": {
     "name": "kuizuo",
@@ -19,18 +19,13 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "build:frontend": "turbo run -C frontend build",
-    "build:backend": "turbo run -C backend build",
+    "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "dev": "turbo run dev",
-    "dev:frontend": "turbo run -C frontend dev",
-    "dev:backend": "turbo run -C backend dev"
-  },
-  "dependencies": {
-    "@kuizuo/eslint-config-ts": "^1.0.1"
+    "clean": "turbo run clean"
   },
   "devDependencies": {
+    "@kuizuo/eslint-config-ts": "^1.0.1",
     "turbo": "^1.6.2"
   },
   "workspaces": [

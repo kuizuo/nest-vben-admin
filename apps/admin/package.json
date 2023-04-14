@@ -1,13 +1,9 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "packageManager": "pnpm@7.11.0",
+  "name": "admin",
+  "version": "0.2.0",
+  "private": true,
+  "packageManager": "pnpm@8.2.0",
   "description": "基于NestJs + TypeScript + TypeORM + Redis + MySql + Vben Admin编写的一款前后端分离的权限管理系统",
-  "author": {
-    "name": "kuizuo",
-    "email": "hi@kuizuo.cn",
-    "url": "https://github.com/kuizuo"
-  },
   "scripts": {
     "bootstrap": "pnpm install",
     "serve": "npm run dev",
@@ -152,30 +148,5 @@
   },
   "engines": {
     "node": "^12 || >=14"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "{!(package)*.json,*.code-snippets,.!(browserslist)*rc}": [
-      "prettier --write--parser json"
-    ],
-    "package.json": [
-      "prettier --write"
-    ],
-    "*.vue": [
-      "eslint --fix",
-      "prettier --write",
-      "stylelint --fix"
-    ],
-    "*.{scss,less,styl,html}": [
-      "stylelint --fix",
-      "prettier --write"
-    ],
-    "*.md": [
-      "prettier --write"
-    ]
-  },
-  "license": "MIT"
+  }
 }

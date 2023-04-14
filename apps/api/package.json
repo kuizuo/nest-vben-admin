@@ -1,13 +1,9 @@
 {
-  "name": "backend",
+  "name": "api",
   "version": "0.2.0",
+  "private": true,
   "description": "基于NestJs + TypeScript + TypeORM + Redis + MySql + Vben Admin编写的一款前后端分离的权限管理系统",
-  "packageManager": "pnpm@7.14.0",
-  "author": {
-    "name": "kuizuo",
-    "email": "hi@kuizuo.cn",
-    "url": "https://github.com/kuizuo"
-  },
+  "packageManager": "pnpm@8.2.0",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
@@ -26,7 +22,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@fastify/multipart": "^7.3.0",

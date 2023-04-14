@@ -1,0 +1,9 @@
+{
+  "name": "constants",
+  "version": "0.1.0",
+  "main": "index.ts",
+  "module": "index.ts",
+  "scripts": {
+    "clean": "pnpm rimraf pnpm rimraf dist && pnpm rimraf .turbo"
+  }
+}
