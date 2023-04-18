@@ -3,7 +3,7 @@ import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiException } from '@/exceptions/api.exception';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
 import { AuthUser } from '@/decorators/auth-user.decorator';
-import { DeptDetailInfo, DeptTree } from './dept.modal';
+import { DeptDetailInfo, DeptTree } from './dept.model';
 import {
   DeptCreateDto,
   DeptDeleteDto,

@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 import { Exclude } from 'class-transformer';
-import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleEntity } from '../../role/role.entity';
 import { DeptEntity } from '../../dept/dept.entity';
 
 @Entity({ name: 'sys_user' })

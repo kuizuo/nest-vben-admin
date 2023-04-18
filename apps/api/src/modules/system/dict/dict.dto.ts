@@ -10,7 +10,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class ParamConfigCreateDto {
+export class DictCreateDto {
   @ApiProperty({ description: '参数名称' })
   @IsString()
   name: string;
@@ -30,7 +30,7 @@ export class ParamConfigCreateDto {
   remark?: string;
 }
 
-export class ParamConfigUpdateDto {
+export class DictUpdateDto {
   @ApiProperty({ description: '配置编号' })
   @IsInt()
   @Min(1)
@@ -50,14 +50,14 @@ export class ParamConfigUpdateDto {
   remark?: string;
 }
 
-export class ParamConfigDeleteDto {
+export class DictDeleteDto {
   @ApiProperty({ description: '需要删除的配置id列表', type: [Number] })
   @IsArray()
   @ArrayNotEmpty()
   ids: number[];
 }
 
-export class ParamConfigInfoDto {
+export class DictInfoDto {
   @ApiProperty({ description: '需要查询的配置编号' })
   @IsInt()
   @Type(() => Number)

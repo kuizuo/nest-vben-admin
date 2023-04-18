@@ -5,7 +5,7 @@ import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
 import { RemoteSocket } from 'socket.io';
 import { EVENT_UPDATE_MENU } from './ws.event';
 import { JwtService } from '@nestjs/jwt';
-import { RoleEntity } from '../system/role/entities/role.entity';
+import { RoleEntity } from '../system/role/role.entity';
 import { UserEntity } from '../system/user/entities/user.entity';
 
 @Injectable()

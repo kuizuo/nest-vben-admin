@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolePageDto } from './role.dto';
 import { Pagination } from '@/helper/paginate/pagination';
-import { RoleEntity } from '@/modules/system/role/entities/role.entity';
+import { RoleEntity } from '@/modules/system/role/role.entity';
 import { RoleService } from './role.service';
 import {
   RoleCreateDto,

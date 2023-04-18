@@ -3,7 +3,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { difference, filter, includes, isEmpty, map } from 'lodash';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
-import { RoleEntity } from '@/modules/system/role/entities/role.entity';
+import { RoleEntity } from '@/modules/system/role/role.entity';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 import { RoleCreateDto, RoleUpdateDto } from './role.dto';
 import { RolePageDto } from './role.dto';

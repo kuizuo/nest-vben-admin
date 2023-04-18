@@ -6,7 +6,7 @@ import { ApiException } from '@/exceptions/api.exception';
 import { UserEntity } from '@/modules/system/user/entities/user.entity';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
 import { RoleService } from '../role/role.service';
-import { DeptDetailInfo, DeptTree } from './dept.modal';
+import { DeptDetailInfo, DeptTree } from './dept.model';
 import {
   MoveDept,
   DeptUpdateDto,

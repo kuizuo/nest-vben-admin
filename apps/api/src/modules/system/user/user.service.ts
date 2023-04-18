@@ -12,14 +12,14 @@ import {
 } from './user.dto';
 import { AccountInfo, UserInfoPage } from './user.modal';
 import { RedisService } from '@/modules/shared/services/redis.service';
-import { ParamConfigService } from '../param-config/param-config.service';
+import { DictService } from '../dict/dict.service';
 import { SYS_USER_INITPASSWORD } from '@/constants/param-config';
 import { QQService } from '@/modules/shared/services/qq.service';
 import { AppGeneralService } from '../../shared/services/app-general.service';
 import { ErrorEnum } from '@/constants/error';
 import { MD5, randomValue } from '@/utils';
 import { UserEntity } from './entities/user.entity';
-import { RoleEntity } from '../role/entities/role.entity';
+import { RoleEntity } from '../role/role.entity';
 import { RegisterDto } from '@/modules/auth/dtos/auth.dto';
 import { ConfigService } from '@nestjs/config';
 import { IAppConfig } from '@/config';
@@ -30,7 +30,7 @@ import { paginateRaw } from '@/helper/paginate';
 export class UserService {
   constructor(
     private readonly redisService: RedisService,
-    private readonly paramConfigService: ParamConfigService,
+    private readonly dictService: DictService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(RoleEntity)
@@ -151,7 +151,7 @@ export class UserService {
 
       let password;
       if (!password) {
-        const initPassword = await this.paramConfigService.findValueByKey(
+        const initPassword = await this.dictService.findValueByKey(
           SYS_USER_INITPASSWORD,
         );
         password = MD5(`${initPassword ?? '123456'}${salt}`);

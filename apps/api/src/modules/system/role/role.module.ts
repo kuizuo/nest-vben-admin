@@ -3,19 +3,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SystemModule } from '../system.module';
 
-import { UserService } from './user.service';
-import { UserEntity } from './entities/user.entity';
-import { UserController } from './user.controller';
+import { RoleService } from './role.service';
+import { RoleEntity } from './role.entity';
+import { RoleController } from './role.controller';
 
-const providers = [UserService];
+const providers = [RoleService];
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([RoleEntity]),
     forwardRef(() => SystemModule),
   ],
-  controllers: [UserController],
+  controllers: [RoleController],
   providers: [...providers],
   exports: [TypeOrmModule, ...providers],
 })
-export class UserModule {}
+export class RoleModule {}

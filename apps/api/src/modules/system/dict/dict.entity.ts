@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
 @Entity({ name: 'sys_config' })
-export class ConfigEntity extends AbstractEntity {
+export class DictEntity extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

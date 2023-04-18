@@ -1,27 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiException } from '@/exceptions/api.exception';
-import { ConfigEntity } from '@/modules/system/param-config/config.entity';
+import { DictEntity } from '@/modules/system/dict/dict.entity';
 import { Repository } from 'typeorm';
-import { ParamConfigCreateDto, ParamConfigUpdateDto } from './param-config.dto';
+import { DictCreateDto, DictUpdateDto } from './dict.dto';
 import { ErrorEnum } from '@/constants/error';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 
 @Injectable()
-export class ParamConfigService {
+export class DictService {
   constructor(
-    @InjectRepository(ConfigEntity)
-    private configRepo: Repository<ConfigEntity>,
+    @InjectRepository(DictEntity)
+    private configRepo: Repository<DictEntity>,
   ) {}
 
   /**
    * 罗列所有配置
    */
-  async page(
-    page: number,
-    pageSize: number,
-  ): Promise<Pagination<ConfigEntity>> {
+  async page(page: number, pageSize: number): Promise<Pagination<DictEntity>> {
     return paginate(this.configRepo, { page, pageSize });
   }
 
@@ -35,14 +32,14 @@ export class ParamConfigService {
   /**
    * 新增
    */
-  async add(dto: ParamConfigCreateDto): Promise<void> {
+  async add(dto: DictCreateDto): Promise<void> {
     await this.configRepo.insert(dto);
   }
 
   /**
    * 更新
    */
-  async update(dto: ParamConfigUpdateDto): Promise<void> {
+  async update(dto: DictUpdateDto): Promise<void> {
     await this.configRepo.update(
       { id: dto.id },
       { name: dto.name, value: dto.value, remark: dto.remark },
@@ -59,7 +56,7 @@ export class ParamConfigService {
   /**
    * 查询单个
    */
-  async findOne(id: number): Promise<ConfigEntity> {
+  async findOne(id: number): Promise<DictEntity> {
     return await this.configRepo.findOneBy({ id });
   }
 

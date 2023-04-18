@@ -20,7 +20,7 @@ import { IAppConfig } from '@/config';
 @ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
 @Controller('menu')
-export class MenuEntityController {
+export class MenuController {
   constructor(
     private menuService: MenuService,
     private configService: ConfigService,

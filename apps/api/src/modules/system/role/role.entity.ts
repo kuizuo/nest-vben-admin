@@ -7,8 +7,8 @@ import {
   JoinTable,
   ManyToMany,
 } from 'typeorm';
-import { UserEntity } from '../../user/entities/user.entity';
-import { MenuEntity } from '../../menu/menu.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { MenuEntity } from '../menu/menu.entity';
 
 @Entity({ name: 'sys_role' })
 export class RoleEntity extends AbstractEntity {

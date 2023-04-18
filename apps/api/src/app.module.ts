@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppsModule } from './modules/apps/apps.module';
-import { WSModule } from './modules/ws/ws.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { MissionModule } from './mission/mission.module';
@@ -49,7 +48,6 @@ import * as config from '@/config';
     MissionModule,
     BullModule,
     AppsModule,
-    WSModule,
     AuthModule,
     SystemModule,
     ToolsModule,

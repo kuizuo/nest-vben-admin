@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ApiException } from '@/exceptions/api.exception';
 import { SYS_API_TOKEN } from '@/constants/param-config';
 import { AuthService } from '@/modules/auth/auth.service';
-import { ParamConfigService } from '@/modules/system/param-config/param-config.service';
+import { DictService } from '@/modules/system/dict/dict.service';
 import { ErrorEnum } from '../constants/error';
 import {
   SKIP_AUTH_DECORATOR_KEY,
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     private jwtService: JwtService,
     private authService: AuthService,
     private configService: ConfigService,
-    private paramConfigService: ParamConfigService,
+    private dictService: DictService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -51,9 +51,7 @@ export class AuthGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
     if (apiToken) {
-      const result = await this.paramConfigService.findValueByKey(
-        SYS_API_TOKEN,
-      );
+      const result = await this.dictService.findValueByKey(SYS_API_TOKEN);
       if (token === result) {
         return true;
       } else {
