@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Test } from '@/entities/apps/test.entity';
+import { Test } from '@/modules/apps/test/test.entity';
 import { TestCreateDto, TestUpdateDto, TestPageDto } from './test.dto';
-import { ApiException } from '@/common/exceptions/api.exception';
-import { PageRespData } from '@/common/response.modal';
-import { ErrorEnum } from '@/common/constants/error';
+import { ApiException } from '@/exceptions/api.exception';
+import { Pagination } from '@/helper/paginate/pagination';
+import { ErrorEnum } from '@/constants/error';
+import { paginate } from '@/helper/paginate';
 
 @Injectable()
 export class TestService {
@@ -18,16 +19,8 @@ export class TestService {
     return await this.testRepo.find();
   }
 
-  async page(dto: TestPageDto): Promise<PageRespData<Test>> {
-    const { page, pageSize } = dto;
-
-    const [items, total] = await this.testRepo
-      .createQueryBuilder(this.testRepo.metadata.tableName)
-      .skip(pageSize * (page - 1))
-      .take(pageSize)
-      .getManyAndCount();
-
-    return { total, items };
+  async page({ page, pageSize }: TestPageDto): Promise<Pagination<Test>> {
+    return paginate(this.testRepo, { page, pageSize });
   }
 
   async detail(id: number): Promise<Test> {

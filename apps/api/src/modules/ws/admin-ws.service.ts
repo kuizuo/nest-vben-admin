@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { SysRoleMenu } from '@/entities/admin/sys-role-menu.entity';
-import { SysUserRole } from '@/entities/admin/sys-user-role.entity';
 import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
 import { RemoteSocket } from 'socket.io';
 import { EVENT_UPDATE_MENU } from './ws.event';
 import { JwtService } from '@nestjs/jwt';
+import { RoleEntity } from '../system/role/entities/role.entity';
+import { UserEntity } from '../system/user/entities/user.entity';
 
 @Injectable()
 export class AdminWSService {
   constructor(
     private jwtService: JwtService,
-    @InjectRepository(SysRoleMenu)
-    private roleMenuRepo: Repository<SysRoleMenu>,
-    @InjectRepository(SysUserRole)
-    private userRoleRepo: Repository<SysUserRole>,
+    @InjectRepository(RoleEntity)
+    private roleRepo: Repository<RoleEntity>,
+    @InjectRepository(UserEntity)
+    private userRepo: Repository<UserEntity>,
     private adminWsGateWay: AdminWSGateway,
   ) {}
 
@@ -75,10 +75,10 @@ export class AdminWSService {
    * 通过menuIds通知用户更新权限菜单
    */
   async noticeUserToUpdateMenusByMenuIds(menuIds: number[]): Promise<void> {
-    const roleMenus = await this.roleMenuRepo.findBy({
-      menuId: In(menuIds),
+    const roles = await this.roleRepo.findBy({
+      menus: { id: In(menuIds) },
     });
-    const roleIds = roleMenus.map((n) => n.roleId);
+    const roleIds = roles.map((r) => r.id);
     await this.noticeUserToUpdateMenusByRoleIds(roleIds);
   }
 
@@ -86,11 +86,13 @@ export class AdminWSService {
    * 通过roleIds通知用户更新权限菜单
    */
   async noticeUserToUpdateMenusByRoleIds(roleIds: number[]): Promise<void> {
-    const users = await this.userRoleRepo.findBy({
-      roleId: In(roleIds),
+    const users = await this.userRepo.findBy({
+      roles: {
+        id: In(roleIds),
+      },
     });
     if (users) {
-      const userIds = users.map((n) => n.userId);
+      const userIds = users.map((n) => n.id);
       await this.noticeUserToUpdateMenusByUserIds(userIds);
     }
   }

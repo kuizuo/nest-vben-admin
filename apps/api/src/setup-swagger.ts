@@ -1,23 +1,25 @@
 import { INestApplication, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PageRespData, BaseResponse } from './common/response.modal';
-import { AbstractEntity } from './common/abstract.entity';
-import { AppConfigService } from './shared/services/app/app-config.service';
-import { API_SECURITY_AUTH } from './common/decorators/swagger.decorator';
+
+import { IAppConfig, ISwaggerConfig } from './config';
+import { Pagination } from './helper/paginate/pagination';
+import { ResOp, TreeResult } from './common/model/response.model';
+import { AbstractEntity } from './common/entity/abstract.entity';
+import { API_SECURITY_AUTH } from './decorators/swagger.decorator';
 
 export function setupSwagger(
   app: INestApplication,
-  config: AppConfigService,
+  configService: ConfigService,
 ): void {
-  const { enable, path } = config.swaggerConfig;
+  const { enable, path } = configService.get<ISwaggerConfig>('swagger');
+
   if (!enable) return;
 
-  // 配置 Swagger 文档
   const documentBuilder = new DocumentBuilder()
-    .setTitle(config.appConfig.name)
-    .setDescription(`${config.appConfig.name} API 接口文档`)
-    .setVersion('1.0')
-    .setLicense('MIT', 'https://github.com/kuizuo/kz-admin');
+    .setTitle(`${configService.get<IAppConfig>('app').name}`)
+    .setDescription(`${configService.get<IAppConfig>('app').name} API document`)
+    .setVersion('1.0');
 
   // auth security
   documentBuilder.addSecurity(API_SECURITY_AUTH, {
@@ -29,14 +31,28 @@ export function setupSwagger(
 
   const document = SwaggerModule.createDocument(app, documentBuilder.build(), {
     ignoreGlobalPrefix: false,
-    extraModels: [AbstractEntity, BaseResponse, PageRespData],
+    extraModels: [AbstractEntity, ResOp, Pagination, TreeResult],
   });
 
   SwaggerModule.setup(path, app, document);
 
+  // 导入 ApiFox 忽略全局前缀
+  const documentApiFox = SwaggerModule.createDocument(
+    app,
+    documentBuilder.build(),
+    {
+      ignoreGlobalPrefix: true,
+      extraModels: [AbstractEntity, ResOp, Pagination, TreeResult],
+    },
+  );
+
+  SwaggerModule.setup(`${path}-fox`, app, documentApiFox);
+
   // started log
   const logger = new Logger('SwaggerModule');
   logger.log(
-    `Document running on http://127.0.0.1:${config.appConfig.port}/${path}`,
+    `Document running on http://127.0.0.1:${
+      configService.get<IAppConfig>('app').port
+    }/${path}`,
   );
 }

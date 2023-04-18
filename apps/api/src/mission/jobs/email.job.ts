@@ -1,6 +1,6 @@
-import { EmailService } from '@/shared/services/email.service';
+import { EmailService } from '@/modules/shared/services/email.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
+import { AppLoggerService } from '../../modules/shared/services/app-logger.service';
 import { Mission } from '../mission.decorator';
 
 /**
@@ -17,7 +17,7 @@ export class EmailJob {
   async send(config: any): Promise<void> {
     if (config) {
       const { to, subject, content } = config;
-      const result = await this.emailService.sendMail(to, subject, content);
+      const result = await this.emailService.send(to, subject, content);
       this.logger.log(result, EmailJob.name);
     } else {
       throw new BadRequestException('Email send job param is empty');

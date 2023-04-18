@@ -1,9 +1,9 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, Min } from 'class-validator';
-import { IsEntityExist } from '@/common/constraints/entity-exist.constraint';
-import { PageOptionDto } from '@/common/paginate.dto';
-import { Test } from '@/entities/apps/test.entity';
+import { IsEntityExist } from '@/constraints/entity-exist.constraint';
+import { PageOptionsDto } from '@/common/dto/page-options.dto';
+import { Test } from '@/modules/apps/test/test.entity';
 
 export class TestCreateDto {}
 
@@ -27,4 +27,4 @@ export class TestDeleteDto {
 
 export class TestDetailDto extends PartialType(TestDeleteDto) {}
 
-export class TestPageDto extends PageOptionDto {}
+export class TestPageDto extends PageOptionsDto  {}

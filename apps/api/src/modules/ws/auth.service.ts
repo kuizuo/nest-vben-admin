@@ -1,8 +1,8 @@
-import { ErrorEnum } from '@/common/constants/error';
+import { ErrorEnum } from '@/constants/error';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isEmpty } from 'lodash';
-import { SocketException } from 'src/common/exceptions/socket.exception';
+import { SocketException } from '@/exceptions/socket.exception';
 import { IAuthUser } from '/@/interfaces/auth';
 
 @Injectable()

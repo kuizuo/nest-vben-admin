@@ -8,9 +8,9 @@ import {
   TestDetailDto,
   TestPageDto,
 } from './test.dto';
-import { Test } from '@/entities/apps/test.entity';
-import { ApiResult } from '@/common/decorators/api-result.decorator';
-import { PageRespData } from '@/common/response.modal';
+import { Test } from '@/modules/apps/test/test.entity';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { Pagination } from '@/helper/paginate/pagination';
 
 @ApiTags('Business - Test模块')
 @ApiExtraModels(Test)
@@ -27,8 +27,8 @@ export class TestController {
 
   @Get('page')
   @ApiOperation({ summary: '分页获取Test列表' })
-  @ApiResult({ type: [Test], struct: 'page' })
-  async page(@Query() dto: TestPageDto): Promise<PageRespData<Test>> {
+  @ApiResult({ type: [Test], isPage: true })
+  async page(@Query() dto: TestPageDto): Promise<Pagination<Test>> {
     return await this.testService.page(dto);
   }
 

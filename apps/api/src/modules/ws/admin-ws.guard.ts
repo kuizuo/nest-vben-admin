@@ -1,8 +1,8 @@
-import { ErrorEnum } from '@/common/constants/error';
+import { ErrorEnum } from '@/constants/error';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
-import { SocketException } from 'src/common/exceptions/socket.exception';
+import { SocketException } from '@/exceptions/socket.exception';
 import { AuthService } from './auth.service';
 
 @Injectable()

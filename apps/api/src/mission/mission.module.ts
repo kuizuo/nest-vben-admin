@@ -1,17 +1,17 @@
 import { DynamicModule, ExistingProvider, Module } from '@nestjs/common';
-import { AdminModule } from 'src/modules/admin/admin.module';
-import { SysLogService } from 'src/modules/admin/system/log/log.service';
 import { EmailJob } from './jobs/email.job';
 import { HttpRequestJob } from './jobs/http-request.job';
-import { SysLogClearJob } from './jobs/sys-log-clear.job';
+import { LogClearJob } from './jobs/log-clear.job';
+import { SystemModule } from '@/modules/system/system.module';
+import { LogModule } from '@/modules/system/log/log.module';
 
-const providers = [SysLogClearJob, HttpRequestJob, EmailJob];
+const providers = [LogClearJob, HttpRequestJob, EmailJob];
 
 /**
  * auto create alias
  * {
- *    provide: 'SysLogClearMissionService',
- *    useExisting: SysLogClearMissionService,
+ *    provide: 'LogClearMissionService',
+ *    useExisting: LogClearMissionService,
  *  }
  */
 function createAliasProviders(): ExistingProvider[] {
@@ -36,8 +36,8 @@ export class MissionModule {
     return {
       global: true,
       module: MissionModule,
-      imports: [AdminModule],
-      providers: [...providers, ...aliasProviders, SysLogService],
+      imports: [SystemModule, LogModule],
+      providers: [...providers, ...aliasProviders],
       exports: aliasProviders,
     };
   }

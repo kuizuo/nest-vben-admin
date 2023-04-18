@@ -14,12 +14,13 @@ import {
 } from '@nestjs/platform-fastify';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { setupSwagger } from './setup-swagger';
-import { AppConfigService } from './shared/services/app/app-config.service';
-import { AppLoggerService } from '/@/shared/services/app/app-logger.service';
-import { AppFilter } from './common/filters/app.filter';
-import { TransformInterceptor as TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { AppLoggerService } from './modules/shared/services/app-logger.service';
+import { AppFilter } from './filters/app.filter';
+import { TransformInterceptor as TransformInterceptor } from './interceptors/transform.interceptor';
+import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { useContainer } from 'class-validator';
+import { ConfigService } from '@nestjs/config';
+import { IAppConfig } from './config';
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -32,7 +33,7 @@ export async function bootstrap() {
   );
 
   // app config service
-  const configService = app.get(AppConfigService);
+  const configService = app.get(ConfigService);
 
   // reflector
   const reflector = app.get(Reflector);
@@ -85,7 +86,7 @@ export async function bootstrap() {
   // );
 
   // global prefix
-  const { globalPrefix, port } = configService.appConfig;
+  const { globalPrefix, port } = configService.get<IAppConfig>('app');
   app.setGlobalPrefix(globalPrefix);
 
   setupSwagger(app, configService);
