@@ -1,18 +1,21 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+
+import { LogModule } from '../system/log/log.module';
+import { MenuModule } from '../system/menu/menu.module';
+import { RoleModule } from '../system/role/role.module';
+import { UserModule } from '../system/user/user.module';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { SystemModule } from '../system/system.module';
 import { TokenService } from './services/token.service';
-import { UserModule } from '../system/user/user.module';
-import { LogModule } from '../system/log/log.module';
 
 const controllers = [AuthController];
-const services = [AuthService, TokenService];
+const providers = [AuthService, TokenService];
 
 @Module({
-  imports: [forwardRef(() => SystemModule), LogModule, UserModule],
+  imports: [UserModule, RoleModule, MenuModule, LogModule],
   controllers: [...controllers],
-  providers: [...services],
-  exports: [...services],
+  providers: [...providers],
+  exports: [...providers],
 })
 export class AuthModule {}

@@ -62,7 +62,7 @@ export function ToBoolean(): PropertyDecorator {
 export function ToDate(): PropertyDecorator {
   return Transform(
     (params) => {
-      const value = params.value;
+      const { value } = params;
 
       if (!value) return;
 
@@ -78,7 +78,7 @@ export function ToDate(): PropertyDecorator {
 export function ToArray(): PropertyDecorator {
   return Transform(
     (params) => {
-      const value = params.value;
+      const { value } = params;
 
       if (isNil(value)) return [];
 

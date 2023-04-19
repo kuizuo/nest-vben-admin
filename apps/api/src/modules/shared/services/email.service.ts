@@ -4,9 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import dayjs from 'dayjs';
 
+import { IAppConfig } from '@/config';
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { IAppConfig } from '@/config';
 
 import { randomValue } from '@/utils';
 

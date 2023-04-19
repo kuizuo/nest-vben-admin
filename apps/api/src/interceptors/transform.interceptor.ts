@@ -5,17 +5,20 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { FastifyReply } from 'fastify';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SKIP_TRANSFORM_DECORATOR_KEY } from '../decorators/skip-transform.decorator';
+
 import { ResOp } from '@/common/model/response.model';
+
+import { SKIP_TRANSFORM_DECORATOR_KEY } from '../decorators/skip-transform.decorator';
 
 /**
  * 统一处理返回接口结果，如果不需要则添加@Keep装饰器
  */
 export class TransformInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
+
   intercept(
     context: ExecutionContext,
     next: CallHandler<any>,

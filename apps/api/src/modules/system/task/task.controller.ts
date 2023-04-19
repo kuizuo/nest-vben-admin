@@ -1,9 +1,14 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
-import { Pagination } from '@/helper/paginate/pagination';
+
+import { ErrorEnum } from '@/constants/error';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
+import { Pagination } from '@/helper/paginate/pagination';
 import { TaskEntity } from '@/modules/system/task/task.entity';
+
 import {
   TaskCheckIdDto,
   TaskCreateDto,
@@ -11,9 +16,6 @@ import {
   TaskPageDto,
 } from './task.dto';
 import { TaskService } from './task.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { ErrorEnum } from '@/constants/error';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 
 @ApiTags('System - 任务调度模块')
 @ApiSecurityAuth()
@@ -26,7 +28,7 @@ export class TaskController {
   @ApiResult({ type: [TaskEntity] })
   @Get('page')
   async page(@Query() dto: TaskPageDto): Promise<Pagination<TaskEntity>> {
-    return await this.taskService.page(dto);
+    return this.taskService.page(dto);
   }
 
   @ApiOperation({ summary: '添加任务' })
@@ -49,7 +51,7 @@ export class TaskController {
   @ApiResult({ type: TaskEntity })
   @Get('info')
   async info(@Query() dto: TaskCheckIdDto): Promise<TaskEntity> {
-    return await this.taskService.info(dto.id);
+    return this.taskService.info(dto.id);
   }
 
   @ApiOperation({ summary: '手动执行一次任务' })

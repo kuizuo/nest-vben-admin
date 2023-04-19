@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -6,8 +7,9 @@ import {
   TreeChildren,
   TreeParent,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+
 import { AbstractEntity } from '@/common/entity/abstract.entity';
+
 import { UserEntity } from '../user/entities/user.entity';
 
 @Entity({ name: 'sys_dept' })

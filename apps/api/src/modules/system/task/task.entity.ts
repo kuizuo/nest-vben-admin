@@ -1,5 +1,6 @@
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
 @Entity({ name: 'sys_task' })

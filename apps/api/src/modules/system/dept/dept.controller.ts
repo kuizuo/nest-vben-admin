@@ -1,22 +1,23 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { ErrorEnum } from '@/constants/error';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { AuthUser } from '@/decorators/auth-user.decorator';
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
-import { AuthUser } from '@/decorators/auth-user.decorator';
-import { DeptDetailInfo, DeptTree } from './dept.model';
+
 import {
   DeptCreateDto,
   DeptDeleteDto,
   InfoDeptDto,
   MoveDeptDto,
-  TransferDeptDto,
   DeptUpdateDto,
   DeptListDto,
 } from './dept.dto';
+import { DeptDetailInfo, DeptTree } from './dept.model';
 import { DeptService } from './dept.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { ErrorEnum } from '@/constants/error';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 
 @ApiSecurityAuth()
 @ApiTags('System - 部门模块')
@@ -32,7 +33,7 @@ export class DeptController {
     @AuthUser('uid') uid: number,
     @Query() dto: DeptListDto,
   ): Promise<DeptTree[]> {
-    return await this.deptService.getDeptTree(uid, dto);
+    return this.deptService.getDeptTree(uid, dto);
   }
 
   @Post('add')
@@ -61,7 +62,7 @@ export class DeptController {
   @ApiOperation({ summary: '查询单个部门信息' })
   @ApiResult({ type: DeptDetailInfo })
   async info(@Query() infoDeptDto: InfoDeptDto): Promise<DeptDetailInfo> {
-    return await this.deptService.info(infoDeptDto.deptId);
+    return this.deptService.info(infoDeptDto.deptId);
   }
 
   @Post('update')

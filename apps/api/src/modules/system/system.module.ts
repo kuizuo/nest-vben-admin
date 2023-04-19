@@ -1,17 +1,14 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import { WSModule } from '@/modules/ws/ws.module';
-
-import { LogModule } from './log/log.module';
-import { UserModule } from './user/user.module';
-import { AuthModule } from '../auth/auth.module';
-import { RoleModule } from './role/role.module';
-import { MenuModule } from './menu/menu.module';
 import { DeptModule } from './dept/dept.module';
 import { DictModule } from './dict/dict.module';
-import { TaskModule } from './task/task.module';
+import { LogModule } from './log/log.module';
+import { MenuModule } from './menu/menu.module';
 import { OnlineModule } from './online/online.module';
+import { RoleModule } from './role/role.module';
 import { ServeModule } from './serve/serve.module';
+import { TaskModule } from './task/task.module';
+import { UserModule } from './user/user.module';
 
 const modules = [
   UserModule,
@@ -27,8 +24,8 @@ const modules = [
 
 @Module({
   imports: [
-    forwardRef(() => WSModule),
-    forwardRef(() => AuthModule),
+    // forwardRef(() => WSModule),
+    // forwardRef(() => AuthModule),
     ...modules,
   ],
   exports: [...modules],

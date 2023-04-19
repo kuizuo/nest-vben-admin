@@ -1,7 +1,9 @@
 import { createParamDecorator } from '@nestjs/common';
 import type { ExecutionContext } from '@nestjs/common';
-import type { IAuthUser } from '/@/interfaces/auth';
+
 import type { FastifyRequest } from 'fastify';
+
+import type { IAuthUser } from '@/interfaces/auth';
 
 /**
  * 快速获取已通过授权的用户信息，而非手动通过Request获取

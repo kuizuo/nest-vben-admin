@@ -7,11 +7,12 @@ import UAParser from 'ua-parser-js';
 
 import { paginateRaw } from '@/helper/paginate';
 
-import { LoginLogEntity } from '../entities/login-log.entity';
-import { LoginLogQueryDto } from '../dtos/log.dto';
-import { UserService } from '../../user/user.service';
-import { LoginLogInfo } from '../log.modal';
 import { IpService } from '@/modules/shared/services/ip.service';
+
+import { UserService } from '../../user/user.service';
+import { LoginLogQueryDto } from '../dtos/log.dto';
+import { LoginLogEntity } from '../entities/login-log.entity';
+import { LoginLogInfo } from '../log.modal';
 
 async function parseLoginLog(e: any, parser: UAParser): Promise<LoginLogInfo> {
   const uaResult = parser.setUA(e.login_log_ua).getResult();

@@ -1,21 +1,22 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
+
+import { IAppConfig } from '@/config';
+import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
+
 import {
   MenuCreateDto,
   MenuDeleteDto,
   MenuInfoDto,
-  MenuSearchDto,
   MenuUpdateDto,
 } from './menu.dto';
 import { MenuService } from './menu.service';
-import { ErrorEnum } from '@/constants/error';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@/config';
 
 @ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
@@ -30,7 +31,7 @@ export class MenuController {
   @ApiResult({ type: [MenuEntity] })
   @Get('list')
   async list(): Promise<string[]> {
-    return await this.menuService.list();
+    return this.menuService.list();
   }
 
   @ApiOperation({ summary: '新增菜单或权限' })
@@ -99,6 +100,6 @@ export class MenuController {
   @ApiOperation({ summary: '获取菜单或权限信息' })
   @Get('info')
   async info(@Query() dto: MenuInfoDto) {
-    return await this.menuService.getMenuItemAndParentInfo(dto.menuId);
+    return this.menuService.getMenuItemAndParentInfo(dto.menuId);
   }
 }

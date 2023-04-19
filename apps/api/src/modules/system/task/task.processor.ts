@@ -1,8 +1,11 @@
 import { OnQueueCompleted, Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { TaskService } from './task.service';
+
 import { SYS_TASK_QUEUE_NAME } from '@/constants/task';
+
 import { TaskLogService } from '../log/services/task-log.service';
+
+import { TaskService } from './task.service';
 
 export interface ExecuteData {
   id: number;

@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { concat, includes, isEmpty, uniq } from 'lodash';
-import { ApiException } from '@/exceptions/api.exception';
-import { MenuEntity } from '@/modules/system/menu/menu.entity';
-import { In, IsNull, Like, Not, Repository } from 'typeorm';
-import { RoleService } from '../role/role.service';
-import { MenuCreateDto, MenuSearchDto } from './menu.dto';
-import { RedisService } from '@/modules/shared/services/redis.service';
-import { generatorMenu, generatorRouters } from '@/utils/permission';
-import { AppGeneralService } from '../../shared/services/app-general.service';
+import { concat, isEmpty, uniq } from 'lodash';
+
+import { In, IsNull, Not, Repository } from 'typeorm';
+
 import { ErrorEnum } from '@/constants/error';
+import { ApiException } from '@/exceptions/api.exception';
+import { RedisService } from '@/modules/shared/services/redis.service';
+import { MenuEntity } from '@/modules/system/menu/menu.entity';
+
+import { generatorMenu, generatorRouters } from '@/utils/permission';
+
+import { AppGeneralService } from '../../shared/services/app-general.service';
+import { RoleService } from '../role/role.service';
+
+import { MenuCreateDto } from './menu.dto';
 
 @Injectable()
 export class MenuService {
@@ -126,7 +131,7 @@ export class MenuService {
    */
   async getMenuItemAndParentInfo(mid: number) {
     const menu = await this.menuRepo.findOneBy({ id: mid });
-    let parentMenu: MenuEntity | undefined = undefined;
+    let parentMenu: MenuEntity | undefined;
     if (menu && menu.parent) {
       parentMenu = await this.menuRepo.findOneBy({ id: menu.parent });
     }

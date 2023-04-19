@@ -1,7 +1,12 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+
+import { Pagination } from '@/helper/paginate/pagination';
+
+import { MenuService } from '../menu/menu.service';
 
 import {
   UserCreateDto,
@@ -13,8 +18,6 @@ import {
 } from './user.dto';
 import { UserInfoPage } from './user.modal';
 import { UserService } from './user.service';
-import { MenuService } from '../menu/menu.service';
-import { Pagination } from '@/helper/paginate/pagination';
 
 @ApiTags('System - 用户模块')
 @ApiSecurityAuth()
@@ -35,7 +38,7 @@ export class UserController {
   @Get('info')
   @ApiOperation({ summary: '查询用户信息' })
   async info(@Query() dto: UserInfoDto) {
-    return await this.userService.info(dto.id);
+    return this.userService.info(dto.id);
   }
 
   @Post('delete')
@@ -49,7 +52,7 @@ export class UserController {
   @ApiOperation({ summary: '获取用户列表' })
   @ApiResult({ type: [UserInfoPage] })
   async list(@Query() dto: UserPageDto): Promise<Pagination<UserInfoPage>> {
-    return await this.userService.page(dto);
+    return this.userService.page(dto);
   }
 
   @Post('update')

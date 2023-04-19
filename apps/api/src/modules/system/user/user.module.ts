@@ -1,18 +1,23 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SystemModule } from '../system.module';
+import { DictModule } from '../dict/dict.module';
 
-import { UserService } from './user.service';
+import { MenuModule } from '../menu/menu.module';
+import { RoleModule } from '../role/role.module';
+
 import { UserEntity } from './entities/user.entity';
 import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 const providers = [UserService];
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
-    forwardRef(() => SystemModule),
+    RoleModule,
+    MenuModule,
+    DictModule,
   ],
   controllers: [UserController],
   providers: [...providers],

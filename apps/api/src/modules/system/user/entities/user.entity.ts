@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -5,10 +6,11 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
+
 import { AbstractEntity } from '@/common/entity/abstract.entity';
-import { Exclude } from 'class-transformer';
-import { RoleEntity } from '../../role/role.entity';
+
 import { DeptEntity } from '../../dept/dept.entity';
+import { RoleEntity } from '../../role/role.entity';
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends AbstractEntity {

@@ -1,4 +1,5 @@
 import { WsException } from '@nestjs/websockets';
+
 import { ErrorEnum } from '../constants/error';
 
 export class SocketException extends WsException {

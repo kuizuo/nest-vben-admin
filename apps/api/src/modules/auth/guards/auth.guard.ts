@@ -4,12 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { isEmpty, isNil } from 'lodash';
 
+import { ErrorEnum } from '@/constants/error';
+import { SKIP_AUTH_DECORATOR_KEY } from '@/decorators';
 import { ApiException } from '@/exceptions/api.exception';
 import { AuthService } from '@/modules/auth/auth.service';
 import { TokenService } from '@/modules/auth/services/token.service';
-
-import { ErrorEnum } from '@/constants/error';
-import { SKIP_AUTH_DECORATOR_KEY } from '@/decorators';
 
 /**
  * Authentication 登录校验

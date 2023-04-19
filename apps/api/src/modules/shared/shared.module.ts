@@ -12,8 +12,8 @@ import { AppGeneralService } from './services/app-general.service';
 import { AppLoggerService } from './services/app-logger.service';
 import { EmailService } from './services/email.service';
 import { IpService } from './services/ip.service';
-import { RedisService } from './services/redis.service';
 import { QQService } from './services/qq.service';
+import { RedisService } from './services/redis.service';
 
 const providers = [
   AppLoggerService,

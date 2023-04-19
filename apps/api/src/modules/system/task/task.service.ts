@@ -3,20 +3,22 @@ import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef, Reflector } from '@nestjs/core';
 import { UnknownElementException } from '@nestjs/core/errors/exceptions/unknown-element.exception';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
 import { Queue } from 'bull';
 import { isEmpty } from 'lodash';
-import { ApiException } from '@/exceptions/api.exception';
-import { TaskEntity } from '@/modules/system/task/task.entity';
-import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
-import { RedisService } from '@/modules/shared/services/redis.service';
-import { MISSION_DECORATOR_KEY } from '/@/mission/mission.decorator';
-import { TaskCreateDto, TaskPageDto, TaskUpdateDto } from './task.dto';
+import { Like, Repository } from 'typeorm';
 
-import { Pagination } from '@/helper/paginate/pagination';
 import { ErrorEnum } from '@/constants/error';
 import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '@/constants/task';
+import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
+import { Pagination } from '@/helper/paginate/pagination';
+import { MISSION_DECORATOR_KEY } from '@/mission/mission.decorator';
+import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
+import { RedisService } from '@/modules/shared/services/redis.service';
+
+import { TaskEntity } from '@/modules/system/task/task.entity';
+
+import { TaskCreateDto, TaskPageDto, TaskUpdateDto } from './task.dto';
 
 @Injectable()
 export class TaskService implements OnModuleInit {
@@ -92,8 +94,8 @@ export class TaskService implements OnModuleInit {
       .where({
         ...(name ? { name: Like(`%${name}%`) } : null),
         ...(service ? { service: Like(`%${service}%`) } : null),
-        ...(type ? { type: type } : null),
-        ...(status ? { status: status } : null),
+        ...(type ? { type } : null),
+        ...(status ? { status } : null),
       })
       .orderBy('task.id', 'ASC');
 
@@ -104,14 +106,14 @@ export class TaskService implements OnModuleInit {
    * count task
    */
   async count(): Promise<number> {
-    return await this.taskRepo.count();
+    return this.taskRepo.count();
   }
 
   /**
    * task info
    */
   async info(id: number): Promise<TaskEntity> {
-    return await this.taskRepo.findOneBy({ id });
+    return this.taskRepo.findOneBy({ id });
   }
 
   /**

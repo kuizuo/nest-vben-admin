@@ -1,7 +1,10 @@
+import { Body, Controller, Post } from '@nestjs/common';
+
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { EmailService } from '@/modules/shared/services/email.service';
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { EmailSendDto } from './email.dto';
 
 @ApiTags('System - 邮箱模块')

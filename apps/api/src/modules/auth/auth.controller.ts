@@ -1,13 +1,16 @@
-import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SkipAuth } from '@/decorators/skip-auth.decorator';
-import { LoginDto, RegisterDto } from './dtos/auth.dto';
-import { ImageCaptcha, LoginToken } from './models/auth.model';
-import { AuthService } from './auth.service';
-import { LogDisabled } from '@/decorators/log-disabled.decorator';
-import { ApiResult } from '@/decorators/api-result.decorator';
+import { Body, Controller, Headers, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { Ip } from '@/decorators';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { LogDisabled } from '@/decorators/log-disabled.decorator';
+import { SkipAuth } from '@/decorators/skip-auth.decorator';
+
 import { UserService } from '../system/user/user.service';
+
+import { AuthService } from './auth.service';
+import { LoginDto, RegisterDto } from './dtos/auth.dto';
+import { LoginToken } from './models/auth.model';
 
 @ApiTags('Auth - 登录模块')
 @Controller('auth')

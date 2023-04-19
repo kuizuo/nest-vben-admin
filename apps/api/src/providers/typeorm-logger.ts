@@ -12,7 +12,7 @@ export class TypeORMLogger implements ITypeORMLogger {
     const sql =
       query +
       (parameters && parameters.length
-        ? ' -- PARAMETERS: ' + this.stringifyParams(parameters)
+        ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
         : '');
 
     this.logger.log(`[QUERY]: ${sql}`);
@@ -29,7 +29,7 @@ export class TypeORMLogger implements ITypeORMLogger {
     const sql =
       query +
       (parameters && parameters.length
-        ? ' -- PARAMETERS: ' + this.stringifyParams(parameters)
+        ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
         : '');
 
     this.logger.error([`[FAILED QUERY]: ${sql}`, `[QUERY ERROR]: ${error}`]);
@@ -44,7 +44,7 @@ export class TypeORMLogger implements ITypeORMLogger {
     const sql =
       query +
       (parameters && parameters.length
-        ? ' -- PARAMETERS: ' + this.stringifyParams(parameters)
+        ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
         : '');
 
     this.logger.warn(`[SLOW QUERY: ${time} ms]: ${sql}`);

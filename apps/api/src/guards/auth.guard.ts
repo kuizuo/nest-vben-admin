@@ -1,20 +1,22 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { FastifyRequest } from 'fastify';
 import { isEmpty } from 'lodash';
-import { JwtService } from '@nestjs/jwt';
-import { ApiException } from '@/exceptions/api.exception';
+
+import { IAppConfig } from '@/config';
 import { SYS_API_TOKEN } from '@/constants/param-config';
+import { ApiException } from '@/exceptions/api.exception';
 import { AuthService } from '@/modules/auth/auth.service';
 import { DictService } from '@/modules/system/dict/dict.service';
+
 import { ErrorEnum } from '../constants/error';
 import {
   SKIP_AUTH_DECORATOR_KEY,
   API_TOKEN_DECORATOR_KEY,
   ALLOW_ANON_PERMISSION_DECORATOR_KEY,
 } from '../decorators';
-import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@/config';
 
 /**
  * admin perm check guard
@@ -40,7 +42,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<FastifyRequest>();
 
-    const token = request.headers['authorization']?.replace('Bearer ', '');
+    const token = request.headers.authorization?.replace('Bearer ', '');
     if (isEmpty(token)) {
       throw new ApiException(ErrorEnum.CODE_1101);
     }
@@ -54,9 +56,8 @@ export class AuthGuard implements CanActivate {
       const result = await this.dictService.findValueByKey(SYS_API_TOKEN);
       if (token === result) {
         return true;
-      } else {
-        throw new ApiException(ErrorEnum.CODE_1103);
       }
+      throw new ApiException(ErrorEnum.CODE_1103);
     }
 
     try {

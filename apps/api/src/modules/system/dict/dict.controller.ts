@@ -1,8 +1,12 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Pagination } from '@/helper/paginate/pagination';
+
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { Pagination } from '@/helper/paginate/pagination';
 import { DictEntity } from '@/modules/system/dict/dict.entity';
+
 import {
   DictCreateDto,
   DictDeleteDto,
@@ -10,8 +14,6 @@ import {
   DictUpdateDto,
 } from './dict.dto';
 import { DictService } from './dict.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 
 @ApiTags('System - 参数配置模块')
 @ApiSecurityAuth()
@@ -23,7 +25,7 @@ export class DictController {
   @ApiResult({ type: [DictEntity] })
   @Get('page')
   async page(@Query() dto: PageOptionsDto): Promise<Pagination<DictEntity>> {
-    return await this.paramConfigService.page(dto.page, dto.pageSize);
+    return this.paramConfigService.page(dto.page, dto.pageSize);
   }
 
   @ApiOperation({ summary: '新增参数配置' })

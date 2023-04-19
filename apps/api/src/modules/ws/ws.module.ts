@@ -1,9 +1,10 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { AdminWSGateway } from './admin-ws.gateway';
-import { AuthService } from './auth.service';
-import { AdminWSService } from './admin-ws.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { SystemModule } from '../system/system.module';
+
+import { AdminWSGateway } from './admin-ws.gateway';
+import { AdminWSService } from './admin-ws.service';
+import { AuthService } from './auth.service';
 
 const providers = [AdminWSGateway, AuthService, AdminWSService];
 

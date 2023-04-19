@@ -1,9 +1,12 @@
-import { ErrorEnum } from '@/constants/error';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { isEmpty } from 'lodash';
+
+import { ErrorEnum } from '@/constants/error';
+
 import { SocketException } from '@/exceptions/socket.exception';
-import { IAuthUser } from '/@/interfaces/auth';
+
+import { IAuthUser } from '@/interfaces/auth';
 
 @Injectable()
 export class AuthService {

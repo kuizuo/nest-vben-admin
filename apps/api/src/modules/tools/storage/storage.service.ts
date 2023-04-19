@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository } from 'typeorm';
-import { StorageCreateDto, StoragePageDto } from './storage.dto';
-import { deleteFile } from '@/utils/file';
-import { StorageInfo } from './storage.modal';
-import { ToolStorage } from './storage.entity';
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
+
 import { paginateRaw } from '@/helper/paginate';
+import { UserEntity } from '@/modules/system/user/entities/user.entity';
+import { deleteFile } from '@/utils/file';
+
+import { StorageCreateDto, StoragePageDto } from './storage.dto';
+import { ToolStorage } from './storage.entity';
 
 @Injectable()
 export class StorageService {
@@ -51,15 +52,15 @@ export class StorageService {
       .createQueryBuilder('storage')
       .where({
         ...(name ? { name: Like(`%${name}%`) } : null),
-        ...(type ? { type: type } : null),
-        ...(extName ? { extName: extName } : null),
+        ...(type ? { type } : null),
+        ...(extName ? { extName } : null),
         ...(size ? { size: Between(size[0], size[1]) } : null),
         ...(time ? { createdAt: Between(time[0], time[1]) } : null),
       })
       .orderBy('storage.created_at', 'DESC');
 
     if (username) {
-      const user = await this.userRepo.findOneBy({ username: username });
+      const user = await this.userRepo.findOneBy({ username });
       queryBuilder.andWhere('storage.userId = :userId', { userId: user.id });
     }
 
@@ -81,6 +82,6 @@ export class StorageService {
   }
 
   async count(): Promise<number> {
-    return await this.storageRepo.count();
+    return this.storageRepo.count();
   }
 }

@@ -1,5 +1,3 @@
-import type { IBaseResponse } from '/@/interfaces/response';
-import { FastifyReply } from 'fastify';
 import {
   ArgumentsHost,
   Catch,
@@ -7,9 +5,13 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiException } from '../exceptions/api.exception';
-import { ErrorEnum } from '../constants/error';
 import { ConfigService } from '@nestjs/config';
+import { FastifyReply } from 'fastify';
+
+import type { IBaseResponse } from '@/interfaces/response';
+
+import { ErrorEnum } from '../constants/error';
+import { ApiException } from '../exceptions/api.exception';
 
 @Catch()
 export class AppFilter implements ExceptionFilter {

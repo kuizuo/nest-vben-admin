@@ -1,15 +1,16 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { difference, filter, includes, isEmpty, map } from 'lodash';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { difference, includes, isEmpty } from 'lodash';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
-import { RoleEntity } from '@/modules/system/role/role.entity';
-import { MenuEntity } from '@/modules/system/menu/menu.entity';
-import { RoleCreateDto, RoleUpdateDto } from './role.dto';
-import { RolePageDto } from './role.dto';
-import { Pagination } from '@/helper/paginate/pagination';
+
 import { IAppConfig } from '@/config';
 import { paginate } from '@/helper/paginate';
+import { Pagination } from '@/helper/paginate/pagination';
+import { MenuEntity } from '@/modules/system/menu/menu.entity';
+import { RoleEntity } from '@/modules/system/role/role.entity';
+
+import { RoleCreateDto, RoleUpdateDto, RolePageDto } from './role.dto';
 
 @Injectable()
 export class RoleService {
@@ -122,7 +123,7 @@ export class RoleService {
       .where({
         ...(value ? { value: Like(`%${value}%`) } : null),
         ...(name ? { name: Like(`%${name}%`) } : null),
-        ...(status ? { status: status } : null),
+        ...(status ? { status } : null),
       })
       .orderBy('role.id', 'ASC');
 

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { DeptEntity } from './dept.entity';
 
 export class DeptDetailInfo extends DeptEntity {

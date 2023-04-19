@@ -1,20 +1,25 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RolePageDto } from './role.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { ErrorEnum } from '@/constants/error';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { ApiException } from '@/exceptions/api.exception';
 import { Pagination } from '@/helper/paginate/pagination';
+
 import { RoleEntity } from '@/modules/system/role/role.entity';
-import { RoleService } from './role.service';
+
+import { MenuService } from '../menu/menu.service';
+
 import {
+  RolePageDto,
   RoleCreateDto,
   RoleDeleteDto,
   RoleInfoDto,
   RoleUpdateDto,
 } from './role.dto';
-import { ApiException } from '@/exceptions/api.exception';
-import { MenuService } from '../menu/menu.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { ErrorEnum } from '@/constants/error';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+
+import { RoleService } from './role.service';
 
 @ApiTags('System - 角色模块')
 @ApiSecurityAuth()
@@ -29,20 +34,20 @@ export class RoleController {
   @ApiResult({ type: [RoleEntity] })
   @Get('list')
   async list(): Promise<RoleEntity[]> {
-    return await this.roleService.list();
+    return this.roleService.list();
   }
 
   @ApiOperation({ summary: '分页查询角色信息' })
   @ApiResult({ type: [RoleEntity] })
   @Get('page')
   async page(@Query() dto: RolePageDto): Promise<Pagination<RoleEntity>> {
-    return await this.roleService.page(dto);
+    return this.roleService.page(dto);
   }
 
   @ApiOperation({ summary: '获取角色信息' })
   @Get('info')
   async info(@Query() dto: RoleInfoDto) {
-    return await this.roleService.info(dto.id);
+    return this.roleService.info(dto.id);
   }
 
   @ApiOperation({ summary: '新增角色' })

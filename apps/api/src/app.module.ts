@@ -1,22 +1,25 @@
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppsModule } from './modules/apps/apps.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BullModule } from '@nestjs/bull';
-import { MissionModule } from './mission/mission.module';
-import { ConstraintModule } from './constraints/constraint.module';
+
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './guards/auth.guard';
-import { env } from './helper/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { LoggerOptions } from 'typeorm';
-import { IDatabaseConfig } from './config';
-import { TypeORMLogger } from './providers/typeorm-logger';
-import { SharedModule } from '@/modules/shared/shared.module';
-import { SystemModule } from './modules/system/system.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { ToolsModule } from './modules/tools/tools.module';
 
 import * as config from '@/config';
+import { SharedModule } from '@/modules/shared/shared.module';
+
+import { IDatabaseConfig } from './config';
+import { ConstraintModule } from './constraints/constraint.module';
+import { AuthGuard } from './guards/auth.guard';
+import { env } from './helper/config';
+import { MissionModule } from './mission/mission.module';
+
+import { AuthModule } from './modules/auth/auth.module';
+import { SystemModule } from './modules/system/system.module';
+import { ToolsModule } from './modules/tools/tools.module';
+import { TypeORMLogger } from './providers/typeorm-logger';
 
 @Module({
   imports: [
@@ -47,7 +50,6 @@ import * as config from '@/config';
     SharedModule,
     MissionModule,
     BullModule,
-    AppsModule,
     AuthModule,
     SystemModule,
     ToolsModule,

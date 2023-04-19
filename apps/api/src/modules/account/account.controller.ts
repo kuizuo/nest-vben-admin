@@ -1,19 +1,23 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { AllowAnonPermission } from '@/decorators/allow-anon-permission.decorator';
+import { ApiResult } from '@/decorators/api-result.decorator';
 import { AuthUser } from '@/decorators/auth-user.decorator';
-import { IAuthUser } from '/@/interfaces/auth';
-import { AccountInfo } from '../system/user/user.modal';
+
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { IAuthUser } from '@/interfaces/auth';
+
+import { MenuEntity } from '@/modules/system/menu/menu.entity';
+
+import { AuthService } from '../auth/auth.service';
 import {
   PasswordUpdateDto,
   UserInfoUpdateDto,
   UserExistDto,
 } from '../system/user/user.dto';
+import { AccountInfo } from '../system/user/user.modal';
 import { UserService } from '../system/user/user.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { MenuEntity } from '@/modules/system/menu/menu.entity';
-import { AllowAnonPermission } from '@/decorators/allow-anon-permission.decorator';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { AuthService } from '../auth/auth.service';
 
 @ApiTags('System - 账户模块')
 @ApiSecurityAuth()
@@ -30,7 +34,7 @@ export class AccountController {
   @ApiResult({ type: AccountInfo })
   @AllowAnonPermission()
   async info(@AuthUser() user: IAuthUser): Promise<AccountInfo> {
-    return await this.userService.getAccountInfo(user.uid);
+    return this.userService.getAccountInfo(user.uid);
   }
 
   @Post('update')
@@ -65,7 +69,7 @@ export class AccountController {
   @ApiResult({ type: [MenuEntity] })
   @AllowAnonPermission()
   async menu(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return await this.authService.getMenu(user.uid);
+    return this.authService.getMenu(user.uid);
   }
 
   @Get('perm')
@@ -73,7 +77,7 @@ export class AccountController {
   @ApiResult({ type: [String] })
   @AllowAnonPermission()
   async perm(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return await this.authService.getPerm(user.uid);
+    return this.authService.getPerm(user.uid);
   }
 
   @Get('exist')

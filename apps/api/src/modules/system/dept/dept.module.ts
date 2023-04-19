@@ -1,19 +1,17 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SystemModule } from '../system.module';
+import { RoleModule } from '../role/role.module';
+import { UserModule } from '../user/user.module';
 
-import { DeptService } from './dept.service';
-import { DeptEntity } from './dept.entity';
 import { DeptController } from './dept.controller';
+import { DeptEntity } from './dept.entity';
+import { DeptService } from './dept.service';
 
 const services = [DeptService];
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([DeptEntity]),
-    forwardRef(() => SystemModule),
-  ],
+  imports: [TypeOrmModule.forFeature([DeptEntity]), UserModule, RoleModule],
   controllers: [DeptController],
   providers: [...services],
   exports: [TypeOrmModule, ...services],

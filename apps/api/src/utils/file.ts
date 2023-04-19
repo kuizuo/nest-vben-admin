@@ -1,6 +1,8 @@
-import { MultipartFile } from '@fastify/multipart';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
+import { MultipartFile } from '@fastify/multipart';
+
 import dayjs from 'dayjs';
 
 enum Type {
@@ -19,23 +21,24 @@ export function getFileType(extName: string) {
     'bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg';
   if (image.includes(extName)) {
     return Type.IMAGE;
-  } else if (documents.includes(extName)) {
-    return Type.TXT;
-  } else if (music.includes(extName)) {
-    return Type.MUSIC;
-  } else if (video.includes(extName)) {
-    return Type.VIDEO;
-  } else {
-    return Type.OTHER;
   }
+  if (documents.includes(extName)) {
+    return Type.TXT;
+  }
+  if (music.includes(extName)) {
+    return Type.MUSIC;
+  }
+  if (video.includes(extName)) {
+    return Type.VIDEO;
+  }
+  return Type.OTHER;
 }
 
 export function getName(fileName: string) {
   if (fileName.includes('.')) {
     return fileName.split('.')[0];
-  } else {
-    return fileName;
   }
+  return fileName;
 }
 
 export function getExtname(fileName: string) {
@@ -51,7 +54,7 @@ export function getSize(bytes: number, decimals = 2) {
 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
 }
 
 export function fileRename(fileName: string) {
@@ -62,7 +65,7 @@ export function fileRename(fileName: string) {
 }
 
 export function getFilePath(name: string) {
-  return '/upload/' + name;
+  return `/upload/${name}`;
 }
 
 export async function saveFile(file: MultipartFile, name: string) {

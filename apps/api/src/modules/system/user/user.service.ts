@@ -1,8 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { findIndex, isEmpty, isNil } from 'lodash';
-import { ApiException } from '@/exceptions/api.exception';
+
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
+
+import { IAppConfig } from '@/config';
+import { ErrorEnum } from '@/constants/error';
+import { SYS_USER_INITPASSWORD } from '@/constants/param-config';
+import { ApiException } from '@/exceptions/api.exception';
+
+import { paginateRaw } from '@/helper/paginate';
+import { Pagination } from '@/helper/paginate/pagination';
+import { RegisterDto } from '@/modules/auth/dtos/auth.dto';
+import { QQService } from '@/modules/shared/services/qq.service';
+import { RedisService } from '@/modules/shared/services/redis.service';
 import {
   UserCreateDto,
   UserPageDto,
@@ -11,20 +23,19 @@ import {
   UserInfoUpdateDto,
 } from './user.dto';
 import { AccountInfo, UserInfoPage } from './user.modal';
-import { RedisService } from '@/modules/shared/services/redis.service';
+
+
 import { DictService } from '../dict/dict.service';
-import { SYS_USER_INITPASSWORD } from '@/constants/param-config';
-import { QQService } from '@/modules/shared/services/qq.service';
+
+
 import { AppGeneralService } from '../../shared/services/app-general.service';
-import { ErrorEnum } from '@/constants/error';
+
 import { MD5, randomValue } from '@/utils';
+
 import { UserEntity } from './entities/user.entity';
+
 import { RoleEntity } from '../role/role.entity';
-import { RegisterDto } from '@/modules/auth/dtos/auth.dto';
-import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@/config';
-import { Pagination } from '@/helper/paginate/pagination';
-import { paginateRaw } from '@/helper/paginate';
+
 
 @Injectable()
 export class UserService {
@@ -45,8 +56,8 @@ export class UserService {
    * 根据用户名查找已经启用的用户
    */
   async findUserByUserName(username: string): Promise<UserEntity | undefined> {
-    return await this.userRepository.findOneBy({
-      username: username,
+    return this.userRepository.findOneBy({
+      username,
       status: 1,
     });
   }
@@ -259,7 +270,7 @@ export class UserService {
   async count(uid: number): Promise<number> {
     const rootUserId = await this.findRootUserId();
 
-    return await this.userRepository.countBy({
+    return this.userRepository.countBy({
       id: Not(In([rootUserId, uid])),
     });
   }
@@ -403,7 +414,7 @@ export class UserService {
    */
   async register({ username, ...data }: RegisterDto): Promise<void> {
     const exists = await this.userRepository.findOneBy({
-      username: username,
+      username,
     });
     if (!isEmpty(exists)) throw new ApiException(ErrorEnum.CODE_1001);
 
@@ -413,7 +424,7 @@ export class UserService {
       const password = MD5(`${data.password ?? 'a123456'}${salt}`);
 
       const u = manager.create(UserEntity, {
-        username: username,
+        username,
         password,
         status: 1,
         psalt: salt,

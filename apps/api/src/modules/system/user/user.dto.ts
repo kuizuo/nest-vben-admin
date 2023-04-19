@@ -16,10 +16,11 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { isEmpty } from 'lodash';
+
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { IsEntityExist } from '@/constraints/entity-exist.constraint';
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
 import { IsUnique } from '@/constraints/unique.constraint';
+import { UserEntity } from '@/modules/system/user/entities/user.entity';
 
 export class UserInfoUpdateDto {
   @ApiProperty({ description: '用户呢称' })

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { isEmpty } from 'lodash';
-import { MD5 } from '/@/utils/crypto';
 import { ConfigService } from '@nestjs/config';
+import { isEmpty } from 'lodash';
+
 import { IAppConfig } from '@/config';
+import { MD5 } from '@/utils/crypto';
 
 @Injectable()
 export class AppGeneralService {

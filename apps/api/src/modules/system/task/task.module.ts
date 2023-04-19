@@ -1,17 +1,18 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
+import { Module } from '@nestjs/common';
 
-import { SystemModule } from '../system.module';
-
-import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '@/constants/task';
 import { ConfigService } from '@nestjs/config';
-import { IRedisConfig } from '@/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { TaskService } from './task.service';
-import { TaskEntity } from './task.entity';
+import { IRedisConfig } from '@/config';
+import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '@/constants/task';
+
+import { LogModule } from '../log/log.module';
+
 import { TaskController } from './task.controller';
+import { TaskEntity } from './task.entity';
 import { TaskConsumer } from './task.processor';
+import { TaskService } from './task.service';
 
 const providers = [TaskService, TaskConsumer];
 
@@ -26,7 +27,7 @@ const providers = [TaskService, TaskConsumer];
       }),
       inject: [ConfigService],
     }),
-    forwardRef(() => SystemModule),
+    LogModule,
   ],
   controllers: [TaskController],
   providers: [...providers],

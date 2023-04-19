@@ -2,11 +2,11 @@ import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { IAppConfig, ISwaggerConfig } from './config';
-import { Pagination } from './helper/paginate/pagination';
-import { ResOp, TreeResult } from './common/model/response.model';
 import { AbstractEntity } from './common/entity/abstract.entity';
+import { ResOp, TreeResult } from './common/model/response.model';
+import { IAppConfig, ISwaggerConfig } from './config';
 import { API_SECURITY_AUTH } from './decorators/swagger.decorator';
+import { Pagination } from './helper/paginate/pagination';
 
 export function setupSwagger(
   app: INestApplication,

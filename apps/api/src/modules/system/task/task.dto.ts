@@ -1,5 +1,6 @@
-import * as parser from 'cron-parser';
-import { isEmpty } from 'lodash';
+import { BadRequestException } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsIn,
@@ -15,10 +16,10 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import * as parser from 'cron-parser';
+import { isEmpty } from 'lodash';
+
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
-import { BadRequestException } from '@nestjs/common';
 
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })
@@ -112,7 +113,7 @@ export class TaskCheckIdDto {
   id: number;
 }
 
-export class TaskPageDto extends PageOptionsDto  {
+export class TaskPageDto extends PageOptionsDto {
   @ApiProperty({ description: '任务名称' })
   @IsOptional()
   @IsString()

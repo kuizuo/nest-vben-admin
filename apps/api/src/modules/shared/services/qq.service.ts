@@ -7,7 +7,7 @@ export class QQService {
 
   async getNickname(qq: string | number) {
     const { data } = await this.http.axiosRef.get(
-      'https://api.kuizuo.cn/api/qqnick?qq=' + qq,
+      `https://api.kuizuo.cn/api/qqnick?qq=${qq}`,
     );
     return data;
   }

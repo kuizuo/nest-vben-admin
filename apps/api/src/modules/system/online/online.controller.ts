@@ -1,15 +1,18 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ApiException } from '@/exceptions/api.exception';
-import { AuthUser } from '@/decorators/auth-user.decorator';
-import { IAuthUser } from '/@/interfaces/auth';
-import { LogDisabled } from '@/decorators/log-disabled.decorator';
-import { OnlineUserInfo } from './online.modal';
-import { KickDto } from './online.dto';
-import { OnlineService } from './online.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
+
 import { ErrorEnum } from '@/constants/error';
+import { ApiResult } from '@/decorators/api-result.decorator';
+import { AuthUser } from '@/decorators/auth-user.decorator';
+import { LogDisabled } from '@/decorators/log-disabled.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { ApiException } from '@/exceptions/api.exception';
+
+import { IAuthUser } from '@/interfaces/auth';
+
+import { KickDto } from './online.dto';
+import { OnlineUserInfo } from './online.modal';
+import { OnlineService } from './online.service';
 
 @ApiTags('System - 在线用户模块')
 @ApiSecurityAuth()
@@ -23,7 +26,7 @@ export class OnlineController {
   @LogDisabled()
   @Get('list')
   async list(@AuthUser() user: IAuthUser): Promise<OnlineUserInfo[]> {
-    return await this.onlineService.listOnlineUser(user.uid);
+    return this.onlineService.listOnlineUser(user.uid);
   }
 
   @ApiOperation({ summary: '下线指定在线用户' })

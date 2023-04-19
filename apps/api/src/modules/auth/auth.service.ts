@@ -5,15 +5,15 @@ import { isEmpty } from 'lodash';
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 
-import { UserService } from '@/modules/system/user/user.service';
 import { RedisService } from '@/modules/shared/services/redis.service';
+import { UserService } from '@/modules/system/user/user.service';
 
 import { MD5 } from '@/utils';
 
+import { LoginLogService } from '../system/log/services/login-log.service';
 import { MenuService } from '../system/menu/menu.service';
 import { RoleService } from '../system/role/role.service';
 
-import { LoginLogService } from '../system/log/services/login-log.service';
 import { TokenService } from './services/token.service';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class AuthService {
     private menuService: MenuService,
     private roleService: RoleService,
     private userService: UserService,
-    private logService: LoginLogService,
+    private loginLogService: LoginLogService,
     private tokenService: TokenService,
   ) {}
 
@@ -56,7 +56,7 @@ export class AuthService {
     const roles = await this.roleService.getRoleValues(roleIds);
 
     const token = await this.tokenService.generateAccessToken(user.id, roles);
-    await this.logService.create(user.id, ip, ua);
+    await this.loginLogService.create(user.id, ip, ua);
 
     return token.accessToken;
   }
@@ -74,7 +74,7 @@ export class AuthService {
   }
 
   async loginLog(uid: number, ip: string, ua: string) {
-    await this.logService.create(uid, ip, ua);
+    await this.loginLogService.create(uid, ip, ua);
   }
 
   async logout(uid: number) {

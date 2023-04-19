@@ -7,11 +7,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { AllowAnonPermission } from '@/decorators';
+import { ApiResult } from '@/decorators/api-result.decorator';
+
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+
 import { ServeStatInfo } from './serve.class';
 import { ServeService } from './serve.service';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { AllowAnonPermission } from '@/decorators';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 
 @ApiTags('System - 服务监控')
 @ApiSecurityAuth()
@@ -28,6 +31,6 @@ export class ServeController {
   @ApiResult({ type: ServeStatInfo })
   @AllowAnonPermission()
   async stat(): Promise<ServeStatInfo> {
-    return await this.serveService.getServeStat();
+    return this.serveService.getServeStat();
   }
 }

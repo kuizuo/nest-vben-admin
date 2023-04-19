@@ -1,12 +1,14 @@
 import { Module, forwardRef } from '@nestjs/common';
 
+import { WSModule } from '@/modules/ws/ws.module';
+
+import { RoleModule } from '../role/role.module';
 import { SystemModule } from '../system.module';
 
-import { OnlineService } from './online.service';
-import { OnlineController } from './online.controller';
 import { UserModule } from '../user/user.module';
-import { RoleModule } from '../role/role.module';
-import { WSModule } from '@/modules/ws/ws.module';
+
+import { OnlineController } from './online.controller';
+import { OnlineService } from './online.service';
 
 const providers = [OnlineService];
 

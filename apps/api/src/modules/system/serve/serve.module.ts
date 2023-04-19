@@ -2,8 +2,8 @@ import { Module, forwardRef } from '@nestjs/common';
 
 import { SystemModule } from '../system.module';
 
-import { ServeService } from './serve.service';
 import { ServeController } from './serve.controller';
+import { ServeService } from './serve.service';
 
 const providers = [ServeService];
 

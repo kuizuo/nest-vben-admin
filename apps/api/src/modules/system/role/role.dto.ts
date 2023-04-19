@@ -1,4 +1,3 @@
-import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -11,6 +10,8 @@ import {
   Matches,
   MinLength,
 } from 'class-validator';
+
+import { PageOptionsDto } from '@/common/dto/page-options.dto';
 
 export class RoleCreateDto {
   @ApiProperty({ description: '角色名称' })
@@ -59,7 +60,7 @@ export class RoleDeleteDto {
   ids: number[];
 }
 
-export class RolePageDto extends PageOptionsDto  {
+export class RolePageDto extends PageOptionsDto {
   @ApiProperty({ description: '角色名称' })
   @IsOptional()
   @IsString()

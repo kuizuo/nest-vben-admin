@@ -1,7 +1,13 @@
-import { BadRequestException, Controller, Post, Req } from '@nestjs/common';
-import { FastifyRequest } from 'fastify';
 import { MultipartFile } from '@fastify/multipart';
+import { BadRequestException, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FastifyRequest } from 'fastify';
+
+import { AuthUser } from '@/decorators/auth-user.decorator';
+
+import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { IAuthUser } from '@/interfaces/auth';
+
 import {
   fileRename,
   getExtname,
@@ -11,11 +17,10 @@ import {
   getSize,
   saveFile,
 } from '@/utils/file';
-import { AuthUser } from '@/decorators/auth-user.decorator';
-import { IAuthUser } from '/@/interfaces/auth';
-import { FileUploadDto } from './upload.dto';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+
 import { StorageService } from '../storage/storage.service';
+
+import { FileUploadDto } from './upload.dto';
 
 @ApiTags('System - 上传模块')
 @ApiSecurityAuth()

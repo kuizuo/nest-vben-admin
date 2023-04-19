@@ -1,22 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, Like, Repository, TreeRepository } from 'typeorm';
 import { includes, isEmpty } from 'lodash';
+import { EntityManager, Repository, TreeRepository } from 'typeorm';
+
+import { IAppConfig } from '@/config';
+import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
+import { UserEntity } from '@/modules/system/user/entities/user.entity';
+
+import { filterTree } from '@/utils/list2tree';
+
 import { RoleService } from '../role/role.service';
-import { DeptDetailInfo, DeptTree } from './dept.model';
+
 import {
   MoveDept,
   DeptUpdateDto,
   DeptCreateDto,
   DeptListDto,
 } from './dept.dto';
-import { filterTree, list2Tree } from '@/utils/list2tree';
-import { ErrorEnum } from '@/constants/error';
-import { ConfigService } from '@nestjs/config';
-import { IAppConfig } from '@/config';
+import { DeptDetailInfo, DeptTree } from './dept.model';
 
 @Injectable()
 export class DeptService {
@@ -34,7 +38,7 @@ export class DeptService {
    * 获取所有部门
    */
   async list(): Promise<DeptEntity[]> {
-    return await this.deptRepository.find({ order: { orderNo: 'DESC' } });
+    return this.deptRepository.find({ order: { orderNo: 'DESC' } });
   }
 
   /**
@@ -108,7 +112,7 @@ export class DeptService {
    * 根据部门查询关联的用户数量
    */
   async countUserByDeptId(id: number): Promise<number> {
-    return await this.userRepository.countBy({ depts: { id } });
+    return this.userRepository.countBy({ depts: { id } });
   }
 
   /**
@@ -116,7 +120,7 @@ export class DeptService {
    */
   async countChildDept(id: number): Promise<number> {
     const item = await this.deptRepository.findOneBy({ id });
-    return await this.deptRepository.countDescendants(item);
+    return this.deptRepository.countDescendants(item);
   }
 
   /**
@@ -124,23 +128,22 @@ export class DeptService {
    */
   async getDeptTree(uid: number, dto: DeptListDto): Promise<DeptTree[]> {
     if (uid === this.configService.get<IAppConfig>('app').rootRoleId) {
-      return await this.deptRepository.findTrees();
-    } else {
-      const set = new Set<number>();
-      const depts = await this.deptRepository
-        .createQueryBuilder('dept')
-        .leftJoinAndSelect('dept.parent', 'parent')
-        .leftJoinAndSelect('dept.children', 'children')
-        .andWhere('user_dept.user_id = :uid', { uid })
-        .getMany();
-
-      const deptTree = await this.deptRepository.findTrees();
-
-      const ids = Array.from(set);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return filterTree(deptTree, (item) => ids.includes(item.id));
+      return this.deptRepository.findTrees();
     }
+    const set = new Set<number>();
+    const depts = await this.deptRepository
+      .createQueryBuilder('dept')
+      .leftJoinAndSelect('dept.parent', 'parent')
+      .leftJoinAndSelect('dept.children', 'children')
+      .andWhere('user_dept.user_id = :uid', { uid })
+      .getMany();
+
+    const deptTree = await this.deptRepository.findTrees();
+
+    const ids = Array.from(set);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return filterTree(deptTree, (item) => ids.includes(item.id));
   }
 
   /**

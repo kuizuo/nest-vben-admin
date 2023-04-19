@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectEntityManager } from '@nestjs/typeorm';
-import { ApiException } from '@/exceptions/api.exception';
-import { AdminWSService } from '@/modules/ws/admin-ws.service';
-import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
-import { EVENT_KICK } from '@/modules/ws/ws.event';
+
 import { EntityManager } from 'typeorm';
+
 import { UAParser } from 'ua-parser-js';
-import { UserService } from '../user/user.service';
-import { OnlineUserInfo } from './online.modal';
+
 import { ErrorEnum } from '@/constants/error';
+import { ApiException } from '@/exceptions/api.exception';
+import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
+import { AdminWSService } from '@/modules/ws/admin-ws.service';
+import { EVENT_KICK } from '@/modules/ws/ws.event';
+
+import { UserService } from '../user/user.service';
+
+import { OnlineUserInfo } from './online.modal';
 
 @Injectable()
 export class OnlineService {
@@ -33,7 +38,7 @@ export class OnlineService {
       const token = socket.handshake.query?.token as string;
       return this.jwtService.verify(token).uid;
     });
-    return await this.findLastLoginInfoList(onlineIds, currentUid);
+    return this.findLastLoginInfoList(onlineIds, currentUid);
   }
 
   /**

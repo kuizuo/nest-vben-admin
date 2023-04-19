@@ -1,12 +1,16 @@
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { StorageInfo } from './storage.modal';
+
+import { Pagination } from '@/helper/paginate/pagination';
 
 import { StorageDeleteDto, StoragePageDto } from './storage.dto';
+import { StorageInfo } from './storage.modal';
+
 import { StorageService } from './storage.service';
-import { Pagination } from '@/helper/paginate/pagination';
 
 @ApiTags('System - 存储模块')
 @ApiSecurityAuth()
@@ -19,7 +23,7 @@ export class StorageController {
   @ApiResult({ type: StorageInfo, isPage: true })
   @Get('list')
   async list(@Query() dto: StoragePageDto): Promise<Pagination<StorageInfo>> {
-    return await this.storageService.page(dto);
+    return this.storageService.page(dto);
   }
 
   @ApiOperation({ summary: '删除文件' })

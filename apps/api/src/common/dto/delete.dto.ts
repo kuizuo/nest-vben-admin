@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray, IsDefined, IsInt, IsNotEmpty, Min } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsDefined,
+  IsInt,
+  IsNotEmpty,
+  Min,
+} from 'class-validator';
 
 /**
  * 单个删除
@@ -19,7 +26,11 @@ export class DeleteDto {
  * 批量删除
  */
 export class DeleteManyDto {
-  @ApiProperty({ description: '待删除的ID列表', type: [Number], required: true })
+  @ApiProperty({
+    description: '待删除的ID列表',
+    type: [Number],
+    required: true,
+  })
   @IsDefined()
   @IsArray()
   @ArrayNotEmpty()

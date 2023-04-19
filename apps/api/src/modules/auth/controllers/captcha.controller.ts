@@ -1,12 +1,11 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { isEmpty } from 'lodash';
 import * as svgCaptcha from 'svg-captcha';
 
-import { ErrorEnum } from '@/constants/error';
 import { ApiResult, LogDisabled } from '@/decorators';
 import { Ip } from '@/decorators/http.decorator';
 import { EmailService } from '@/modules/shared/services/email.service';
@@ -16,14 +15,9 @@ import { generateUUID } from '@/utils';
 
 import { AuthUser, SkipAuth } from '../decorators';
 
-import {
-  CheckCodeDto,
-  ImageCaptchaDto,
-  SendEmailCodeDto,
-  SendSmsCodeDto,
-} from '../dtos/captcha.dto';
-import { CaptchaService } from '../services/captcha.service';
+import { ImageCaptchaDto, SendEmailCodeDto } from '../dtos/captcha.dto';
 import { ImageCaptcha } from '../models/auth.model';
+import { CaptchaService } from '../services/captcha.service';
 import { TokenService } from '../services/token.service';
 
 @ApiTags('Captcha - 验证码模块')

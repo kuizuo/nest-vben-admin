@@ -1,26 +1,25 @@
 import path from 'path';
+
+import { ClassSerializerInterceptor, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import {
-  ClassSerializerInterceptor,
-  HttpStatus,
-  Logger,
-  UnprocessableEntityException,
-  ValidationPipe,
-} from '@nestjs/common';
-import { AppModule } from './app.module';
 import {
   NestFastifyApplication,
   FastifyAdapter,
 } from '@nestjs/platform-fastify';
+
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { setupSwagger } from './setup-swagger';
-import { AppLoggerService } from './modules/shared/services/app-logger.service';
-import { AppFilter } from './filters/app.filter';
-import { TransformInterceptor as TransformInterceptor } from './interceptors/transform.interceptor';
-import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
+
 import { useContainer } from 'class-validator';
-import { ConfigService } from '@nestjs/config';
+
+import { AppModule } from './app.module';
+
 import { IAppConfig } from './config';
+import { AppFilter } from './filters/app.filter';
+import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
+import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { AppLoggerService } from './modules/shared/services/app-logger.service';
+import { setupSwagger } from './setup-swagger';
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -46,6 +45,7 @@ export async function bootstrap() {
   app.useStaticAssets({ root: path.join(__dirname, '..', 'public') });
 
   // https://github.com/fastify/fastify-multipart/
+  // eslint-disable-next-line global-require
   await app.register(require('@fastify/multipart'), {
     limits: {
       fileSize: 1000000,
