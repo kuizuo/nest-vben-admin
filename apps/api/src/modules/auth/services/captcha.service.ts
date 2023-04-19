@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { RedisService } from '@/modules/shared/services/redis.service';
+import { RedisService } from '@/modules/shared/redis/redis.service';
 import { CaptchaLogService } from '@/modules/system/log/services/captcha-log.service';
 
 @Injectable()

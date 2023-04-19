@@ -16,4 +16,4 @@ const providers = [AdminWSGateway, AuthService, AdminWSService];
   providers,
   exports: [...providers],
 })
-export class WSModule {}
+export class SocketModule {}

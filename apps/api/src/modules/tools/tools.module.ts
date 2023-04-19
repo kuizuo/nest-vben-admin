@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { EmailService } from '@/modules/shared/services/email.service';
+import { EmailService } from '@/modules/shared/mailer/mailer.service';
 
 import { UserEntity } from '../system/user/entities/user.entity';
 

@@ -7,7 +7,7 @@ import UAParser from 'ua-parser-js';
 
 import { paginateRaw } from '@/helper/paginate';
 
-import { IpService } from '@/modules/shared/services/ip.service';
+import { IpService } from '@/modules/shared/ip/ip.service';
 
 import { UserService } from '../../user/user.service';
 import { LoginLogQueryDto } from '../dtos/log.dto';

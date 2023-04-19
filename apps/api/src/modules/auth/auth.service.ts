@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 
-import { RedisService } from '@/modules/shared/services/redis.service';
+import { RedisService } from '@/modules/shared/redis/redis.service';
 import { UserService } from '@/modules/system/user/user.service';
 
 import { MD5 } from '@/utils';

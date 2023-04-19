@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 
-import { env, envNumber } from '@/helper/config';
+import { env, envNumber } from '@/config/env';
 
 export const jwt = registerAs('jwt', () => ({
   secret: env('TOKEN_SECRET'),

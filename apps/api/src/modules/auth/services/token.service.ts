@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
 
 import { IAuthUser } from '@/interfaces/auth';
-import { RedisService } from '@/modules/shared/services/redis.service';
+import { RedisService } from '@/modules/shared/redis/redis.service';
 import { MenuService } from '@/modules/system/menu/menu.service';
 
 /**

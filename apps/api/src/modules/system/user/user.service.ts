@@ -13,8 +13,17 @@ import { ApiException } from '@/exceptions/api.exception';
 import { paginateRaw } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 import { RegisterDto } from '@/modules/auth/dtos/auth.dto';
-import { QQService } from '@/modules/shared/services/qq.service';
-import { RedisService } from '@/modules/shared/services/redis.service';
+import { QQService } from '@/modules/shared/qq/qq.service';
+import { RedisService } from '@/modules/shared/redis/redis.service';
+
+import { MD5, randomValue } from '@/utils';
+
+import { AppGeneralService } from '../../shared/services/app-general.service';
+import { DictService } from '../dict/dict.service';
+
+import { RoleEntity } from '../role/role.entity';
+
+import { UserEntity } from './entities/user.entity';
 import {
   UserCreateDto,
   UserPageDto,
@@ -23,19 +32,6 @@ import {
   UserInfoUpdateDto,
 } from './user.dto';
 import { AccountInfo, UserInfoPage } from './user.modal';
-
-
-import { DictService } from '../dict/dict.service';
-
-
-import { AppGeneralService } from '../../shared/services/app-general.service';
-
-import { MD5, randomValue } from '@/utils';
-
-import { UserEntity } from './entities/user.entity';
-
-import { RoleEntity } from '../role/role.entity';
-
 
 @Injectable()
 export class UserService {

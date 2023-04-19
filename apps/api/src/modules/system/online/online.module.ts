@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 
-import { WSModule } from '@/modules/ws/ws.module';
+import { SocketModule } from '@/modules/socket/socket.module';
 
 import { RoleModule } from '../role/role.module';
 import { SystemModule } from '../system.module';
@@ -15,7 +15,7 @@ const providers = [OnlineService];
 @Module({
   imports: [
     forwardRef(() => SystemModule),
-    forwardRef(() => WSModule),
+    forwardRef(() => SocketModule),
     UserModule,
     RoleModule,
   ],

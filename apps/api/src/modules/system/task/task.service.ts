@@ -13,8 +13,8 @@ import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 import { MISSION_DECORATOR_KEY } from '@/mission/mission.decorator';
+import { RedisService } from '@/modules/shared/redis/redis.service';
 import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
-import { RedisService } from '@/modules/shared/services/redis.service';
 
 import { TaskEntity } from '@/modules/system/task/task.entity';
 

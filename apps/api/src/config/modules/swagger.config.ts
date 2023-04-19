@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 
-import { env, envBoolean } from '@/helper/config';
+import { env, envBoolean } from '@/config/env';
 
 export const swagger = registerAs('swagger', () => ({
   enable: envBoolean('SWAGGER_ENABLE'),

@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsInt, Min } from 'class-validator';
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
-import { IsEntityExist } from '@/constraints/entity-exist.constraint';
+import { IsEntityExist } from '@/database/constraints/entity-exist.constraint';
 import { DemoEntity } from '@/modules/apps/demo/demo.entity';
 
 export class DemoCreateDto {}

@@ -10,7 +10,7 @@ import { ApiException } from '@/exceptions/api.exception';
 
 import { randomValue } from '@/utils';
 
-import { RedisService } from './redis.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class EmailService {
@@ -89,7 +89,7 @@ export class EmailService {
     let limitCountOfDay: string | number = await this.redisService.client.get(
       `captcha:${to}:limit-day`,
     );
-    limitCountOfDay = limitCountOfDay ? parseInt(limitCountOfDay, 10) : 0;
+    limitCountOfDay = limitCountOfDay ? Number(limitCountOfDay) : 0;
     if (limitCountOfDay > LIMIT_TIME)
       throw new ApiException(ErrorEnum.CODE_1202);
 
@@ -97,7 +97,7 @@ export class EmailService {
     let ipLimitCountOfDay: string | number = await this.redisService.client.get(
       `ip:${ip}:send:limit-day`,
     );
-    ipLimitCountOfDay = ipLimitCountOfDay ? parseInt(ipLimitCountOfDay, 10) : 0;
+    ipLimitCountOfDay = ipLimitCountOfDay ? Number(ipLimitCountOfDay) : 0;
     if (ipLimitCountOfDay > LIMIT_TIME)
       throw new ApiException(ErrorEnum.CODE_1202);
   }

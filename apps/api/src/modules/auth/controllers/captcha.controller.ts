@@ -8,8 +8,8 @@ import * as svgCaptcha from 'svg-captcha';
 
 import { ApiResult, LogDisabled } from '@/decorators';
 import { Ip } from '@/decorators/http.decorator';
-import { EmailService } from '@/modules/shared/services/email.service';
-import { RedisService } from '@/modules/shared/services/redis.service';
+import { EmailService } from '@/modules/shared/mailer/mailer.service';
+import { RedisService } from '@/modules/shared/redis/redis.service';
 
 import { generateUUID } from '@/utils';
 

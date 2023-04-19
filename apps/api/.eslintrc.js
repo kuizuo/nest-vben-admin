@@ -66,5 +66,7 @@ module.exports = {
 
     'no-restricted-syntax': 'off',
     'no-await-in-loop': 'off',
+
+    'radix': 'off'
   },
 };

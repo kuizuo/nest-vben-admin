@@ -8,9 +8,9 @@ import { UAParser } from 'ua-parser-js';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { AdminWSGateway } from '@/modules/ws/admin-ws.gateway';
-import { AdminWSService } from '@/modules/ws/admin-ws.service';
-import { EVENT_KICK } from '@/modules/ws/ws.event';
+import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway';
+import { AdminWSService } from '@/modules/socket/admin-ws.service';
+import { EVENT_KICK } from '@/modules/socket/socket.event';
 
 import { UserService } from '../user/user.service';
 

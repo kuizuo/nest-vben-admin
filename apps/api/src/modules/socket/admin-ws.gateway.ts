@@ -8,12 +8,12 @@ import {
 import { Server, Socket } from 'socket.io';
 
 import { AuthService } from './auth.service';
-import { EVENT_OFFLINE, EVENT_ONLINE } from './ws.event';
+import { EVENT_OFFLINE, EVENT_ONLINE } from './socket.event';
 
 /**
  * Admin WebSokcet网关，不含权限校验，Socket端只做通知相关操作
  */
-@WebSocketGateway(parseInt(process.env.WS_PORT), {
+@WebSocketGateway(Number(process.env.WS_PORT), {
   path: `/${process.env.WS_PATH}`,
   namespace: '/admin',
 })

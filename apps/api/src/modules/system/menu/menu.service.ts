@@ -6,7 +6,7 @@ import { In, IsNull, Not, Repository } from 'typeorm';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { RedisService } from '@/modules/shared/services/redis.service';
+import { RedisService } from '@/modules/shared/redis/redis.service';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
 import { generatorMenu, generatorRouters } from '@/utils/permission';

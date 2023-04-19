@@ -7,13 +7,13 @@ import { ThrottlerModule } from '@nestjs/throttler';
 
 import { IJwtConfig, IMailerConfig, IRedisConfig } from '@/config';
 
+import { IpService } from './ip/ip.service';
+import { EmailService } from './mailer/mailer.service';
+import { QQService } from './qq/qq.service';
 import { RedisModule } from './redis/redis.module';
+import { RedisService } from './redis/redis.service';
 import { AppGeneralService } from './services/app-general.service';
 import { AppLoggerService } from './services/app-logger.service';
-import { EmailService } from './services/email.service';
-import { IpService } from './services/ip.service';
-import { QQService } from './services/qq.service';
-import { RedisService } from './services/redis.service';
 
 const providers = [
   AppLoggerService,
@@ -77,8 +77,6 @@ const providers = [
       }),
       inject: [ConfigService],
     }),
-    // sms
-    // SmsModule.registerAsync({}),
   ],
   providers: [...providers],
   exports: [HttpModule, CacheModule, JwtModule, ...providers],
