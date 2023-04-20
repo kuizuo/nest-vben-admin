@@ -1,5 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 
+import { AuthModule } from '@/modules/auth/auth.module';
 import { SocketModule } from '@/modules/socket/socket.module';
 
 import { RoleModule } from '../role/role.module';
@@ -16,6 +17,7 @@ const providers = [OnlineService];
   imports: [
     forwardRef(() => SystemModule),
     forwardRef(() => SocketModule),
+    AuthModule,
     UserModule,
     RoleModule,
   ],

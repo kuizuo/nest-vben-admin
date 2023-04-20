@@ -1,4 +1,4 @@
-import { MailerService } from '@nestjs-modules/mailer';
+import { MailerService as NestMailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
@@ -13,9 +13,9 @@ import { randomValue } from '@/utils';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()
-export class EmailService {
+export class MailerService {
   constructor(
-    private mailerService: MailerService,
+    private mailerService: NestMailerService,
     private redisService: RedisService,
     private configService: ConfigService,
   ) {}
@@ -102,7 +102,7 @@ export class EmailService {
       throw new ApiException(ErrorEnum.CODE_1202);
   }
 
-  async saveRecord(to: string, code: string, ip: string) {
+  async log(to: string, code: string, ip: string) {
     const getRemainTime = () => {
       const now = dayjs();
       return now.endOf('day').diff(now, 'second');

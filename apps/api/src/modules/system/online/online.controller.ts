@@ -3,12 +3,10 @@ import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
-import { AuthUser } from '@/decorators/auth-user.decorator';
-import { LogDisabled } from '@/decorators/log-disabled.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
 
-import { IAuthUser } from '@/interfaces/auth';
+import { AuthUser } from '@/modules/auth/decorators';
 
 import { KickDto } from './online.dto';
 import { OnlineUserInfo } from './online.modal';
@@ -23,7 +21,6 @@ export class OnlineController {
 
   @ApiOperation({ summary: '查询当前在线用户' })
   @ApiResult({ type: [OnlineUserInfo] })
-  @LogDisabled()
   @Get('list')
   async list(@AuthUser() user: IAuthUser): Promise<OnlineUserInfo[]> {
     return this.onlineService.listOnlineUser(user.uid);

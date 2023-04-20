@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
 
-import { IAuthUser } from '@/interfaces/auth';
 import { RedisService } from '@/modules/shared/redis/redis.service';
 import { MenuService } from '@/modules/system/menu/menu.service';
 
@@ -15,7 +14,7 @@ export class TokenService {
   constructor(
     private jwtService: JwtService,
     private redisService: RedisService,
-    private config: ConfigService,
+    private configService: ConfigService,
     private menuService: MenuService,
   ) {}
 
@@ -74,7 +73,7 @@ export class TokenService {
       `auth:token:${uid}`,
       jwtSign,
       'EX',
-      this.config.get<string>('jwt.expires'),
+      this.configService.get<string>('jwt.expires'),
     );
 
     // 设置菜单权限
@@ -102,12 +101,12 @@ export class TokenService {
     const refreshTokenPayload = {
       accessToken,
       exp: now
-        .add(this.config.get<number>('jwt.refreshExpires'), 'second')
+        .add(this.configService.get<number>('jwt.refreshExpires'), 'second')
         .unix(),
     };
 
     const refreshToken = this.jwtService.sign(refreshTokenPayload, {
-      secret: this.config.get<string>('jwt.refreshSecret'),
+      secret: this.configService.get<string>('jwt.refreshSecret'),
     });
 
     // accessToken 与 refreshToken 一一对应 且与 refreshToken时间一样
@@ -117,14 +116,14 @@ export class TokenService {
         refreshToken,
       }),
       'EX',
-      this.config.get<number>('jwt.refreshExpires'),
+      this.configService.get<number>('jwt.refreshExpires'),
     );
 
     await this.redisService.client.set(
       `auth:refresh_token:${refreshToken}`,
       JSON.stringify(refreshTokenPayload),
       'EX',
-      this.config.get<number>('jwt.refreshExpires'),
+      this.configService.get<number>('jwt.refreshExpires'),
     );
 
     return refreshToken;

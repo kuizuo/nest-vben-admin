@@ -8,8 +8,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { FastifyReply } from 'fastify';
 
-import type { IBaseResponse } from '@/interfaces/response';
-
 import { ErrorEnum } from '../constants/error';
 import { ApiException } from '../exceptions/api.exception';
 

@@ -1,41 +1,32 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 import { isEmpty } from 'lodash';
 import * as svgCaptcha from 'svg-captcha';
 
-import { ApiResult, LogDisabled } from '@/decorators';
-import { Ip } from '@/decorators/http.decorator';
-import { EmailService } from '@/modules/shared/mailer/mailer.service';
+import { ApiResult } from '@/decorators';
 import { RedisService } from '@/modules/shared/redis/redis.service';
 
 import { generateUUID } from '@/utils';
 
-import { AuthUser, SkipAuth } from '../decorators';
+import { Public } from '../decorators';
 
-import { ImageCaptchaDto, SendEmailCodeDto } from '../dtos/captcha.dto';
+import { ImageCaptchaDto } from '../dtos/captcha.dto';
 import { ImageCaptcha } from '../models/auth.model';
-import { CaptchaService } from '../services/captcha.service';
-import { TokenService } from '../services/token.service';
 
 @ApiTags('Captcha - 验证码模块')
 @UseGuards(ThrottlerGuard)
-@Controller()
+@Controller('auth/captcha')
 export class CaptchaController {
-  constructor(
-    private tokenService: TokenService,
-    private captchaService: CaptchaService,
-    private emailService: EmailService,
-    private redisService: RedisService,
-  ) {}
+  constructor(private redisService: RedisService) {}
 
-  @Get('captcha/img')
+  @Get('img')
   @ApiOperation({ summary: '获取登录图片验证码' })
   @ApiResult({ type: ImageCaptcha })
-  @SkipAuth()
-  @LogDisabled()
+  @Public()
+  @Throttle(2, 60)
   async captchaByImg(@Query() dto: ImageCaptchaDto): Promise<ImageCaptcha> {
     const { width, height } = dto;
 
@@ -61,24 +52,5 @@ export class CaptchaController {
       60 * 5,
     );
     return result;
-  }
-
-  @Post('send_email_code')
-  @ApiOperation({ summary: '发送邮箱验证码' })
-  @SkipAuth()
-  @LogDisabled()
-  async sendEmailCode(
-    @Body() dto: SendEmailCodeDto,
-    @Ip() ip: string,
-    @AuthUser('uid') uid: number,
-  ): Promise<void> {
-    // await this.authService.checkImgCaptcha(dto.captchaId, dto.verifyCode);
-    const { email } = dto;
-
-    await this.emailService.checkLimit(email, ip);
-    const { to, code } = await this.emailService.sendCode(email);
-
-    await this.emailService.saveRecord(email, code, ip);
-    await this.captchaService.log(to, code, 'email', uid);
   }
 }

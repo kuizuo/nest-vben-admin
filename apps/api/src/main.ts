@@ -1,6 +1,12 @@
 import path from 'path';
 
-import { ClassSerializerInterceptor, Logger } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  HttpStatus,
+  Logger,
+  UnprocessableEntityException,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import {
@@ -20,7 +26,7 @@ import { catchError } from './helper/catchError';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { AppLoggerService } from './modules/shared/services/app-logger.service';
-import { setupSwagger } from './setup-swagger';
+import { setupSwagger } from './utils/setup-swagger';
 
 catchError();
 
@@ -53,7 +59,7 @@ async function bootstrap() {
   // eslint-disable-next-line global-require
   await app.register(require('@fastify/multipart'), {
     limits: {
-      fileSize: 1000000,
+      fileSize: 1024 * 1024 * 10, // 10M
       files: 1,
     },
   });
@@ -69,26 +75,27 @@ async function bootstrap() {
     // 返回数据处理
     new TransformInterceptor(new Reflector()),
   );
+
+  // 使用全局管道验证数据
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      exceptionFactory: (errors) =>
+        new UnprocessableEntityException(
+          errors.map((e) => {
+            const rule = Object.keys(e.constraints)[0];
+            const msg = e.constraints[rule];
+            return `property ${e.property} validation failed: ${msg}, following constraints: ${rule}`;
+          })[0],
+        ),
+    }),
+  );
+
   // websocket
   app.useWebSocketAdapter(new IoAdapter());
-
-  // // 使用全局管道验证数据
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     transform: true,
-  //     whitelist: true,
-  //     // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
-  //     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-  //     exceptionFactory: (errors) =>
-  //       new UnprocessableEntityException(
-  //         errors.map((e) => {
-  //           const rule = Object.keys(e.constraints)[0];
-  //           const msg = e.constraints[rule];
-  //           return `property ${e.property} validation failed: ${msg}, following constraints: ${rule}`;
-  //         })[0],
-  //       ),
-  //   }),
-  // );
 
   // global prefix
   const { globalPrefix, port } = configService.get<IAppConfig>('app');

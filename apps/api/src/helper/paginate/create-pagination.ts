@@ -1,5 +1,4 @@
-import { IPaginationMeta } from '@/interfaces/response';
-
+import { IPaginationMeta } from './interface';
 import { Pagination } from './pagination';
 
 export function createPaginationObject<T>({

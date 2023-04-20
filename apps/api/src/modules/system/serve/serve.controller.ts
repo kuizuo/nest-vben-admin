@@ -8,10 +8,11 @@ import {
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { AllowAnonPermission } from '@/decorators';
 import { ApiResult } from '@/decorators/api-result.decorator';
 
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+
+import { AllowAnon } from '@/modules/auth/decorators';
 
 import { ServeStatInfo } from './serve.class';
 import { ServeService } from './serve.service';
@@ -29,7 +30,7 @@ export class ServeController {
   @Get('stat')
   @ApiOperation({ summary: '获取服务器运行信息' })
   @ApiResult({ type: ServeStatInfo })
-  @AllowAnonPermission()
+  @AllowAnon()
   async stat(): Promise<ServeStatInfo> {
     return this.serveService.getServeStat();
   }

@@ -3,7 +3,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { EmailService } from '@/modules/shared/mailer/mailer.service';
+import { MailerService } from '@/modules/shared/mailer/mailer.service';
 
 import { EmailSendDto } from './email.dto';
 
@@ -11,7 +11,7 @@ import { EmailSendDto } from './email.dto';
 @ApiSecurityAuth()
 @Controller('email')
 export class EmailController {
-  constructor(private emailService: EmailService) {}
+  constructor(private emailService: MailerService) {}
 
   @ApiOperation({ summary: '发送邮件' })
   @Post('send')

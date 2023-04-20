@@ -2,13 +2,12 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HttpModule } from '@nestjs/axios';
 import { Global, CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerModule } from '@nestjs/throttler';
 
-import { IJwtConfig, IMailerConfig, IRedisConfig } from '@/config';
+import { IMailerConfig, IRedisConfig } from '@/config';
 
 import { IpService } from './ip/ip.service';
-import { EmailService } from './mailer/mailer.service';
+import { MailerService } from './mailer/mailer.service';
 import { QQService } from './qq/qq.service';
 import { RedisModule } from './redis/redis.module';
 import { RedisService } from './redis/redis.service';
@@ -19,7 +18,7 @@ const providers = [
   AppLoggerService,
   AppGeneralService,
   RedisService,
-  EmailService,
+  MailerService,
   IpService,
   QQService,
 ];
@@ -48,20 +47,7 @@ const providers = [
         limit: 5,
       }),
     }),
-    // jwt
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        const { secret, expires } = configService.get<IJwtConfig>('jwt');
 
-        return {
-          secret,
-          expires,
-          ignoreExpiration: process.env.NODE_ENV === 'development',
-        };
-      },
-      inject: [ConfigService],
-    }),
     // redis
     RedisModule.registerAsync({
       imports: [ConfigModule],
@@ -79,6 +65,6 @@ const providers = [
     }),
   ],
   providers: [...providers],
-  exports: [HttpModule, CacheModule, JwtModule, ...providers],
+  exports: [HttpModule, CacheModule, ...providers],
 })
 export class SharedModule {}

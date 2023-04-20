@@ -3,11 +3,9 @@ import { BadRequestException, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FastifyRequest } from 'fastify';
 
-import { AuthUser } from '@/decorators/auth-user.decorator';
-
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { IAuthUser } from '@/interfaces/auth';
 
+import { AuthUser } from '@/modules/auth/decorators';
 import {
   fileRename,
   getExtname,

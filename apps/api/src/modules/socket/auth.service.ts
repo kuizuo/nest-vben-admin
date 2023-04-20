@@ -6,8 +6,6 @@ import { ErrorEnum } from '@/constants/error';
 
 import { SocketException } from '@/exceptions/socket.exception';
 
-import { IAuthUser } from '@/interfaces/auth';
-
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}

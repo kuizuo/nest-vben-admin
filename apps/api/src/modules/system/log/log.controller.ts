@@ -2,7 +2,6 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiResult } from '@/decorators';
-import { LogDisabled } from '@/decorators/log-disabled.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { Pagination } from '@/helper/paginate/pagination';
 
@@ -29,7 +28,6 @@ export class LogController {
 
   @ApiOperation({ summary: '分页查询登录日志' })
   @ApiResult({ type: [LoginLogInfo], isPage: true })
-  @LogDisabled()
   @Get('login/page')
   async loginLogPage(
     @Query() dto: LoginLogQueryDto,
@@ -39,7 +37,6 @@ export class LogController {
 
   @ApiOperation({ summary: '分页查询任务日志' })
   @ApiResult({ type: [TaskLogInfo], isPage: true })
-  @LogDisabled()
   @Get('task/page')
   async taskPage(
     @Query() dto: TaskLogQueryDto,
@@ -49,7 +46,6 @@ export class LogController {
 
   @ApiOperation({ summary: '分页查询验证码日志' })
   @ApiResult({ type: [CaptchaLogEntity], isPage: true })
-  @LogDisabled()
   @Get('captcha/page')
   async captchaPage(
     @Query() dto: CaptchaLogQueryDto,

@@ -1,8 +1,8 @@
 import { SetMetadata } from '@nestjs/common';
 
-export const ALLOW_ANON_DECORATOR_KEY = 'decorator:allow_anon_permission';
+import { ALLOW_ANON_KEY } from '../constants';
 
 /**
  * 当接口不需要检测用户是否具有操作权限时添加该装饰器
  */
-export const AllowAnon = () => SetMetadata(ALLOW_ANON_DECORATOR_KEY, true);
+export const AllowAnon = () => SetMetadata(ALLOW_ANON_KEY, true);

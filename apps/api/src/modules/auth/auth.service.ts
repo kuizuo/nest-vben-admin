@@ -27,11 +27,31 @@ export class AuthService {
     private tokenService: TokenService,
   ) {}
 
+  async validateUser(credential: string, password: string): Promise<any> {
+    const user = await this.userService.findUserByUserName(credential);
+    console.log(user);
+    if (isEmpty(user)) {
+      throw new ApiException(ErrorEnum.CODE_1003);
+    }
+
+    const comparePassword = MD5(`${password}${user.psalt}`);
+    if (user.password !== comparePassword) {
+      throw new ApiException(ErrorEnum.CODE_1003);
+    }
+
+    if (user) {
+      const { password, ...result } = user;
+      return result;
+    }
+
+    return null;
+  }
+
   /**
    * 获取登录JWT
    * 返回null则账号密码有误，不存在该用户
    */
-  async getLoginSign(
+  async login(
     username: string,
     password: string,
     ip: string,
@@ -48,14 +68,12 @@ export class AuthService {
     }
 
     const roleIds = await this.roleService.getRoleIdByUser(user.id);
-    // 是管理员才允许登录
-    if (!(roleIds.includes(1) || roleIds.includes(2))) {
-      throw new ApiException(ErrorEnum.CODE_1104);
-    }
 
     const roles = await this.roleService.getRoleValues(roleIds);
 
+    // 包含access_token和refresh_token
     const token = await this.tokenService.generateAccessToken(user.id, roles);
+
     await this.loginLogService.create(user.id, ip, ua);
 
     return token.accessToken;

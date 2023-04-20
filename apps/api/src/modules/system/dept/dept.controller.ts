@@ -3,9 +3,9 @@ import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
-import { AuthUser } from '@/decorators/auth-user.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
+import { AuthUser } from '@/modules/auth/decorators';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
 
 import {

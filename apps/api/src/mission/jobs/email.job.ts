@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { EmailService } from '@/modules/shared/mailer/mailer.service';
+import { MailerService } from '@/modules/shared/mailer/mailer.service';
 
 import { AppLoggerService } from '../../modules/shared/services/app-logger.service';
 import { Mission } from '../mission.decorator';
@@ -12,7 +12,7 @@ import { Mission } from '../mission.decorator';
 @Mission()
 export class EmailJob {
   constructor(
-    private readonly emailService: EmailService,
+    private readonly emailService: MailerService,
     private readonly logger: AppLoggerService,
   ) {}
 

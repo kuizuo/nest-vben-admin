@@ -1,5 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 
+import { AuthModule } from '../auth/auth.module';
 import { SystemModule } from '../system/system.module';
 
 import { AdminWSGateway } from './admin-ws.gateway';
@@ -12,7 +13,7 @@ const providers = [AdminWSGateway, AuthService, AdminWSService];
  * WebSocket Module
  */
 @Module({
-  imports: [forwardRef(() => SystemModule)],
+  imports: [forwardRef(() => SystemModule), AuthModule],
   providers,
   exports: [...providers],
 })

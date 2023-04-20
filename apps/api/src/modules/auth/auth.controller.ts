@@ -1,18 +1,20 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Ip } from '@/decorators';
 import { ApiResult } from '@/decorators/api-result.decorator';
-import { LogDisabled } from '@/decorators/log-disabled.decorator';
-import { SkipAuth } from '@/decorators/skip-auth.decorator';
 
 import { UserService } from '../system/user/user.service';
 
 import { AuthService } from './auth.service';
+import { Public } from './decorators';
 import { LoginDto, RegisterDto } from './dtos/auth.dto';
+import { LocalGuard } from './guards/local.guard';
 import { LoginToken } from './models/auth.model';
 
-@ApiTags('Auth - 登录模块')
+@ApiTags('Auth - 认证模块')
+@UseGuards(LocalGuard)
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -23,15 +25,13 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: '登录' })
   @ApiResult({ type: LoginToken })
-  @SkipAuth()
-  @LogDisabled()
   async login(
     @Body() dto: LoginDto,
     @Ip() ip: string,
     @Headers('user-agent') ua: string,
   ): Promise<LoginToken> {
     // await this.loginService.checkImgCaptcha(dto.captchaId, dto.verifyCode);
-    const token = await this.authService.getLoginSign(
+    const token = await this.authService.login(
       dto.username,
       dto.password,
       ip,
@@ -42,8 +42,6 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: '注册' })
-  @SkipAuth()
-  @LogDisabled()
   async register(@Body() dto: RegisterDto): Promise<void> {
     await this.userService.register(dto);
   }
