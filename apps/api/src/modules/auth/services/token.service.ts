@@ -6,6 +6,14 @@ import dayjs from 'dayjs';
 import { RedisService } from '@/modules/shared/redis/redis.service';
 import { MenuService } from '@/modules/system/menu/menu.service';
 
+import { RoleService } from '@/modules/system/role/role.service';
+import { UserEntity } from '@/modules/system/user/entities/user.entity';
+
+import { generateUUID } from '@/utils';
+
+import { AccessTokenEntity } from '../entities/access-token.entity';
+import { RefreshTokenEntity } from '../entities/refresh-token.entity';
+
 /**
  * 令牌服务
  */
@@ -15,39 +23,30 @@ export class TokenService {
     private jwtService: JwtService,
     private redisService: RedisService,
     private configService: ConfigService,
+    private roleService: RoleService,
     private menuService: MenuService,
   ) {}
 
   /**
    * 根据accessToken刷新AccessToken与RefreshToken
-   * @param accessToken
+   * @param accessTokenSign
    * @param response
    */
-  async refreshToken(accessToken: string) {
-    // 通过accessToken获取refreshToken和用户信息
-    const accessTokenJson = await this.redisService.client.get(
-      `auth:access_token:${accessToken}`,
-    );
+  async refreshToken(accessToken: AccessTokenEntity) {
+    const { user, refreshToken } = accessToken;
 
-    if (accessTokenJson) {
+    if (refreshToken) {
       const now = dayjs();
-      const { refreshToken } = JSON.parse(accessTokenJson);
-      const refreshTokenObj = (await this.jwtService.decode(
-        refreshToken,
-      )) as IAuthUser;
-
       // 判断refreshToken是否过期
-      if (now.unix() > refreshTokenObj.exp) return null;
+      if (now.isAfter(refreshToken.expired_at)) return null;
 
-      const user = (await this.jwtService.decode(accessToken)) as IAuthUser;
+      const roleIds = await this.roleService.getRoleIdByUser(user.id);
+      const roleValues = await this.roleService.getRoleValues(roleIds);
+
       // 如果没过期则生成新的access_token和refresh_token
-      const token = await this.generateAccessToken(user.uid, user?.roles);
+      const token = await this.generateAccessToken(user.id, roleValues);
 
-      // 删除旧的access_token
-      await this.redisService.client.del(`auth:access_token:${accessToken}`);
-      // 删除旧的refresh_token
-      await this.redisService.client.del(`auth:refresh_token:${refreshToken}`);
-
+      await accessToken.remove();
       return token;
     }
     return null;
@@ -62,26 +61,29 @@ export class TokenService {
 
     const jwtSign = this.jwtService.sign(payload);
 
-    // 生成refreshToken
-    const refreshToken = await this.generateRefreshToken(jwtSign, dayjs());
-
     // 设置密码版本号 当密码修改时，版本号+1
     await this.redisService.client.set(`auth:passwordVersion:${uid}`, 1);
 
-    // 设置用户id对应jwt
-    await this.redisService.client.set(
-      `auth:token:${uid}`,
-      jwtSign,
-      'EX',
-      this.configService.get<string>('jwt.expires'),
-    );
-
     // 设置菜单权限
     const perms = await this.menuService.getPerms(uid);
+
     await this.redisService.client.set(
       `auth:perms:${uid}`,
       JSON.stringify(perms),
     );
+
+    // 生成accessToken
+    const accessToken = new AccessTokenEntity();
+    accessToken.value = jwtSign;
+    accessToken.user = { id: uid } as UserEntity;
+    accessToken.expired_at = dayjs()
+      .add(this.configService.get<number>('jwt.expires'), 'second')
+      .toDate();
+
+    await accessToken.save();
+
+    // 生成refreshToken
+    const refreshToken = await this.generateRefreshToken(accessToken, dayjs());
 
     return {
       accessToken: jwtSign,
@@ -95,38 +97,27 @@ export class TokenService {
    * @param now
    */
   async generateRefreshToken(
-    accessToken: string,
+    accessToken: AccessTokenEntity,
     now: dayjs.Dayjs,
   ): Promise<string> {
     const refreshTokenPayload = {
-      accessToken,
-      exp: now
-        .add(this.configService.get<number>('jwt.refreshExpires'), 'second')
-        .unix(),
+      uuid: generateUUID(),
     };
 
-    const refreshToken = this.jwtService.sign(refreshTokenPayload, {
+    const refreshTokenSign = this.jwtService.sign(refreshTokenPayload, {
       secret: this.configService.get<string>('jwt.refreshSecret'),
     });
 
-    // accessToken 与 refreshToken 一一对应 且与 refreshToken时间一样
-    await this.redisService.client.set(
-      `auth:access_token:${accessToken}`,
-      JSON.stringify({
-        refreshToken,
-      }),
-      'EX',
-      this.configService.get<number>('jwt.refreshExpires'),
-    );
+    const refreshToken = new RefreshTokenEntity();
+    refreshToken.value = refreshTokenSign;
+    refreshToken.expired_at = now
+      .add(this.configService.get<number>('jwt.refreshExpires'), 'second')
+      .toDate();
+    refreshToken.accessToken = accessToken;
 
-    await this.redisService.client.set(
-      `auth:refresh_token:${refreshToken}`,
-      JSON.stringify(refreshTokenPayload),
-      'EX',
-      this.configService.get<number>('jwt.refreshExpires'),
-    );
+    await refreshToken.save();
 
-    return refreshToken;
+    return refreshTokenSign;
   }
 
   /**
@@ -134,10 +125,11 @@ export class TokenService {
    * @param value
    */
   async checkAccessToken(value: string) {
-    const accessToken = await this.redisService.client.get(
-      `auth:access_token:${value}`,
-    );
-    return !!accessToken;
+    return AccessTokenEntity.findOne({
+      where: { value },
+      relations: ['user', 'refreshToken'],
+      cache: true,
+    });
   }
 
   /**
@@ -145,15 +137,10 @@ export class TokenService {
    * @param value
    */
   async removeAccessToken(value: string) {
-    const accessToken = await this.redisService.client.get(
-      `auth:access_token:${value}`,
-    );
-
-    if (accessToken) {
-      const { refreshToken, user } = JSON.parse(accessToken);
-      await this.redisService.client.del(`auth:refresh_token:${refreshToken}`);
-      await this.redisService.client.del(`auth:token:${user.uid}`);
-    }
+    const accessToken = await AccessTokenEntity.findOne({
+      where: { value },
+    });
+    if (accessToken) await accessToken.remove();
   }
 
   /**
@@ -161,13 +148,13 @@ export class TokenService {
    * @param value
    */
   async removeRefreshToken(value: string) {
-    const refresh_token_json = await this.redisService.client.get(
-      `auth:refresh_token:${value}`,
-    );
-
-    if (refresh_token_json) {
-      const { accessToken } = JSON.parse(refresh_token_json);
-      await this.redisService.client.del(`auth:access_token:${accessToken}`);
+    const refreshToken = await RefreshTokenEntity.findOne({
+      where: { value },
+      relations: ['accessToken'],
+    });
+    if (refreshToken) {
+      if (refreshToken.accessToken) await refreshToken.accessToken.remove();
+      await refreshToken.remove();
     }
   }
 

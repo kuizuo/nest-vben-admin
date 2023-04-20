@@ -5,9 +5,12 @@ import {
   Entity,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
+
+import { AccessTokenEntity } from '@/modules/auth/entities/access-token.entity';
 
 import { DeptEntity } from '../../dept/dept.entity';
 import { RoleEntity } from '../../role/role.entity';
@@ -55,4 +58,9 @@ export class UserEntity extends AbstractEntity {
   @ManyToMany(() => DeptEntity, (dept) => dept.users)
   @JoinTable()
   depts: DeptEntity[];
+
+  @OneToMany(() => AccessTokenEntity, (accessToken) => accessToken.user, {
+    cascade: true,
+  })
+  accessTokens: AccessTokenEntity[];
 }

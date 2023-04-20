@@ -48,14 +48,17 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
         throw new ApiException(ErrorEnum.CODE_1101);
       }
 
-      const flag = await this.tokenService.checkAccessToken(requestToken);
-      if (!flag) throw new ApiException(ErrorEnum.CODE_1101);
+      // 判断token是否存在,如果不存在则认证失败
+      const accessToken = isNil(requestToken)
+        ? undefined
+        : await this.tokenService.checkAccessToken(requestToken!);
+      if (!accessToken) throw new ApiException(ErrorEnum.CODE_1101);
 
       // 无法通过token校验
       // 尝试通过refreshToken刷新token
 
       if (!isNil(requestToken)) {
-        const token = await this.tokenService.refreshToken(requestToken);
+        const token = await this.tokenService.refreshToken(accessToken);
         if (isNil(token)) throw new ApiException(ErrorEnum.CODE_1101);
 
         if (token.accessToken) {

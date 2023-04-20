@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { IJwtConfig } from '@/config';
 
 import { LogModule } from '../system/log/log.module';
@@ -16,6 +18,8 @@ import { AuthService } from './auth.service';
 import { AccountController } from './controllers/account.controller';
 import { CaptchaController } from './controllers/captcha.controller';
 import { EmailController } from './controllers/email.controller';
+import { AccessTokenEntity } from './entities/access-token.entity';
+import { RefreshTokenEntity } from './entities/refresh-token.entity';
 import { CaptchaService } from './services/captcha.service';
 import { TokenService } from './services/token.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -32,6 +36,7 @@ const strategies = [LocalStrategy, JwtStrategy];
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([AccessTokenEntity, RefreshTokenEntity]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -53,6 +58,6 @@ const strategies = [LocalStrategy, JwtStrategy];
   ],
   controllers: [...controllers],
   providers: [...providers, ...strategies],
-  exports: [JwtModule, ...providers],
+  exports: [TypeOrmModule, JwtModule, ...providers],
 })
 export class AuthModule {}
