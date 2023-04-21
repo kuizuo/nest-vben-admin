@@ -3,9 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
 
-import { RedisService } from '@/modules/shared/redis/redis.service';
-import { MenuService } from '@/modules/system/menu/menu.service';
-
 import { RoleService } from '@/modules/system/role/role.service';
 import { UserEntity } from '@/modules/system/user/entities/user.entity';
 
@@ -21,10 +18,8 @@ import { RefreshTokenEntity } from '../entities/refresh-token.entity';
 export class TokenService {
   constructor(
     private jwtService: JwtService,
-    private redisService: RedisService,
     private configService: ConfigService,
     private roleService: RoleService,
-    private menuService: MenuService,
   ) {}
 
   /**
@@ -60,17 +55,6 @@ export class TokenService {
     };
 
     const jwtSign = this.jwtService.sign(payload);
-
-    // 设置密码版本号 当密码修改时，版本号+1
-    await this.redisService.client.set(`auth:passwordVersion:${uid}`, 1);
-
-    // 设置菜单权限
-    const perms = await this.menuService.getPerms(uid);
-
-    await this.redisService.client.set(
-      `auth:perms:${uid}`,
-      JSON.stringify(perms),
-    );
 
     // 生成accessToken
     const accessToken = new AccessTokenEntity();

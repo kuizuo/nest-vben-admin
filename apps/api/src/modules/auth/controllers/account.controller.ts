@@ -4,8 +4,9 @@ import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiResult } from '@/decorators/api-result.decorator';
 
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { AllowAnon, AuthUser } from '@/modules/auth/decorators';
+import { AuthUser } from '@/modules/auth/decorators';
 
+import { AllowAnon } from '@/modules/rbac/decorators';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
 import {
@@ -48,7 +49,7 @@ export class AccountController {
   @ApiResult({ type: [MenuEntity] })
   @AllowAnon()
   async menu(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return this.authService.getMenu(user.uid);
+    return this.authService.getMenus(user.uid);
   }
 
   @Get('permissions')
@@ -56,7 +57,7 @@ export class AccountController {
   @ApiResult({ type: [String] })
   @AllowAnon()
   async permissions(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return this.authService.getPerm(user.uid);
+    return this.authService.getPermissions(user.uid);
   }
 
   @Post('update')

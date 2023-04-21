@@ -11,9 +11,6 @@ import { TokenService } from '@/modules/auth/services/token.service';
 
 import { AuthStrategy, IS_PUBLIC_KEY } from '../constants';
 
-/**
- * Authentication 登录校验
- */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
   constructor(
@@ -40,9 +37,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     try {
       result = await super.canActivate(context);
     } catch (e) {
-      if (isPublic) {
-        return true;
-      }
+      if (isPublic) return true;
 
       if (isEmpty(requestToken)) {
         throw new ApiException(ErrorEnum.CODE_1101);
@@ -83,22 +78,18 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       throw new ApiException(ErrorEnum.CODE_1101);
     }
 
-    const pv = await this.authService.getRedisPasswordVersionById(
-      request.user.uid,
-    );
+    const pv = await this.authService.getPasswordVersionByUid(request.user.uid);
     if (pv !== `${request.user.pv}`) {
       // 密码版本不一致，登录期间已更改过密码
       throw new ApiException(ErrorEnum.CODE_1102);
     }
 
-    // 允许多端登录
-    const cacheToken = await this.authService.getRedisTokenById(
-      request.user.uid,
-    );
-    if (requestToken !== cacheToken) {
-      // 与redis保存不一致 即二次登录
-      throw new ApiException(ErrorEnum.CODE_1106);
-    }
+    // 不允许多端登录
+    // const cacheToken = await this.authService.getTokenByUid(request.user.uid);
+    // if (requestToken !== cacheToken) {
+    //   // 与redis保存不一致 即二次登录
+    //   throw new ApiException(ErrorEnum.CODE_1106);
+    // }
 
     return result;
   }

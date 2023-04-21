@@ -149,7 +149,7 @@ export class MenuService {
   /**
    * 获取当前用户的所有权限
    */
-  async getPerms(uid: number): Promise<string[]> {
+  async getPermissions(uid: number): Promise<string[]> {
     const roleIds = await this.roleService.getRoleIdByUser(uid);
     let permission: any[] = [];
     let result: any = null;
@@ -196,7 +196,7 @@ export class MenuService {
    * 刷新指定用户ID的权限
    */
   async refreshPerms(uid: number): Promise<void> {
-    const perms = await this.getPerms(uid);
+    const perms = await this.getPermissions(uid);
     const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
     if (online) {
       // 判断是否在线
@@ -217,7 +217,7 @@ export class MenuService {
       for (let i = 0; i < onlineUserIds.length; i++) {
         const uid = onlineUserIds[i].split('admin:token:')[1];
         if (!uid) continue;
-        const perms = await this.getPerms(parseInt(uid));
+        const perms = await this.getPermissions(parseInt(uid));
         await this.redisService
           .getRedis()
           .set(`admin:perms:${uid}`, JSON.stringify(perms));

@@ -12,7 +12,7 @@ import { ApiResult } from '@/decorators/api-result.decorator';
 
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 
-import { AllowAnon } from '@/modules/auth/decorators';
+import { AllowAnon } from '@/modules/rbac/decorators';
 
 import { ServeStatInfo } from './serve.class';
 import { ServeService } from './serve.service';

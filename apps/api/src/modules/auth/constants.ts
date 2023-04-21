@@ -1,5 +1,4 @@
 export const IS_PUBLIC_KEY = 'is_public';
-export const ALLOW_ANON_KEY = 'allow_anon_permission';
 
 export const AuthStrategy = {
   LOCAL: 'local',

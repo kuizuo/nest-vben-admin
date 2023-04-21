@@ -29,7 +29,7 @@ export class AuthService {
 
   async validateUser(credential: string, password: string): Promise<any> {
     const user = await this.userService.findUserByUserName(credential);
-    console.log(user);
+
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1003);
     }
@@ -73,6 +73,18 @@ export class AuthService {
 
     // 包含access_token和refresh_token
     const token = await this.tokenService.generateAccessToken(user.id, roles);
+
+    await this.redisService.client.set(
+      `auth:token:${user.id}`,
+      token.accessToken,
+    );
+
+    // 设置密码版本号 当密码修改时，版本号+1
+    await this.redisService.client.set(`auth:passwordVersion:${user.id}`, 1);
+
+    // 设置菜单权限
+    const permissions = await this.menuService.getPermissions(user.id);
+    await this.setPermissions(user.id, permissions);
 
     await this.loginLogService.create(user.id, ip, ua);
 
@@ -119,26 +131,36 @@ export class AuthService {
   /**
    * 获取菜单列表
    */
-  async getMenu(uid: number): Promise<string[]> {
+  async getMenus(uid: number): Promise<string[]> {
     return this.menuService.getMenus(uid);
   }
 
   /**
    * 获取权限列表
    */
-  async getPerm(uid: number): Promise<string[]> {
-    return this.menuService.getPerms(uid);
+  async getPermissions(uid: number): Promise<string[]> {
+    return this.menuService.getPermissions(uid);
   }
 
-  async getRedisPasswordVersionById(id: number): Promise<string> {
-    return this.redisService.client.get(`auth:passwordVersion:${id}`);
+  async setPermissions(uid: number, permissions: string[]): Promise<void> {
+    await this.redisService.client.set(
+      `auth:permission:${uid}`,
+      JSON.stringify(permissions),
+    );
   }
 
-  async getRedisTokenById(id: number): Promise<string> {
-    return this.redisService.client.get(`auth:token:${id}`);
+  async getPasswordVersionByUid(uid: number): Promise<string> {
+    return this.redisService.client.get(`auth:passwordVersion:${uid}`);
   }
 
-  async getRedisPermsById(id: number): Promise<string> {
-    return this.redisService.client.get(`auth:perms:${id}`);
+  async getTokenByUid(uid: number): Promise<string> {
+    return this.redisService.client.get(`auth:token:${uid}`);
+  }
+
+  async getPermissionsByUid(uid: number): Promise<string[]> {
+    const permissionString = await this.redisService.client.get(
+      `auth:permission:${uid}`,
+    );
+    return permissionString ? JSON.parse(permissionString) : [];
   }
 }
