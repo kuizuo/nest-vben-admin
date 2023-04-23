@@ -8,7 +8,7 @@ export enum Order {
   DESC = 'DESC',
 }
 
-export class PageOptionsDto {
+export class PageOptionsDto<T = any> {
   @ApiProperty({
     minimum: 1,
     default: 1,
@@ -34,7 +34,7 @@ export class PageOptionsDto {
   @ApiProperty({})
   @IsString()
   @IsOptional()
-  field?: string; // keyof T;
+  field?: keyof T;
 
   @ApiProperty({
     enum: Order,

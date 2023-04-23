@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiResult } from '@/decorators/api-result.decorator';
@@ -9,20 +9,19 @@ import { AuthUser } from '@/modules/auth/decorators';
 import { AllowAnon } from '@/modules/rbac/decorators';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
-import {
-  PasswordUpdateDto,
-  UserInfoUpdateDto,
-} from '../../system/user/user.dto';
+import { PasswordUpdateDto } from '@/modules/system/user/dtos/password.dto';
+
 import { AccountInfo } from '../../system/user/user.modal';
 import { UserService } from '../../system/user/user.service';
 import { AuthService } from '../auth.service';
+import { AccountUpdateDto } from '../dtos/account.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('Account - 账户模块')
 @ApiSecurityAuth()
 @ApiExtraModels(AccountInfo)
 @UseGuards(JwtAuthGuard)
-@Controller('auth')
+@Controller('account')
 export class AccountController {
   constructor(
     private userService: UserService,
@@ -60,12 +59,12 @@ export class AccountController {
     return this.authService.getPermissions(user.uid);
   }
 
-  @Post('update')
+  @Put('update')
   @ApiOperation({ summary: '更改账户资料' })
   @AllowAnon()
   async update(
-    @Body() dto: UserInfoUpdateDto,
     @AuthUser() user: IAuthUser,
+    @Body() dto: AccountUpdateDto,
   ): Promise<void> {
     await this.userService.updateAccountInfo(user.uid, dto);
   }
@@ -74,8 +73,8 @@ export class AccountController {
   @ApiOperation({ summary: '更改账户密码' })
   @AllowAnon()
   async password(
-    @Body() dto: PasswordUpdateDto,
     @AuthUser() user: IAuthUser,
+    @Body() dto: PasswordUpdateDto,
   ): Promise<void> {
     await this.userService.updatePassword(user.uid, dto);
   }

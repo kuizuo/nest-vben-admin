@@ -12,6 +12,7 @@ import { ApiException } from '@/exceptions/api.exception';
 
 import { paginateRaw } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
+import { AccountUpdateDto } from '@/modules/auth/dtos/account.dto';
 import { RegisterDto } from '@/modules/auth/dtos/auth.dto';
 import { QQService } from '@/modules/shared/qq/qq.service';
 import { RedisService } from '@/modules/shared/redis/redis.service';
@@ -23,14 +24,9 @@ import { DictService } from '../dict/dict.service';
 
 import { RoleEntity } from '../role/role.entity';
 
+import { PasswordUpdateDto } from './dtos/password.dto';
+import { UserCreateDto, UserListDto, UserUpdateDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
-import {
-  UserCreateDto,
-  UserPageDto,
-  PasswordUpdateDto,
-  UserUpdateDto,
-  UserInfoUpdateDto,
-} from './user.dto';
 import { AccountInfo, UserInfoPage } from './user.modal';
 
 @Injectable()
@@ -81,7 +77,7 @@ export class UserService {
   /**
    * 更新个人信息
    */
-  async updateAccountInfo(uid: number, info: UserInfoUpdateDto): Promise<void> {
+  async updateAccountInfo(uid: number, info: AccountUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid });
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
@@ -137,9 +133,8 @@ export class UserService {
 
   /**
    * 增加系统用户，如果返回false则表示已存在该用户
-   * @param param Object 对应SysUser实体类
    */
-  async add({
+  async create({
     username,
     password,
     roleIds: roles,
@@ -282,17 +277,13 @@ export class UserService {
   }
 
   /**
-   * 分页查询用户列表
+   * 查询用户列表
    */
-  async page({
+  async findAll({
     page,
     pageSize,
-    username,
-    nickName,
-    deptId,
-    email,
-    status,
-  }: UserPageDto): Promise<Pagination<UserInfoPage>> {
+    query: { username, nickName, deptId, email, status },
+  }: UserListDto): Promise<Pagination<UserInfoPage>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.depts', 'dept')

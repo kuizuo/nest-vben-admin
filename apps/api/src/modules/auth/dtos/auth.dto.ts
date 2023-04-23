@@ -31,15 +31,3 @@ export class RegisterDto {
   @IsString()
   lang: string;
 }
-
-export class ResetPasswordDto {
-  @ApiProperty({ description: '临时token', example: 'uuid' })
-  @IsString()
-  accessToken: string;
-
-  @ApiProperty({ description: '密码', example: 'a123456' })
-  @IsString()
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/)
-  @MinLength(6)
-  password: string;
-}
