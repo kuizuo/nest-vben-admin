@@ -1,7 +1,9 @@
 export default {
   api: {
+    operationSuccess: '操作成功',
     operationFailed: '操作失败',
     errorTip: '错误提示',
+    successTip: '成功提示',
     errorMessage: '操作失败,系统异常!',
     timeoutMessage: '登录超时,请重新登录!',
     apiTimeoutMessage: '接口请求超时,请刷新页面重试!',
@@ -85,17 +87,14 @@ export default {
     passwordPlaceholder: '请输入密码',
     smsPlaceholder: '请输入验证码',
     mobilePlaceholder: '请输入手机号码',
-    emailPlaceholder: '请输入邮箱',
     policyPlaceholder: '勾选后才能注册',
     diffPwd: '两次输入密码不一致',
 
     userName: '账号',
     password: '密码',
     confirmPassword: '确认密码',
-    qq: 'QQ',
     email: '邮箱',
     smsCode: '短信验证码',
-    emailCode: '邮箱验证码',
     mobile: '手机号码',
   },
 };

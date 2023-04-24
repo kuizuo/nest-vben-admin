@@ -8,10 +8,10 @@
     v-show="getShow"
     @keypress.enter="handleLogin"
   >
-    <FormItem name="username" class="enter-x">
+    <FormItem name="account" class="enter-x">
       <Input
         size="large"
-        v-model:value="formData.username"
+        v-model:value="formData.account"
         :placeholder="t('sys.login.userName')"
         class="fix-auto-fill"
       />
@@ -63,7 +63,7 @@
           {{ t('sys.login.qrSignInFormTitle') }}
         </Button>
       </ACol>
-      <ACol :md="7" :xs="24">
+      <ACol :md="6" :xs="24">
         <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
           {{ t('sys.login.registerButton') }}
         </Button>
@@ -119,8 +119,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    username: 'admin',
-    password: 'a123456',
+    account: 'vben',
+    password: '123456',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -136,22 +136,22 @@
       loading.value = true;
       const userInfo = await userStore.login({
         password: data.password,
-        username: data.username,
-        mode: 'modal',
+        username: data.account,
+        mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.nickName}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
           duration: 3,
         });
       }
     } catch (error) {
-      // createErrorModal({
-      //   title: t('sys.api.errorTip'),
-      //   content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
-      //   getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
-      // });
+      createErrorModal({
+        title: t('sys.api.errorTip'),
+        content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
+        getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
+      });
     } finally {
       loading.value = false;
     }

@@ -111,8 +111,9 @@
     computed,
   } from 'vue';
   import { Tooltip, Popover, Checkbox, Divider } from 'ant-design-vue';
+  import type { CheckboxChangeEvent } from 'ant-design-vue/lib/checkbox/interface';
   import { SettingOutlined, DragOutlined } from '@ant-design/icons-vue';
-  import { Icon } from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
   import { ScrollContainer } from '/@/components/Container';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useTableContext } from '../../hooks/useTableContext';
@@ -164,7 +165,7 @@
 
       const plainSortOptions = ref<Options[]>([]);
 
-      const columnListRef = ref<ComponentRef>(null);
+      const columnListRef = ref(null);
 
       const state = reactive<State>({
         checkAll: true,
@@ -183,9 +184,11 @@
 
       watchEffect(() => {
         const columns = table.getColumns();
-        if (columns.length && !state.isInit) {
-          init();
-        }
+        setTimeout(() => {
+          if (columns.length && !state.isInit) {
+            init();
+          }
+        }, 0);
       });
 
       watchEffect(() => {
@@ -210,7 +213,7 @@
         const columns = getColumns();
 
         const checkList = table
-          .getColumns({ ignoreAction: true })
+          .getColumns({ ignoreAction: true, ignoreIndex: true })
           .map((item) => {
             if (item.defaultHidden) {
               return '';
@@ -241,7 +244,7 @@
       }
 
       // checkAll change
-      function onCheckAllChange(e: ChangeEvent) {
+      function onCheckAllChange(e: CheckboxChangeEvent) {
         const checkList = plainOptions.value.map((item) => item.value);
         if (e.target.checked) {
           state.checkedList = checkList;
@@ -255,7 +258,7 @@
       const indeterminate = computed(() => {
         const len = plainOptions.value.length;
         let checkedLen = state.checkedList.length;
-        unref(checkIndex) && checkedLen--;
+        // unref(checkIndex) && checkedLen--;
         return checkedLen > 0 && checkedLen < len;
       });
 
@@ -288,7 +291,7 @@
         nextTick(() => {
           const columnListEl = unref(columnListRef);
           if (!columnListEl) return;
-          const el = columnListEl.$el as any;
+          const el = (columnListEl as any).$el;
           if (!el) return;
           // Drag and drop sort
           sortable = Sortablejs.create(unref(el), {
@@ -313,7 +316,12 @@
               }
 
               plainSortOptions.value = columns;
-              setColumns(columns);
+
+              setColumns(
+                columns
+                  .map((col: Options) => col.value)
+                  .filter((value: string) => state.checkedList.includes(value)),
+              );
             },
           });
           // 记录原始order 序列
@@ -323,14 +331,14 @@
       }
 
       // Control whether the serial number column is displayed
-      function handleIndexCheckChange(e: ChangeEvent) {
+      function handleIndexCheckChange(e: CheckboxChangeEvent) {
         table.setProps({
           showIndexColumn: e.target.checked,
         });
       }
 
       // Control whether the check box is displayed
-      function handleSelectCheckChange(e: ChangeEvent) {
+      function handleSelectCheckChange(e: CheckboxChangeEvent) {
         table.setProps({
           rowSelection: e.target.checked ? defaultRowSelection : undefined,
         });
@@ -339,7 +347,9 @@
       function handleColumnFixed(item: BasicColumn, fixed?: 'left' | 'right') {
         if (!state.checkedList.includes(item.dataIndex as string)) return;
 
-        const columns = getColumns() as BasicColumn[];
+        const columns = getColumns().filter((c: BasicColumn) =>
+          state.checkedList.includes(c.dataIndex as string),
+        ) as BasicColumn[];
         const isFixed = item.fixed === fixed ? false : fixed;
         const index = columns.findIndex((col) => col.dataIndex === item.dataIndex);
         if (index !== -1) {
@@ -406,8 +416,8 @@
 
   .@{prefix-cls} {
     &__popover-title {
-      position: relative;
       display: flex;
+      position: relative;
       align-items: center;
       justify-content: space-between;
     }

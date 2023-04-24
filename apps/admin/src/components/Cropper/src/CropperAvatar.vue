@@ -45,7 +45,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import type { ButtonProps } from '/@/components/Button';
-  import Icon from '/@/components/Icon';
+  import Icon from '@/components/Icon/Icon.vue';
 
   const props = {
     width: { type: [String, Number], default: '200px' },
@@ -91,11 +91,9 @@
         },
       );
 
-      function handleUploadSuccess(response) {
-        const source = response.source;
-        const filename = response.data.data.filename;
+      function handleUploadSuccess({ source, data }) {
         sourceValue.value = source;
-        emit('change', source, filename);
+        emit('change', { source, data });
         createMessage.success(t('component.cropper.uploadSuccess'));
       }
 
@@ -126,10 +124,10 @@
 
     &-image-wrapper {
       overflow: hidden;
-      cursor: pointer;
-      background: @component-background;
       border: 1px solid @border-color-base;
       border-radius: 50%;
+      background: @component-background;
+      cursor: pointer;
 
       img {
         width: 100%;
@@ -137,15 +135,15 @@
     }
 
     &-image-mask {
-      opacity: 0%;
       position: absolute;
       width: inherit;
       height: inherit;
-      border-radius: inherit;
+      transition: opacity 0.4s;
       border: inherit;
+      border-radius: inherit;
+      opacity: 0;
       background: rgb(0 0 0 / 40%);
       cursor: pointer;
-      transition: opacity 0.4s;
 
       ::v-deep(svg) {
         margin: auto;
@@ -153,7 +151,7 @@
     }
 
     &-image-mask:hover {
-      opacity: 4000%;
+      opacity: 40;
     }
 
     &-upload-btn {

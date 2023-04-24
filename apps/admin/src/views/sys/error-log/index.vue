@@ -1,16 +1,32 @@
 <template>
   <div class="p-4">
     <template v-for="src in imgList" :key="src">
-      <img :src="src" v-show="false" />
+      <img :src="src" v-show="false" alt="" />
     </template>
     <DetailModal :info="rowInfo" @register="registerModal" />
     <BasicTable @register="register" class="error-handle-table">
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            { label: t('sys.errorLog.tableActionDesc'), onClick: handleDetail.bind(null, record) },
-          ]"
-        />
+      <template #toolbar>
+        <a-button @click="fireVueError" type="primary">
+          {{ t('sys.errorLog.fireVueError') }}
+        </a-button>
+        <a-button @click="fireResourceError" type="primary">
+          {{ t('sys.errorLog.fireResourceError') }}
+        </a-button>
+        <a-button @click="fireAjaxError" type="primary">
+          {{ t('sys.errorLog.fireAjaxError') }}
+        </a-button>
+      </template>
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                label: t('sys.errorLog.tableActionDesc'),
+                onClick: handleDetail.bind(null, record),
+              },
+            ]"
+          />
+        </template>
       </template>
     </BasicTable>
   </div>
@@ -25,6 +41,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useErrorLogStore } from '/@/store/modules/errorLog';
+  import { fireErrorApi } from '/@/api/demo/error';
   import { getColumns } from './data';
   import { cloneDeep } from 'lodash-es';
 
@@ -40,7 +57,7 @@
       width: 80,
       title: 'Action',
       dataIndex: 'action',
-      slots: { customRender: 'action' },
+      // slots: { customRender: 'action' },
     },
   });
   const [registerModal, { openModal }] = useModal();
@@ -64,5 +81,17 @@
   function handleDetail(row: ErrorLogInfo) {
     rowInfo.value = row;
     openModal(true);
+  }
+
+  function fireVueError() {
+    throw new Error('fire vue error!');
+  }
+
+  function fireResourceError() {
+    imgList.value.push(`${new Date().getTime()}.png`);
+  }
+
+  async function fireAjaxError() {
+    await fireErrorApi();
   }
 </script>

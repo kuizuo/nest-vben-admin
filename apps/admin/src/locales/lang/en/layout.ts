@@ -2,9 +2,8 @@ export default {
   footer: { onlinePreview: 'Preview', onlineDocument: 'Document' },
   header: {
     // user dropdown
-    profileSetting: 'Profile',
     dropdownItemDoc: 'Document',
-    dropdownItemLoginOut: 'Login Out',
+    dropdownItemLoginOut: 'Log Out',
 
     tooltipErrorLog: 'Error log',
     tooltipLock: 'Lock screen',

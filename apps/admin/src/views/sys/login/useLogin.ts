@@ -1,7 +1,7 @@
-import type { RuleObject } from 'ant-design-vue/lib/form/interface';
+import type { ValidationRule, FormInstance } from 'ant-design-vue/lib/form/Form';
+import type { RuleObject, NamePath } from 'ant-design-vue/lib/form/interface';
 import { ref, computed, unref, Ref } from 'vue';
 import { useI18n } from '/@/hooks/web/useI18n';
-import { sendCodeApi } from '/@/api/sys/user';
 
 export enum LoginStateEnum {
   LOGIN,
@@ -12,6 +12,9 @@ export enum LoginStateEnum {
 }
 
 const currentState = ref(LoginStateEnum.LOGIN);
+
+// 这里也可以优化
+// import { createGlobalState } from '@vueuse/core'
 
 export function useLoginState() {
   function setLoginState(state: LoginStateEnum) {
@@ -27,7 +30,12 @@ export function useLoginState() {
   return { setLoginState, getLoginState, handleBackLogin };
 }
 
-export function useFormValid<T extends Object = any>(formRef: Ref<any>) {
+export function useFormValid<T extends Object = any>(formRef: Ref<FormInstance>) {
+  const validate = computed(() => {
+    const form = unref(formRef);
+    return form?.validate ?? ((_nameList?: NamePath) => Promise.resolve());
+  });
+
   async function validForm() {
     const form = unref(formRef);
     if (!form) return;
@@ -35,7 +43,7 @@ export function useFormValid<T extends Object = any>(formRef: Ref<any>) {
     return data as T;
   }
 
-  return { validForm };
+  return { validate, validForm };
 }
 
 export function useFormRules(formData?: Recordable) {
@@ -43,10 +51,8 @@ export function useFormRules(formData?: Recordable) {
 
   const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
-  const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
-  const getEmailFormRule = computed(() => createRule(t('sys.login.emailPlaceholder')));
-  const getEmailCodeFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
+  const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
 
   const validatePolicy = async (_: RuleObject, value: boolean) => {
     return !value ? Promise.reject(t('sys.login.policyPlaceholder')) : Promise.resolve();
@@ -64,41 +70,33 @@ export function useFormRules(formData?: Recordable) {
     };
   };
 
-  const getFormRules = computed((): { [k: string]: any } => {
+  const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
     const accountFormRule = unref(getAccountFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
     const mobileFormRule = unref(getMobileFormRule);
-    const emailFormRule = unref(getEmailFormRule);
-    const emailCodeFormRule = unref(getEmailCodeFormRule);
 
     const mobileRule = {
       sms: smsFormRule,
       mobile: mobileFormRule,
     };
-
-    const emailRule = {
-      email: emailFormRule,
-      emailCode: emailCodeFormRule,
-    };
-
     switch (unref(currentState)) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          username: accountFormRule,
+          account: accountFormRule,
           password: passwordFormRule,
           confirmPassword: [
             { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
           ],
           policy: [{ validator: validatePolicy, trigger: 'change' }],
-          ...emailRule,
+          ...mobileRule,
         };
 
       // reset password form rules
       case LoginStateEnum.RESET_PASSWORD:
         return {
-          username: accountFormRule,
+          account: accountFormRule,
           ...mobileRule,
         };
 
@@ -109,7 +107,7 @@ export function useFormRules(formData?: Recordable) {
       // login form rules
       default:
         return {
-          username: accountFormRule,
+          account: accountFormRule,
           password: passwordFormRule,
         };
     }
@@ -125,12 +123,4 @@ function createRule(message: string) {
       trigger: 'change',
     },
   ];
-}
-
-export function useSendCode() {
-  async function sendCode(email) {
-    await sendCodeApi({ email });
-    return true;
-  }
-  return { sendCode };
 }

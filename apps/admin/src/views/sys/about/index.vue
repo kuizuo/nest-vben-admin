@@ -3,8 +3,9 @@
     <template #headerContent>
       <div class="flex justify-between items-center">
         <span class="flex-1">
-          <a :href="GITHUB_URL" target="_blank">{{ projectName }}</a>
-          是一个基于Vben Admin并集成了NestJS后端所开发的后台管理系统。
+          <a :href="GITHUB_URL" target="_blank">{{ name }}</a>
+          是一个基于Vue3.0、Vite、 Ant-Design-Vue 、TypeScript
+          的后台解决方案，目标是为中大型项目开发,提供现成的开箱解决方案及丰富的示例,原则上不会限制任何代码用于商用。
         </span>
       </div>
     </template>
@@ -20,10 +21,9 @@
   import { Description, DescItem, useDescription } from '/@/components/Description/index';
   import { GITHUB_URL, SITE_URL, DOC_URL } from '/@/settings/siteSetting';
 
-  const projectName = import.meta.env.VITE_GLOB_APP_TITLE;
   const { pkg, lastBuildTime } = __APP_INFO__;
 
-  const { dependencies, devDependencies, version } = pkg;
+  const { dependencies, devDependencies, name, version } = pkg;
 
   const schema: DescItem[] = [];
   const devSchema: DescItem[] = [];
@@ -53,11 +53,6 @@
       render: commonLinkRender('预览地址'),
     },
     {
-      label: 'Swagger地址',
-      field: 'swagger',
-      render: commonLinkRender('Swagger'),
-    },
-    {
       label: 'Github',
       field: 'github',
       render: commonLinkRender('Github'),
@@ -69,7 +64,6 @@
     lastBuildTime,
     doc: DOC_URL,
     preview: SITE_URL,
-    swagger: `${SITE_URL}/swagger-ui`,
     github: GITHUB_URL,
   };
 

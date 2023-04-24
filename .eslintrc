@@ -1,3 +1,0 @@
-{
-  "extends": ["@kuizuo/eslint-config-ts"]
-}

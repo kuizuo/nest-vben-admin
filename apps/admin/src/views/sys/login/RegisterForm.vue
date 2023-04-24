@@ -10,24 +10,20 @@
           :placeholder="t('sys.login.userName')"
         />
       </FormItem>
-      <FormItem name="qq" class="enter-x">
-        <Input size="large" v-model:value="formData.qq" :placeholder="t('sys.login.qq')" />
-      </FormItem>
-      <FormItem name="email" class="enter-x">
+      <FormItem name="mobile" class="enter-x">
         <Input
           size="large"
-          v-model:value="formData.email"
-          :placeholder="t('sys.login.email')"
+          v-model:value="formData.mobile"
+          :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
         />
       </FormItem>
-      <FormItem name="code" class="enter-x">
+      <FormItem name="sms" class="enter-x">
         <CountdownInput
           size="large"
           class="fix-auto-fill"
-          v-model:value="formData.code"
-          :placeholder="t('sys.login.emailCode')"
-          :sendCodeApi="() => sendCode(formData.email)"
+          v-model:value="formData.sms"
+          :placeholder="t('sys.login.smsCode')"
         />
       </FormItem>
       <FormItem name="password" class="enter-x">
@@ -70,21 +66,13 @@
   </template>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed, toRaw } from 'vue';
+  import { reactive, ref, unref, computed } from 'vue';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button, Checkbox } from 'ant-design-vue';
   import { StrengthMeter } from '/@/components/StrengthMeter';
   import { CountdownInput } from '/@/components/CountDown';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import {
-    useLoginState,
-    useFormRules,
-    useFormValid,
-    LoginStateEnum,
-    useSendCode,
-  } from './useLogin';
-
-  import { registerApi } from '/@/api/sys/user';
+  import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
 
   const FormItem = Form.Item;
   const InputPassword = Input.Password;
@@ -98,9 +86,6 @@
     account: '',
     password: '',
     confirmPassword: '',
-    email: '',
-    code: '',
-    qq: '',
     mobile: '',
     sms: '',
     policy: false,
@@ -108,28 +93,12 @@
 
   const { getFormRules } = useFormRules(formData);
   const { validForm } = useFormValid(formRef);
-  const { sendCode } = useSendCode();
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
   async function handleRegister() {
     const data = await validForm();
     if (!data) return;
-
-    try {
-      loading.value = true;
-      await registerApi(
-        toRaw({
-          username: data.account,
-          password: data.password,
-          qq: data.qq,
-          email: data.email,
-          code: data.code,
-        }),
-      );
-      handleBackLogin();
-    } finally {
-      loading.value = false;
-    }
+    console.log(data);
   }
 </script>

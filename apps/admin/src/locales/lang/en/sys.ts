@@ -1,7 +1,9 @@
 export default {
   api: {
+    operationSuccess: 'Operation Success',
     operationFailed: 'Operation failed',
     errorTip: 'Error Tip',
+    successTip: 'Success Tip',
     errorMessage: 'The operation failed, the system is abnormal!',
     timeoutMessage: 'Login timed out, please log in again!',
     apiTimeoutMessage: 'The interface request timed out, please refresh the page and try again!',
@@ -91,17 +93,14 @@ export default {
     passwordPlaceholder: 'Please input password',
     smsPlaceholder: 'Please input sms code',
     mobilePlaceholder: 'Please input mobile',
-    emailPlaceholder: 'Please input email',
     policyPlaceholder: 'Register after checking',
     diffPwd: 'The two passwords are inconsistent',
 
     userName: 'Username',
     password: 'Password',
-    qq: 'QQ',
     confirmPassword: 'Confirm Password',
     email: 'Email',
     smsCode: 'SMS code',
-    emailCode: 'email code',
     mobile: 'Mobile',
   },
 };

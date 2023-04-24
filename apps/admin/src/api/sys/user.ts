@@ -1,46 +1,55 @@
 import { defHttp } from '/@/utils/http/axios';
-import {
-  LoginParams,
-  LoginResultModel,
-  GetUserInfoModel,
-  UpdateUserInfoParams,
-  RegisterParams,
-} from './model/userModel';
+import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
   Login = '/login',
-  Register = '/register',
-  SendCode = '/sendCode',
-  Logout = '/account/logout',
-  GetUserInfo = '/account/info',
-  UpdateUserInfo = '/account/update',
-  GetPermCode = '/account/perm',
-  Password = '/account/password',
+  Logout = '/logout',
+  GetUserInfo = '/getUserInfo',
+  GetPermCode = '/getPermCode',
+  TestRetry = '/testRetry',
 }
 
-export const loginApi = (params: LoginParams, mode: ErrorMessageMode = 'modal') =>
-  defHttp.post<LoginResultModel>({ url: Api.Login, params }, { errorMessageMode: mode });
-
-export const registerApi = (params: RegisterParams, mode: ErrorMessageMode = 'modal') =>
-  defHttp.post({ url: Api.Register, params }, { successMsg: '注册成功', errorMessageMode: mode });
-
-export const sendCodeApi = (params: { email: string }) =>
-  defHttp.post({ url: Api.SendCode, params: params }, { successMsg: '发送成功' });
-
-export const doLogout = () => defHttp.get({ url: Api.Logout });
-
-export const getUserInfoApi = () =>
-  defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
-
-export const updateUserInfoApi = (params: UpdateUserInfoParams) =>
-  defHttp.post(
-    { url: Api.UpdateUserInfo, params },
-    { errorMessageMode: 'none', successMsg: '更新成功' },
+/**
+ * @description: user login api
+ */
+export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
+  return defHttp.post<LoginResultModel>(
+    {
+      url: Api.Login,
+      params,
+    },
+    {
+      errorMessageMode: mode,
+    },
   );
+}
 
-export const getPermCode = () => defHttp.get<string[]>({ url: Api.GetPermCode });
+/**
+ * @description: getUserInfo
+ */
+export function getUserInfo() {
+  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+}
 
-export const changePasswordApi = (params: { oldPassword: string; newPassword: string }) =>
-  defHttp.post({ url: Api.Password, params });
+export function getPermCode() {
+  return defHttp.get<string[]>({ url: Api.GetPermCode });
+}
+
+export function doLogout() {
+  return defHttp.get({ url: Api.Logout });
+}
+
+export function testRetry() {
+  return defHttp.get(
+    { url: Api.TestRetry },
+    {
+      retryRequest: {
+        isOpenRetry: true,
+        count: 5,
+        waitTime: 1000,
+      },
+    },
+  );
+}
