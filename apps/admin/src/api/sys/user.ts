@@ -7,7 +7,7 @@ enum Api {
   Login = '/auth/login',
   Logout = '/auth/logout',
   GetUserInfo = '/account/profile',
-  GetPermCode = '/account/permission',
+  GetPermCode = '/account/permissions',
 }
 
 /**

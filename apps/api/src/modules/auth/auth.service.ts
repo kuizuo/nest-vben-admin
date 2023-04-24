@@ -67,7 +67,7 @@ export class AuthService {
       throw new ApiException(ErrorEnum.CODE_1003);
     }
 
-    const roleIds = await this.roleService.getRoleIdByUser(user.id);
+    const roleIds = await this.roleService.getRoleIdsByUser(user.id);
 
     const roles = await this.roleService.getRoleValues(roleIds);
 

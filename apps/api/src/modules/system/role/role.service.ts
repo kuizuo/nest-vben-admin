@@ -28,7 +28,7 @@ export class RoleService {
    */
   async list(): Promise<RoleEntity[]> {
     const result = await this.roleRepository.findBy({
-      // id: Not(this.rootRoleId),
+      // id: Not(this.adminRoleId),
     });
 
     return result;
@@ -39,7 +39,7 @@ export class RoleService {
    */
   async count(): Promise<number> {
     const count = await this.roleRepository.countBy({
-      id: Not(this.configService.get<IAppConfig>('app').rootRoleId),
+      id: Not(this.configService.get<IAppConfig>('app').adminRoleId),
     });
     return count;
   }
@@ -59,7 +59,7 @@ export class RoleService {
    */
   async delete(roleIds: number[]): Promise<void> {
     if (
-      includes(roleIds, this.configService.get<IAppConfig>('app').rootRoleId)
+      includes(roleIds, this.configService.get<IAppConfig>('app').adminRoleId)
     ) {
       throw new Error('不能删除超级管理员');
     }
@@ -86,8 +86,6 @@ export class RoleService {
    * 更新角色信息
    */
   async update({ id, menus, ...data }: RoleUpdateDto): Promise<void> {
-    const role = await this.roleRepository.update(id, data);
-
     // 对比 menu 差异
     const originMenus = await this.menuRepository.find({
       where: { roles: { id } },
@@ -133,7 +131,7 @@ export class RoleService {
   /**
    * 根据用户id查找角色信息
    */
-  async getRoleIdByUser(id: number): Promise<number[]> {
+  async getRoleIdsByUser(id: number): Promise<number[]> {
     const roles = await this.roleRepository.find({
       where: {
         users: { id },
@@ -154,13 +152,24 @@ export class RoleService {
     ).map((r) => r.value);
   }
 
-  /**
-   * 根据角色ID列表查找关联用户ID
-   */
-  async countUserIdByRole(ids: number[]): Promise<number | never> {
-    if (includes(ids, this.configService.get<IAppConfig>('app').rootRoleId)) {
-      throw new Error('Not Support Delete Root');
+  async isAdminRoleByUser(uid: number): Promise<boolean> {
+    const roles = await this.roleRepository.find({
+      where: {
+        users: { id: uid },
+      },
+    });
+
+    if (!isEmpty(roles)) {
+      return roles.some(
+        (r) => r.id === this.configService.get('app').adminRoleId,
+      );
     }
-    return this.roleRepository.countBy({ id: In(ids) });
+    return false;
+  }
+
+  hasAdminRole(rids: number[]): boolean {
+    return rids.some(
+      (r) => r === this.configService.get<IAppConfig>('app').adminRoleId,
+    );
   }
 }

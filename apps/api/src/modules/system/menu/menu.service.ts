@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { concat, isEmpty, uniq } from 'lodash';
 
@@ -11,7 +12,6 @@ import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
 import { generatorMenu, generatorRouters } from '@/utils/permission';
 
-import { AppGeneralService } from '../../shared/services/app-general.service';
 import { RoleService } from '../role/role.service';
 
 import { MenuCreateDto } from './menu.dto';
@@ -22,7 +22,7 @@ export class MenuService {
     @InjectRepository(MenuEntity) private menuRepo: Repository<MenuEntity>,
     private roleService: RoleService,
     private redisService: RedisService,
-    private generalService: AppGeneralService,
+    private configService: ConfigService,
   ) {}
 
   /**
@@ -55,19 +55,16 @@ export class MenuService {
    * 根据角色获取所有菜单
    */
   async getMenus(uid: number): Promise<string[]> {
-    const roleIds = await this.roleService.getRoleIdByUser(uid);
+    const roleIds = await this.roleService.getRoleIdsByUser(uid);
     let menus: MenuEntity[] = [];
-    if (this.generalService.isRootUser(uid)) {
+
+    if (this.roleService.hasAdminRole(roleIds)) {
       menus = await this.menuRepo.find({ order: { orderNo: 'ASC' } });
     } else {
       menus = await this.menuRepo
         .createQueryBuilder('menu')
-        .innerJoinAndSelect(
-          'sys_role_menu',
-          'role_menu',
-          'menu.id = role_menu.menu_id',
-        )
-        .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
+        .innerJoinAndSelect('menu.roles', 'role')
+        .andWhere('role.id IN (:...roleIds)', { roleIds })
         .orderBy('menu.order_no', 'ASC')
         .getMany();
     }
@@ -106,13 +103,13 @@ export class MenuService {
     //   return allMenus;
     // }
     // const childMenus: any = [];
-    for (let i = 0; i < menus.length; i++) {
-      if (menus[i].type !== 2) {
+    for (const menu of menus) {
+      if (menu.type !== 2) {
         // 子目录下是菜单或目录，继续往下级查找
-        const c = await this.findChildMenus(menus[i].id);
+        const c = await this.findChildMenus(menu.id);
         allMenus.push(c);
       }
-      allMenus.push(menus[i].id);
+      allMenus.push(menu.id);
     }
     return allMenus;
   }
@@ -150,10 +147,10 @@ export class MenuService {
    * 获取当前用户的所有权限
    */
   async getPermissions(uid: number): Promise<string[]> {
-    const roleIds = await this.roleService.getRoleIdByUser(uid);
+    const roleIds = await this.roleService.getRoleIdsByUser(uid);
     let permission: any[] = [];
     let result: any = null;
-    if (this.generalService.isRootUser(uid)) {
+    if (this.roleService.hasAdminRole(roleIds)) {
       result = await this.menuRepo.findBy({
         permission: Not(IsNull()),
         type: In([1, 2]),
@@ -164,12 +161,8 @@ export class MenuService {
       }
       result = await this.menuRepo
         .createQueryBuilder('menu')
-        .innerJoinAndSelect(
-          'sys_role_menu',
-          'role_menu',
-          'menu.id = role_menu.menu_id',
-        )
-        .andWhere('role_menu.role_id IN (:...roldIds)', { roldIds: roleIds })
+        .innerJoinAndSelect('menu.roles', 'role')
+        .andWhere('role.id IN (:...roleIds)', { roleIds })
         .andWhere('menu.type IN (1,2)')
         .andWhere('menu.permission IS NOT NULL')
         .getMany();
@@ -214,14 +207,16 @@ export class MenuService {
       .getRedis()
       .keys('admin:token:*');
     if (onlineUserIds && onlineUserIds.length > 0) {
-      for (let i = 0; i < onlineUserIds.length; i++) {
-        const uid = onlineUserIds[i].split('admin:token:')[1];
-        if (!uid) continue;
-        const perms = await this.getPermissions(parseInt(uid));
-        await this.redisService
-          .getRedis()
-          .set(`admin:perms:${uid}`, JSON.stringify(perms));
-      }
+      onlineUserIds
+        .map((i) => i.split('admin:token:')[1])
+        .filter((i) => i)
+        .forEach(async (uid) => {
+          const perms = await this.getPermissions(parseInt(uid));
+          await this.redisService
+
+            .getRedis()
+            .set(`admin:perms:${uid}`, JSON.stringify(perms));
+        });
     }
   }
 }

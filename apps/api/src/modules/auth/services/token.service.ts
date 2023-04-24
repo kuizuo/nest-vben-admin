@@ -35,7 +35,7 @@ export class TokenService {
       // 判断refreshToken是否过期
       if (now.isAfter(refreshToken.expired_at)) return null;
 
-      const roleIds = await this.roleService.getRoleIdByUser(user.id);
+      const roleIds = await this.roleService.getRoleIdsByUser(user.id);
       const roleValues = await this.roleService.getRoleValues(roleIds);
 
       // 如果没过期则生成新的access_token和refresh_token

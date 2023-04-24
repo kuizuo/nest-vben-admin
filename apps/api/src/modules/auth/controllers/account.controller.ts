@@ -43,7 +43,7 @@ export class AccountController {
     await this.authService.clearLoginStatus(user.uid);
   }
 
-  @Get('menu')
+  @Get('menus')
   @ApiOperation({ summary: '获取菜单列表' })
   @ApiResult({ type: [MenuEntity] })
   @AllowAnon()

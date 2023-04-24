@@ -1,10 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { ApiException } from '@/exceptions/api.exception';
 import { Pagination } from '@/helper/paginate/pagination';
 
 import { RoleEntity } from '@/modules/system/role/role.entity';
@@ -66,10 +64,6 @@ export class RoleController {
   @ApiOperation({ summary: '删除角色' })
   @Post('delete')
   async delete(@Body() dto: RoleDeleteDto): Promise<void> {
-    const count = await this.roleService.countUserIdByRole(dto.ids);
-    if (count > 0) {
-      throw new ApiException(ErrorEnum.CODE_1008);
-    }
     await this.roleService.delete(dto.ids);
     await this.menuService.refreshOnlineUserPerms();
   }

@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { includes, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { EntityManager, Repository, TreeRepository } from 'typeorm';
 
-import { IAppConfig } from '@/config';
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
@@ -31,7 +29,6 @@ export class DeptService {
     private deptRepository: TreeRepository<DeptEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
     private roleService: RoleService,
-    private configService: ConfigService,
   ) {}
 
   /**
@@ -94,10 +91,7 @@ export class DeptService {
    */
   async move(depts: MoveDept[]): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
-      for (let i = 0; i < depts.length; i++) {
-        const dept = depts[i];
-        await manager.save(dept);
-      }
+      await manager.save(depts);
     });
   }
 
@@ -127,7 +121,7 @@ export class DeptService {
    * 获取部门列表树结构
    */
   async getDeptTree(uid: number, dto: DeptListDto): Promise<DeptTree[]> {
-    if (uid === this.configService.get<IAppConfig>('app').rootRoleId) {
+    if (this.roleService.isAdminRoleByUser(uid)) {
       return this.deptRepository.findTrees();
     }
     const set = new Set<number>();
@@ -150,22 +144,18 @@ export class DeptService {
    * 根据当前角色id获取部门列表
    */
   async getDepts(uid: number): Promise<DeptEntity[]> {
-    const roleIds = await this.roleService.getRoleIdByUser(uid);
+    const roleIds = await this.roleService.getRoleIdsByUser(uid);
     let depts: any = [];
 
-    if (includes(roleIds, 1)) {
+    if (this.roleService.hasAdminRole(roleIds)) {
       // root find all
       depts = await this.deptRepository.find();
     } else {
       // [ 1, 2, 3 ] role find
       depts = await this.deptRepository
         .createQueryBuilder('dept')
-        .innerJoinAndSelect(
-          'sys_role_dept',
-          'role_dept',
-          'dept.id = role_dept.dept_id',
-        )
-        .andWhere('role_dept.role_id IN (:...roldIds)', { roldIds: roleIds })
+        .innerJoinAndSelect('role.depts', 'role')
+        .andWhere('role.id IN (:...roleIds)', { roleIds })
         .orderBy('dept.order_no', 'ASC')
         .getMany();
     }

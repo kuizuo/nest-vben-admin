@@ -11,12 +11,10 @@ import { MailerService } from './mailer/mailer.service';
 import { QQService } from './qq/qq.service';
 import { RedisModule } from './redis/redis.module';
 import { RedisService } from './redis/redis.service';
-import { AppGeneralService } from './services/app-general.service';
 import { AppLoggerService } from './services/app-logger.service';
 
 const providers = [
   AppLoggerService,
-  AppGeneralService,
   RedisService,
   MailerService,
   IpService,

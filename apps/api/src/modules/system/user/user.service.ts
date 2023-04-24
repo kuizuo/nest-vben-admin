@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { findIndex, isEmpty, isNil } from 'lodash';
 
-import { EntityManager, In, Like, Not, Repository } from 'typeorm';
+import { EntityManager, Like, Repository } from 'typeorm';
 
 import { IAppConfig } from '@/config';
 import { ErrorEnum } from '@/constants/error';
@@ -19,7 +19,6 @@ import { RedisService } from '@/modules/shared/redis/redis.service';
 
 import { MD5, randomValue } from '@/utils';
 
-import { AppGeneralService } from '../../shared/services/app-general.service';
 import { DictService } from '../dict/dict.service';
 
 import { RoleEntity } from '../role/role.entity';
@@ -40,7 +39,6 @@ export class UserService {
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly qqService: QQService,
-    private readonly generalService: AppGeneralService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -185,10 +183,6 @@ export class UserService {
     status,
     ...data
   }: UserUpdateDto): Promise<void> {
-    if (this.generalService.isRootUser(id)) {
-      throw new BadRequestException('不能更新超级管理员');
-    }
-
     await this.entityManager.transaction(async (manager) => {
       if (password) {
         await this.forceUpdatePassword(id, password);
@@ -256,22 +250,11 @@ export class UserService {
   }
 
   /**
-   * 根据部门ID列举用户条数：除去超级管理员
-   */
-  async count(uid: number): Promise<number> {
-    const rootUserId = await this.findRootUserId();
-
-    return this.userRepository.countBy({
-      id: Not(In([rootUserId, uid])),
-    });
-  }
-
-  /**
    * 查找超管的用户ID
    */
   async findRootUserId(): Promise<number> {
     const user = await this.userRepository.findOneBy({
-      roles: { id: this.configService.get<IAppConfig>('app').rootRoleId },
+      roles: { id: this.configService.get<IAppConfig>('app').adminRoleId },
     });
     return user.id;
   }
