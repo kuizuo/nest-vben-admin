@@ -9,12 +9,12 @@ import { AuthUser } from '@/modules/auth/decorators';
 import { AllowAnon } from '@/modules/rbac/decorators';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
-import { PasswordUpdateDto } from '@/modules/system/user/dtos/password.dto';
+import { PasswordUpdateDto } from '@/modules/system/user/dto/password.dto';
 
 import { AccountInfo } from '../../system/user/user.modal';
 import { UserService } from '../../system/user/user.service';
 import { AuthService } from '../auth.service';
-import { AccountUpdateDto } from '../dtos/account.dto';
+import { AccountUpdateDto } from '../dto/account.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('Account - 账户模块')

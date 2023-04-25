@@ -8,7 +8,7 @@ import { MailerService } from '@/modules/shared/mailer/mailer.service';
 
 import { AuthUser, Public } from '../decorators';
 
-import { SendEmailCodeDto } from '../dtos/captcha.dto';
+import { SendEmailCodeDto } from '../dto/captcha.dto';
 
 @ApiTags('Auth - 认证模块')
 @UseGuards(ThrottlerGuard)

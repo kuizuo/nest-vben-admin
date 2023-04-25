@@ -10,7 +10,7 @@ import { paginateRaw } from '@/helper/paginate';
 import { IpService } from '@/modules/shared/ip/ip.service';
 
 import { UserService } from '../../user/user.service';
-import { LoginLogQueryDto } from '../dtos/log.dto';
+import { LoginLogQueryDto } from '../dto/log.dto';
 import { LoginLogEntity } from '../entities/login-log.entity';
 import { LoginLogInfo } from '../log.modal';
 

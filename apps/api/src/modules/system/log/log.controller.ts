@@ -9,7 +9,7 @@ import {
   CaptchaLogQueryDto,
   LoginLogQueryDto,
   TaskLogQueryDto,
-} from './dtos/log.dto';
+} from './dto/log.dto';
 import { CaptchaLogEntity } from './entities/captcha-log.entity';
 import { LoginLogInfo, TaskLogInfo } from './log.modal';
 import { CaptchaLogService } from './services/captcha-log.service';

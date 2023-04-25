@@ -8,7 +8,7 @@ import { UserService } from '../system/user/user.service';
 
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
-import { LoginDto, RegisterDto } from './dtos/auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { LocalGuard } from './guards/local.guard';
 import { LoginToken } from './models/auth.model';
 

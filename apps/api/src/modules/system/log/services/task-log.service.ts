@@ -5,7 +5,7 @@ import { LessThan, Repository } from 'typeorm';
 
 import { paginateRaw } from '@/helper/paginate';
 
-import { TaskLogQueryDto } from '../dtos/log.dto';
+import { TaskLogQueryDto } from '../dto/log.dto';
 import { TaskLogEntity } from '../entities/task-log.entity';
 
 @Injectable()

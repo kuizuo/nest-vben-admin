@@ -13,7 +13,7 @@ import { generateUUID } from '@/utils';
 
 import { Public } from '../decorators';
 
-import { ImageCaptchaDto } from '../dtos/captcha.dto';
+import { ImageCaptchaDto } from '../dto/captcha.dto';
 import { ImageCaptcha } from '../models/auth.model';
 
 @ApiTags('Captcha - 验证码模块')

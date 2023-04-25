@@ -17,8 +17,8 @@ import { Pagination } from '@/helper/paginate/pagination';
 import { Permission } from '@/modules/rbac/decorators';
 import { MenuService } from '@/modules/system/menu/menu.service';
 
-import { UserPasswordDto } from './dtos/password.dto';
-import { UserCreateDto, UserListDto, UserUpdateDto } from './dtos/user.dto';
+import { UserPasswordDto } from './dto/password.dto';
+import { UserCreateDto, UserListDto, UserUpdateDto } from './dto/user.dto';
 import { PermissionUser } from './permission';
 import { UserInfoPage } from './user.modal';
 import { UserService } from './user.service';

@@ -12,8 +12,8 @@ import { ApiException } from '@/exceptions/api.exception';
 
 import { paginateRaw } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
-import { AccountUpdateDto } from '@/modules/auth/dtos/account.dto';
-import { RegisterDto } from '@/modules/auth/dtos/auth.dto';
+import { AccountUpdateDto } from '@/modules/auth/dto/account.dto';
+import { RegisterDto } from '@/modules/auth/dto/auth.dto';
 import { QQService } from '@/modules/shared/qq/qq.service';
 import { RedisService } from '@/modules/shared/redis/redis.service';
 
@@ -23,8 +23,8 @@ import { DictService } from '../dict/dict.service';
 
 import { RoleEntity } from '../role/role.entity';
 
-import { PasswordUpdateDto } from './dtos/password.dto';
-import { UserCreateDto, UserListDto, UserUpdateDto } from './dtos/user.dto';
+import { PasswordUpdateDto } from './dto/password.dto';
+import { UserCreateDto, UserListDto, UserUpdateDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { AccountInfo, UserInfoPage } from './user.modal';
 
