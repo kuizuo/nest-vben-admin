@@ -3,24 +3,26 @@
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
-
-<script lang="ts" setup name="DeptModal">
+<script lang="ts" setup>
   import { ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema } from './dept.data';
-  import { getDeptList, addDept, updateDept } from '/@/api/system/dept';
+  import { BasicForm, useForm } from '/@/components/Form';
+  import { getTaskInfo, taskAdd, taskUpdate } from '/@/api/system/task';
+  import { formSchema } from './task.data';
 
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
   const rowId = ref('');
+  const getTitle = computed(() => (!unref(isUpdate) ? '新增任务' : '编辑任务'));
 
-  const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
+  const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
     labelWidth: 100,
-    baseColProps: { span: 24 },
     schemas: formSchema,
     showActionButtonGroup: false,
+    actionColOptions: {
+      span: 23,
+    },
   });
 
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
@@ -30,19 +32,13 @@
 
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
-
+      const taskInfo = await getTaskInfo({ id: data.record.id });
       setFieldsValue({
         ...data.record,
+        ...taskInfo,
       });
     }
-    const treeData = await getDeptList();
-    updateSchema({
-      field: 'parentId',
-      componentProps: { treeData },
-    });
   });
-
-  const getTitle = computed(() => (!unref(isUpdate) ? '新增' : '编辑'));
 
   async function handleSubmit() {
     try {
@@ -54,14 +50,10 @@
         id: rowId.value,
       };
 
-      if (!data.parentId) {
-        data.parentId = -1;
-      }
-
-      await (!unref(isUpdate) ? addDept : updateDept)(data);
+      await (!unref(isUpdate) ? taskAdd : taskUpdate)(data);
 
       closeModal();
-      emit('success');
+      emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
     } finally {
       setModalProps({ confirmLoading: false });
     }

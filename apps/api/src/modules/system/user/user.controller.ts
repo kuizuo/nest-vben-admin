@@ -26,7 +26,7 @@ import { UserService } from './user.service';
 @ApiTags('System - 用户模块')
 @ApiSecurityAuth()
 @ApiExtraModels(UserInfoPage)
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     private userService: UserService,

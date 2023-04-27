@@ -8,11 +8,13 @@
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm">
-      <template #menu="{ model, field }">
-        <BasicTree
+      <template #menus="{ model, field }">
+        <Tree
+          ref="treeRef"
           v-model:value="model[field]"
-          :treeData="treeData"
-          :fieldNames="{ title: 'menuName', key: 'id' }"
+          v-model:checkedKeys="checkedKeys"
+          :tree-data="treeData"
+          :field-names="{ title: 'name', key: 'id' }"
           checkable
           toolbar
           title="菜单分配"
@@ -21,68 +23,78 @@
     </BasicForm>
   </BasicDrawer>
 </template>
-<script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+<script lang="ts" setup>
+  import { ref, computed, unref, toRaw } from 'vue';
+  import { Tree } from 'ant-design-vue';
+  import { TreeDataItem } from 'ant-design-vue/lib/tree';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema } from './role.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { BasicTree, TreeItem } from '/@/components/Tree';
+  import { TreeItem } from '/@/components/Tree';
+  import { getMenuList } from '/@/api/system/menu';
+  import { createRole, updateRole, getRoleInfo } from '/@/api/system/role';
+  import { formSchema } from './role.data';
 
-  import { getMenuList } from '/@/api/demo/system';
+  const emit = defineEmits(['success', 'register']);
 
-  export default defineComponent({
-    name: 'RoleDrawer',
-    components: { BasicDrawer, BasicForm, BasicTree },
-    emits: ['success', 'register'],
-    setup(_, { emit }) {
-      const isUpdate = ref(true);
-      const treeData = ref<TreeItem[]>([]);
+  const isUpdate = ref(true);
+  const treeData = ref<any[]>([]);
+  const checkedKeys = ref<number[]>([]);
+  const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
+    labelWidth: 90,
+    schemas: formSchema,
+    showActionButtonGroup: false,
+  });
 
-      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
-        labelWidth: 90,
-        baseColProps: { span: 24 },
-        schemas: formSchema,
-        showActionButtonGroup: false,
+  const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
+    resetFields();
+    setDrawerProps({ confirmLoading: false });
+    // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
+    if (unref(treeData).length === 0) {
+      treeData.value = (await getMenuList()) as any as TreeItem[];
+    }
+    isUpdate.value = !!data?.isUpdate;
+
+    if (unref(isUpdate)) {
+      const roleInfo = await getRoleInfo({ id: data.record.id });
+      checkedKeys.value = getCheckedKeys(roleInfo.menus, toRaw(treeData.value));
+      setFieldsValue({
+        ...data.record,
       });
+    }
+  });
+  const treeRef = ref<Nullable<any>>(null);
+  const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));
 
-      const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
-        resetFields();
-        setDrawerProps({ confirmLoading: false });
-        // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          treeData.value = (await getMenuList()) as any as TreeItem[];
-        }
-        isUpdate.value = !!data?.isUpdate;
-
-        if (unref(isUpdate)) {
-          setFieldsValue({
-            ...data.record,
-          });
-        }
-      });
-
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增角色' : '编辑角色'));
-
-      async function handleSubmit() {
-        try {
-          const values = await validate();
-          setDrawerProps({ confirmLoading: true });
-          // TODO custom api
-          console.log(values);
-          closeDrawer();
-          emit('success');
-        } finally {
-          setDrawerProps({ confirmLoading: false });
+  const getCheckedKeys = (checkedList: number[], options: TreeDataItem[], total = []) => {
+    return options.reduce<number[]>((prev, curr) => {
+      if (curr.children?.length) {
+        getCheckedKeys(checkedList, curr.children, total);
+      } else {
+        if (checkedList.includes(curr.id)) {
+          prev.push(curr.id);
         }
       }
+      return prev;
+    }, total);
+  };
 
-      return {
-        registerDrawer,
-        registerForm,
-        getTitle,
-        handleSubmit,
-        treeData,
+  async function handleSubmit() {
+    try {
+      const values = await validate();
+      setDrawerProps({ confirmLoading: true });
+
+      const data = {
+        ...values,
+        id: parseInt(values.id),
+        menus: [...unref(treeRef).checkedKeys, ...unref(treeRef).halfCheckedKeys],
       };
-    },
-  });
+
+      await (!unref(isUpdate) ? createRole : updateRole)(data);
+
+      closeDrawer();
+      emit('success');
+    } finally {
+      setDrawerProps({ confirmLoading: false });
+    }
+  }
 </script>
