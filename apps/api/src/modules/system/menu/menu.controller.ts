@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
@@ -6,37 +6,44 @@ import { flattenDeep } from 'lodash';
 import { IAppConfig } from '@/config';
 import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
+import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
+import { Permission } from '@/modules/rbac/decorators';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
-import {
-  MenuCreateDto,
-  MenuDeleteDto,
-  MenuInfoDto,
-  MenuUpdateDto,
-} from './menu.dto';
+import { MenuCreateDto, MenuUpdateDto } from './menu.dto';
 import { MenuService } from './menu.service';
+import { PermissionMenu } from './permission';
 
 @ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
-@Controller('menu')
+@Controller('menus')
 export class MenuController {
   constructor(
     private menuService: MenuService,
     private configService: ConfigService,
   ) {}
 
+  @Get()
   @ApiOperation({ summary: '获取所有菜单列表' })
   @ApiResult({ type: [MenuEntity] })
-  @Get('list')
+  @Permission(PermissionMenu.LIST)
   async list(): Promise<string[]> {
     return this.menuService.list();
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: '获取菜单或权限信息' })
+  @Permission(PermissionMenu.READ)
+  async info(@IdParam() id: number) {
+    return this.menuService.getMenuItemAndParentInfo(id);
+  }
+
+  @Post()
   @ApiOperation({ summary: '新增菜单或权限' })
-  @Post('add')
-  async add(@Body() dto: MenuCreateDto): Promise<void> {
+  @Permission(PermissionMenu.CREATE)
+  async create(@Body() dto: MenuCreateDto): Promise<void> {
     // check
     await this.menuService.check(dto);
     if (!dto.parent) {
@@ -53,16 +60,16 @@ export class MenuController {
     }
   }
 
+  @Put(':id')
   @ApiOperation({ summary: '更新菜单或权限' })
-  @Post('update')
-  async update(@Body() dto: MenuUpdateDto): Promise<void> {
-    if (
-      dto.id <=
-      this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId
-    ) {
-      // 系统内置功能不提供删除
+  @Permission(PermissionMenu.UPDATE)
+  async update(
+    @IdParam() id: number,
+    @Body() dto: MenuUpdateDto,
+  ): Promise<void> {
+    if (id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId)
       throw new ApiException(ErrorEnum.CODE_1016);
-    }
+
     // check
     await this.menuService.check(dto);
     if (dto.parent === -1 || !dto.parent) {
@@ -79,27 +86,21 @@ export class MenuController {
     }
   }
 
+  @Delete(':id')
   @ApiOperation({ summary: '删除菜单或权限' })
-  @Post('delete')
-  async delete(@Body() dto: MenuDeleteDto): Promise<void> {
+  @Permission(PermissionMenu.DELETE)
+  async delete(@IdParam() id: number): Promise<void> {
     // 68为内置init.sql中插入最后的索引编号
     if (
-      dto.id <=
-      this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId
+      id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId
     ) {
       // 系统内置功能不提供删除
       throw new ApiException(ErrorEnum.CODE_1016);
     }
     // 如果有子目录，一并删除
-    const childMenus = await this.menuService.findChildMenus(dto.id);
-    await this.menuService.deleteMenuItem(flattenDeep([dto.id, childMenus]));
+    const childMenus = await this.menuService.findChildMenus(id);
+    await this.menuService.deleteMenuItem(flattenDeep([id, childMenus]));
     // 刷新在线用户权限
     await this.menuService.refreshOnlineUserPerms();
-  }
-
-  @ApiOperation({ summary: '获取菜单或权限信息' })
-  @Get('info')
-  async info(@Query() dto: MenuInfoDto) {
-    return this.menuService.getMenuItemAndParentInfo(dto.menuId);
   }
 }

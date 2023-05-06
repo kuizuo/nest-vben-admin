@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { RouterModule } from '@nestjs/core';
+
 import { DeptModule } from './dept/dept.module';
 import { DictModule } from './dict/dict.module';
 import { LogModule } from './log/log.module';
@@ -27,6 +29,13 @@ const modules = [
     // forwardRef(() => WSModule),
     // forwardRef(() => AuthModule),
     ...modules,
+    RouterModule.register([
+      {
+        path: 'system',
+        module: SystemModule,
+        children: [...modules],
+      },
+    ]),
   ],
   exports: [...modules],
 })

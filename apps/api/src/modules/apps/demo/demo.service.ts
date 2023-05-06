@@ -8,7 +8,7 @@ import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 import { DemoEntity } from '@/modules/apps/demo/demo.entity';
 
-import { DemoCreateDto, DemoUpdateDto, DemoPageDto } from './demo.dto';
+import { DemoDto, DemoPageDto } from './demo.dto';
 
 @Injectable()
 export class DemoService {
@@ -32,18 +32,15 @@ export class DemoService {
     return item;
   }
 
-  async create(dto: DemoCreateDto) {
+  async create(dto: DemoDto) {
     let test = new DemoEntity();
     test = Object.assign(dto);
 
     await this.testRepo.save(test);
   }
 
-  async update(dto: DemoUpdateDto) {
-    const item = await this.detail(dto.id);
-
-    const test: DemoEntity = Object.assign(item, dto);
-    await this.testRepo.save(test);
+  async update(id: number, { ...data }: DemoDto) {
+    await this.testRepo.update(id, data);
   }
 
   async delete(id: number) {

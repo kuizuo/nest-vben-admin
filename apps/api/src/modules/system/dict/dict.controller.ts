@@ -1,56 +1,55 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { ApiResult } from '@/decorators/api-result.decorator';
+import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { Pagination } from '@/helper/paginate/pagination';
 import { DictEntity } from '@/modules/system/dict/dict.entity';
 
-import {
-  DictCreateDto,
-  DictDeleteDto,
-  DictInfoDto,
-  DictUpdateDto,
-} from './dict.dto';
+import { DictCreateDto, DictUpdateDto } from './dict.dto';
 import { DictService } from './dict.service';
 
-@ApiTags('System - 参数配置模块')
+@ApiTags('System - 字典配置模块')
 @ApiSecurityAuth()
-@Controller('dict')
+@Controller('dicts')
 export class DictController {
-  constructor(private paramConfigService: DictService) {}
+  constructor(private dictService: DictService) {}
 
-  @ApiOperation({ summary: '分页获取参数配置列表' })
+  @ApiOperation({ summary: '获取字典配置列表' })
   @ApiResult({ type: [DictEntity] })
-  @Get('page')
-  async page(@Query() dto: PageOptionsDto): Promise<Pagination<DictEntity>> {
-    return this.paramConfigService.page(dto.page, dto.pageSize);
+  @Get()
+  async list(@Query() dto: PageOptionsDto): Promise<Pagination<DictEntity>> {
+    return this.dictService.page(dto);
   }
 
-  @ApiOperation({ summary: '新增参数配置' })
-  @Post('add')
-  async add(@Body() dto: DictCreateDto): Promise<void> {
-    await this.paramConfigService.isExistKey(dto.key);
-    await this.paramConfigService.add(dto);
+  @Post()
+  @ApiOperation({ summary: '新增字典配置' })
+  async create(@Body() dto: DictCreateDto): Promise<void> {
+    await this.dictService.isExistKey(dto.key);
+    await this.dictService.create(dto);
   }
 
-  @ApiOperation({ summary: '查询单个参数配置信息' })
+  @Get(':id')
+  @ApiOperation({ summary: '查询单个字典配置信息' })
   @ApiResult({ type: DictEntity })
-  @Get('info')
-  async info(@Query() dto: DictInfoDto): Promise<DictEntity> {
-    return this.paramConfigService.findOne(dto.id);
+  async info(@IdParam() id: number): Promise<DictEntity> {
+    return this.dictService.findOne(id);
   }
 
-  @ApiOperation({ summary: '更新单个参数配置' })
-  @Post('update')
-  async update(@Body() dto: DictUpdateDto): Promise<void> {
-    await this.paramConfigService.update(dto);
+  @Post(':id')
+  @ApiOperation({ summary: '更新单个字典配置' })
+  async update(
+    @IdParam() id: number,
+    @Body() dto: DictUpdateDto,
+  ): Promise<void> {
+    await this.dictService.update(id, dto);
   }
 
-  @ApiOperation({ summary: '删除指定的参数配置' })
-  @Post('delete')
-  async delete(@Body() dto: DictDeleteDto): Promise<void> {
-    await this.paramConfigService.delete(dto.ids);
+  @Delete(':id')
+  @ApiOperation({ summary: '删除指定的字典配置' })
+  async delete(@IdParam() id: number): Promise<void> {
+    await this.dictService.delete(id);
   }
 }

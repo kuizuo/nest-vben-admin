@@ -12,5 +12,5 @@ export class ListDTO<T = Record<string, any>> extends PageOptionsDto<T> {
     },
   })
   @IsOptional()
-  readonly query: T;
+  query?: Partial<T> = {};
 }

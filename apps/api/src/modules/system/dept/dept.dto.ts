@@ -44,14 +44,6 @@ export class DeptDeleteDto {
   deptId: number;
 }
 
-export class InfoDeptDto {
-  @ApiProperty({ description: '查询的系统部门ID' })
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  deptId: number;
-}
-
 export class TransferDeptDto {
   @ApiProperty({ description: '需要转移的管理员列表编号', type: [Number] })
   @IsArray()

@@ -25,12 +25,12 @@
 <script lang="ts" setup>
   import { Button, Row, Col } from 'ant-design-vue';
   import { computed, onMounted } from 'vue';
-  import { BasicForm, useForm } from '/@/components/Form/index';
+  import { BasicForm, useForm } from '/@/components/Form';
   import { CollapseContainer } from '/@/components/Container';
   import { CropperAvatar } from '/@/components/Cropper';
 
   import headerImg from '/@/assets/images/header.jpg';
-  import { getUserInfoApi, updateUserInfoApi } from '/@/api/sys/user';
+  import { getUserInfo, updateUserInfo } from '/@/api/sys/user';
   import { baseSetschemas } from './data';
   import { useUserStore } from '/@/store/modules/user';
   import { uploadApi } from '/@/api/sys/upload';
@@ -44,7 +44,7 @@
   });
 
   onMounted(async () => {
-    const data = await getUserInfoApi();
+    const data = await getUserInfo();
     setFieldsValue(data);
     setFieldsValue({
       avatar: null,
@@ -68,7 +68,7 @@
   async function handleSubmit() {
     let values = await validate();
 
-    await updateUserInfoApi(values);
+    await updateUserInfo(values);
     await userStore.getUserInfoAction();
   }
 </script>

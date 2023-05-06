@@ -1,9 +1,8 @@
 import { h } from 'vue';
 import { Avatar, Space, Tag } from 'ant-design-vue';
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { formatToDateTime } from '/@/utils/dateUtil';
-import { getAllRoleList } from '/@/api/system/role';
+import { getRoleList } from '/@/api/system/role';
 
 export const columns: BasicColumn[] = [
   {
@@ -23,11 +22,6 @@ export const columns: BasicColumn[] = [
     title: '昵称',
     dataIndex: 'nickName',
     width: 80,
-  },
-  {
-    title: 'QQ',
-    dataIndex: 'qq',
-    width: 100,
   },
   {
     title: '邮箱',
@@ -154,7 +148,8 @@ export const formSchema: FormSchema[] = [
     field: 'roles',
     component: 'ApiSelect',
     componentProps: {
-      api: getAllRoleList,
+      api: getRoleList,
+      resultField: 'items',
       labelField: 'name',
       valueField: 'id',
       mode: 'multiple',

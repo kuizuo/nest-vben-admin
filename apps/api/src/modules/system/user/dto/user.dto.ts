@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
@@ -11,17 +11,16 @@ import {
   IsString,
   Matches,
   MaxLength,
-  Min,
   MinLength,
   ValidateIf,
 } from 'class-validator';
 import { isEmpty } from 'lodash';
 
-import { ListDTO } from '@/common/dto/list.dto';
+import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { IsUnique } from '@/database/constraints/unique.constraint';
 import { UserEntity } from '@/modules/system/user/entities/user.entity';
 
-export class UserCreateDto {
+export class UserDto {
   @ApiProperty({ description: '登录账号', example: 'kz-admin' })
   @IsString()
   @Matches(/^[a-z0-9A-Z\W_]+$/)
@@ -82,10 +81,28 @@ export class UserCreateDto {
   status: number;
 }
 
-export class UserUpdateDto extends PartialType(UserCreateDto) {
-  @IsInt()
-  @Min(1)
-  id!: number;
-}
+export class UserListDto extends PageOptionsDto<UserDto> {
+  @ApiProperty({ description: '登录账号' })
+  @IsString()
+  @IsOptional()
+  username: string;
 
-export class UserListDto extends ListDTO<UserCreateDto> {}
+  @ApiProperty({ description: '呢称' })
+  @IsOptional()
+  nickName: string;
+
+  @ApiProperty({ description: '归属大区', example: 1 })
+  @IsInt()
+  @IsOptional()
+  deptId: number;
+
+  @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
+  @IsEmail()
+  @IsOptional()
+  email: string;
+
+  @ApiProperty({ description: '状态', example: 0 })
+  @IsInt()
+  @IsOptional()
+  status: number;
+}

@@ -38,7 +38,7 @@
       ]);
 
       rowId.value = data.record.id;
-      const userInfo = await getUserInfo({ id: data.record.id });
+      const userInfo = await getUserInfo(data.record.id);
       setFieldsValue(userInfo);
     } else {
       updateSchema([

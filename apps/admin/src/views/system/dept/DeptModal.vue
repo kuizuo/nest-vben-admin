@@ -9,7 +9,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './dept.data';
-  import { getDeptList, addDept, updateDept } from '/@/api/system/dept';
+  import { getDeptList, createDept, updateDept } from '/@/api/system/dept';
 
   const emit = defineEmits(['success', 'register']);
 
@@ -58,7 +58,7 @@
         data.parentId = -1;
       }
 
-      await (!unref(isUpdate) ? addDept : updateDept)(data);
+      await (!unref(isUpdate) ? createDept : updateDept)(data);
 
       closeModal();
       emit('success');

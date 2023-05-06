@@ -44,7 +44,7 @@
 
   onMounted(async () => {
     console.log('mounted');
-    userInfo.value = await getUserInfo({ id: userId.value });
+    userInfo.value = await getUserInfo(userId.value);
     console.log(userInfo.value);
   });
 

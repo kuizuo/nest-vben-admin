@@ -1,8 +1,7 @@
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
-import { Icon } from '/@/components/Icon';
+import { BasicColumn, FormSchema } from '/@/components/Table';
+import Icon from '@/components/Icon/Icon.vue';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { constantRouterComponents } from '/@/router/helper/routeHelper';
 
@@ -185,7 +184,7 @@ export const formSchema: FormSchema[] = [
     field: 'orderNo',
     label: '排序',
     component: 'InputNumber',
-    required: true,
+    defaultValue: 0,
   },
   {
     field: 'icon',

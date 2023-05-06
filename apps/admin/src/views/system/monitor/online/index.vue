@@ -59,7 +59,7 @@
     },
   });
 
-  type TableListItem = API.OnlineUserListItem;
+  type TableListItem = OnlineUserListItem;
 
   const handleKick = async (record: TableListItem) => {
     await kickUser({ id: record.id });

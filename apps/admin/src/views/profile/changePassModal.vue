@@ -5,9 +5,8 @@
 </template>
 <script lang="ts" setup>
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, useForm } from '/@/components/Form/index';
+  import { BasicForm, useForm, FormSchema } from '/@/components/Form';
 
-  import { FormSchema } from '/@/components/Form/index';
   import { changePasswordApi } from '/@/api/sys/user';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useUserStore } from '/@/store/modules/user';

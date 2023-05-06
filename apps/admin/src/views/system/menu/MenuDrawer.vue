@@ -15,7 +15,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './menu.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { getMenuList, addMenu, updateMenu } from '/@/api/system/menu';
+  import { getMenuList, createMenu, updateMenu } from '/@/api/system/menu';
 
   const emit = defineEmits(['success', 'register']);
 
@@ -54,12 +54,9 @@
       setDrawerProps({ confirmLoading: true });
 
       if (!unref(isUpdate)) {
-        await addMenu(values);
+        await createMenu(values);
       } else {
-        await updateMenu({
-          ...values,
-          id: parseInt(values.id),
-        });
+        await updateMenu(values.id, values);
       }
 
       closeDrawer();

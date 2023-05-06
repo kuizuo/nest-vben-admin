@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { difference, includes, isEmpty } from 'lodash';
+import { difference, isEmpty } from 'lodash';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
 
 import { IAppConfig } from '@/config';
@@ -10,7 +10,7 @@ import { Pagination } from '@/helper/paginate/pagination';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 import { RoleEntity } from '@/modules/system/role/role.entity';
 
-import { RoleCreateDto, RoleUpdateDto, RolePageDto } from './role.dto';
+import { RoleDto, RolePageDto } from './role.dto';
 
 @Injectable()
 export class RoleService {
@@ -26,7 +26,7 @@ export class RoleService {
   /**
    * 列举所有角色：除去超级管理员
    */
-  async list(): Promise<RoleEntity[]> {
+  async findAll(): Promise<RoleEntity[]> {
     const result = await this.roleRepository.findBy({
       // id: Not(this.adminRoleId),
     });
@@ -54,26 +54,18 @@ export class RoleService {
     return { ...info, menus };
   }
 
-  /**
-   * 根据角色Id数组删除
-   */
-  async delete(roleIds: number[]): Promise<void> {
-    if (
-      includes(roleIds, this.configService.get<IAppConfig>('app').adminRoleId)
-    ) {
+  async delete(id: number): Promise<void> {
+    if (id === this.configService.get<IAppConfig>('app').adminRoleId) {
       throw new Error('不能删除超级管理员');
     }
 
-    await this.entityManager.transaction(async (manager) => {
-      await manager.delete(RoleEntity, roleIds);
-      await manager.delete(MenuEntity, { roles: { id: In(roleIds) } });
-    });
+    await this.roleRepository.delete(id);
   }
 
   /**
    * 增加角色
    */
-  async create({ menus, ...data }: RoleCreateDto): Promise<{ roleId: number }> {
+  async create({ menus, ...data }: RoleDto): Promise<{ roleId: number }> {
     const role = await this.roleRepository.save({
       ...data,
       menus: menus ? await this.menuRepository.findByIds(menus) : [],
@@ -85,7 +77,7 @@ export class RoleService {
   /**
    * 更新角色信息
    */
-  async update({ id, menus, ...data }: RoleUpdateDto): Promise<void> {
+  async update(id, { menus, ...data }: Partial<RoleDto>): Promise<void> {
     // 对比 menu 差异
     const originMenus = await this.menuRepository.find({
       where: { roles: { id } },

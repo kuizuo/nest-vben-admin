@@ -8,8 +8,8 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
 
-  import { formSchema } from './param-config.data';
-  import { createParamConfig, updateParamConfig } from '/@/api/system/param-config';
+  import { formSchema } from './dict.data';
+  import { createParamConfig, updateParamConfig } from '/@/api/system/dict';
 
   const emit = defineEmits(['success', 'register']);
 

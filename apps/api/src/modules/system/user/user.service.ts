@@ -24,7 +24,7 @@ import { DictService } from '../dict/dict.service';
 import { RoleEntity } from '../role/role.entity';
 
 import { PasswordUpdateDto } from './dto/password.dto';
-import { UserCreateDto, UserListDto, UserUpdateDto } from './dto/user.dto';
+import { UserDto, UserListDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { AccountInfo, UserInfoPage } from './user.modal';
 
@@ -138,7 +138,7 @@ export class UserService {
     roleIds: roles,
     deptId,
     ...data
-  }: UserCreateDto): Promise<void> {
+  }: UserDto): Promise<void> {
     const exists = await this.userRepository.findOneBy({
       username,
     });
@@ -175,14 +175,10 @@ export class UserService {
   /**
    * 更新用户信息
    */
-  async update({
+  async update(
     id,
-    password,
-    deptId,
-    roleIds,
-    status,
-    ...data
-  }: UserUpdateDto): Promise<void> {
+    { password, deptId, roleIds, status, ...data }: UserDto,
+  ): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
       if (password) {
         await this.forceUpdatePassword(id, password);
@@ -265,7 +261,11 @@ export class UserService {
   async findAll({
     page,
     pageSize,
-    query: { username, nickName, deptId, email, status },
+    username,
+    nickName,
+    deptId,
+    email,
+    status,
   }: UserListDto): Promise<Pagination<UserInfoPage>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')

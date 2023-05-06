@@ -1,10 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
-  ArrayNotEmpty,
   IsArray,
   IsIn,
-  IsInt,
   IsOptional,
   IsString,
   Matches,
@@ -13,7 +10,7 @@ import {
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
 
-export class RoleCreateDto {
+export class RoleDto {
   @ApiProperty({ description: '角色名称' })
   @IsString()
   @MinLength(2)
@@ -38,26 +35,6 @@ export class RoleCreateDto {
   @IsOptional()
   @IsArray()
   menus?: number[];
-}
-
-export class RoleUpdateDto extends RoleCreateDto {
-  @ApiProperty({ description: '关联部门编号' })
-  @IsInt()
-  id: number;
-}
-
-export class RoleInfoDto {
-  @ApiProperty({ description: '需要查找的角色ID' })
-  @IsInt()
-  @Type(() => Number)
-  id: number;
-}
-
-export class RoleDeleteDto {
-  @ApiProperty({ description: '需要删除的角色ID列表', type: [Number] })
-  @IsArray()
-  @ArrayNotEmpty()
-  ids: number[];
 }
 
 export class RolePageDto extends PageOptionsDto {

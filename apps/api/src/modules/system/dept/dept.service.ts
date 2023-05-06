@@ -72,7 +72,7 @@ export class DeptService {
   /**
    * 新增部门
    */
-  async add(dto: DeptCreateDto): Promise<void> {
+  async create(dto: DeptCreateDto): Promise<void> {
     const { name, parentId, orderNo } = dto;
     const parent = await this.deptRepository.findOne({
       where: { id: parentId },

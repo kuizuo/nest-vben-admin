@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
@@ -21,7 +22,10 @@ export class DictService {
   /**
    * 罗列所有配置
    */
-  async page(page: number, pageSize: number): Promise<Pagination<DictEntity>> {
+  async page({
+    page,
+    pageSize,
+  }: PageOptionsDto): Promise<Pagination<DictEntity>> {
     return paginate(this.dictRepository, { page, pageSize });
   }
 
@@ -35,25 +39,22 @@ export class DictService {
   /**
    * 新增
    */
-  async add(dto: DictCreateDto): Promise<void> {
+  async create(dto: DictCreateDto): Promise<void> {
     await this.dictRepository.insert(dto);
   }
 
   /**
    * 更新
    */
-  async update(dto: DictUpdateDto): Promise<void> {
-    await this.dictRepository.update(
-      { id: dto.id },
-      { name: dto.name, value: dto.value, remark: dto.remark },
-    );
+  async update(id: number, dto: DictUpdateDto): Promise<void> {
+    await this.dictRepository.update(id, dto);
   }
 
   /**
    * 删除
    */
-  async delete(ids: number[]): Promise<void> {
-    await this.dictRepository.delete(ids);
+  async delete(id: number): Promise<void> {
+    await this.dictRepository.delete(id);
   }
 
   /**

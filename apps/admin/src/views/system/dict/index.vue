@@ -35,13 +35,13 @@
 <script lang="ts" setup name="参数配置">
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
-  import { getParamConfigList, deleteParamConfig } from '/@/api/system/param-config';
-  import { columns } from './param-config.data';
+  import { getDictList, deleteDict } from '/@/api/system/dict';
+  import { columns } from './dict.data';
   import ParamConfigModal from './ParamConfigModal.vue';
 
-  const [registerTable, { reload, getDataSource, updateTableDataRecord }] = useTable({
+  const [registerTable, { reload, getDataSource }] = useTable({
     title: '参数配置',
-    api: getParamConfigList,
+    api: getDictList,
     useSearchForm: true,
     formConfig: {
       labelWidth: 80,
@@ -76,7 +76,7 @@
   }
 
   async function handleDelete(record: Recordable, index: number) {
-    await deleteParamConfig({ ids: [record.id] });
+    await deleteDict(record.id);
     let data = getDataSource();
     data.splice(index, 1);
   }

@@ -1,70 +1,66 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiResult } from '@/decorators/api-result.decorator';
+import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { Pagination } from '@/helper/paginate/pagination';
-
+import { Permission } from '@/modules/rbac/decorators';
 import { RoleEntity } from '@/modules/system/role/role.entity';
 
 import { MenuService } from '../menu/menu.service';
 
-import {
-  RolePageDto,
-  RoleCreateDto,
-  RoleDeleteDto,
-  RoleInfoDto,
-  RoleUpdateDto,
-} from './role.dto';
-
+import { PermissionRole } from './permission';
+import { RoleDto } from './role.dto';
 import { RoleService } from './role.service';
 
 @ApiTags('System - 角色模块')
 @ApiSecurityAuth()
-@Controller('role')
+@Controller('roles')
 export class RoleController {
   constructor(
     private roleService: RoleService,
     private menuService: MenuService,
   ) {}
 
+  @Get()
   @ApiOperation({ summary: '获取角色列表' })
   @ApiResult({ type: [RoleEntity] })
-  @Get('list')
+  @Permission(PermissionRole.LIST)
   async list(): Promise<RoleEntity[]> {
-    return this.roleService.list();
+    return this.roleService.findAll();
   }
 
-  @ApiOperation({ summary: '分页查询角色信息' })
-  @ApiResult({ type: [RoleEntity] })
-  @Get('page')
-  async page(@Query() dto: RolePageDto): Promise<Pagination<RoleEntity>> {
-    return this.roleService.page(dto);
-  }
-
+  @Get(':id')
   @ApiOperation({ summary: '获取角色信息' })
-  @Get('info')
-  async info(@Query() dto: RoleInfoDto) {
-    return this.roleService.info(dto.id);
+  @ApiResult({ type: RoleEntity })
+  @Permission(PermissionRole.READ)
+  async info(@IdParam() id: number) {
+    return this.roleService.info(id);
   }
 
+  @Post()
   @ApiOperation({ summary: '新增角色' })
-  @Post('add')
-  async add(@Body() dto: RoleCreateDto): Promise<void> {
+  @Permission(PermissionRole.CREATE)
+  async create(@Body() dto: RoleDto): Promise<void> {
     await this.roleService.create(dto);
   }
 
+  @Post(':id')
   @ApiOperation({ summary: '更新角色' })
-  @Post('update')
-  async update(@Body() dto: RoleUpdateDto): Promise<void> {
-    await this.roleService.update(dto);
+  @Permission(PermissionRole.UPDATE)
+  async update(
+    @IdParam() id: number,
+    @Body() dto: Partial<RoleDto>,
+  ): Promise<void> {
+    await this.roleService.update(id, dto);
     await this.menuService.refreshOnlineUserPerms();
   }
 
+  @Delete()
   @ApiOperation({ summary: '删除角色' })
-  @Post('delete')
-  async delete(@Body() dto: RoleDeleteDto): Promise<void> {
-    await this.roleService.delete(dto.ids);
+  @Permission(PermissionRole.DELETE)
+  async delete(@IdParam() id: number): Promise<void> {
+    await this.roleService.delete(id);
     await this.menuService.refreshOnlineUserPerms();
   }
 }

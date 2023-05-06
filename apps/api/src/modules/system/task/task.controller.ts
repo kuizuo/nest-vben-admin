@@ -33,7 +33,7 @@ export class TaskController {
 
   @ApiOperation({ summary: '添加任务' })
   @Post('add')
-  async add(@Body() dto: TaskCreateDto): Promise<void> {
+  async create(@Body() dto: TaskCreateDto): Promise<void> {
     const serviceCall = dto.service.split('.');
     await this.taskService.checkHasMissionMeta(serviceCall[0], serviceCall[1]);
     await this.taskService.addOrUpdate(dto);

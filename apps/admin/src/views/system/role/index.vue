@@ -30,13 +30,13 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
-  import { getRoleListByPage, deleteRole } from '/@/api/system/role';
+  import { getRoleList, deleteRole } from '/@/api/system/role';
   import { columns, searchFormSchema } from './role.data';
 
   const [registerDrawer, { openDrawer }] = useDrawer();
   const [registerTable, { reload, deleteTableDataRecord }] = useTable({
     title: '角色列表',
-    api: getRoleListByPage,
+    api: getRoleList,
     columns,
     formConfig: {
       labelWidth: 120,
@@ -69,7 +69,7 @@
   }
 
   async function handleDelete(record: Recordable) {
-    await deleteRole({ ids: [record.id] });
+    await deleteRole(record.id);
     deleteTableDataRecord(record.id);
   }
 
