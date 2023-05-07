@@ -36,6 +36,15 @@ export const columns: BasicColumn[] = [
   },
 ];
 
+export const searchFormSchema: FormSchema[] = [
+  {
+    field: 'name',
+    label: '名称',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+];
+
 export const formSchema: FormSchema[] = [
   {
     field: 'name',

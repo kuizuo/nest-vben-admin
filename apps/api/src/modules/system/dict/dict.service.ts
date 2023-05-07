@@ -3,14 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
-import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 import { DictEntity } from '@/modules/system/dict/dict.entity';
 
-import { DictCreateDto, DictUpdateDto } from './dict.dto';
+import { DictDto, DictQueryDto } from './dict.dto';
 
 @Injectable()
 export class DictService {
@@ -25,8 +24,17 @@ export class DictService {
   async page({
     page,
     pageSize,
-  }: PageOptionsDto): Promise<Pagination<DictEntity>> {
-    return paginate(this.dictRepository, { page, pageSize });
+    name,
+  }: DictQueryDto): Promise<Pagination<DictEntity>> {
+    const queryBuilder = this.dictRepository.createQueryBuilder('dict');
+
+    if (name) {
+      queryBuilder.where('dict.name LIKE :name', {
+        name: `%${name}%`,
+      });
+    }
+
+    return paginate(queryBuilder, { page, pageSize });
   }
 
   /**
@@ -39,14 +47,14 @@ export class DictService {
   /**
    * 新增
    */
-  async create(dto: DictCreateDto): Promise<void> {
+  async create(dto: DictDto): Promise<void> {
     await this.dictRepository.insert(dto);
   }
 
   /**
    * 更新
    */
-  async update(id: number, dto: DictUpdateDto): Promise<void> {
+  async update(id: number, dto: Partial<DictDto>): Promise<void> {
     await this.dictRepository.update(id, dto);
   }
 

@@ -4,17 +4,17 @@
   </BasicModal>
 </template>
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
 
   import { formSchema } from './dict.data';
-  import { createParamConfig, updateParamConfig } from '/@/api/system/dict';
+  import { createDict, updateDict } from '/@/api/system/dict';
 
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
-  const rowId = ref(0);
+  const rowId = ref<number>(0);
 
   const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
     labelWidth: 80,
@@ -47,12 +47,11 @@
 
       setModalProps({ confirmLoading: true });
 
-      const data = {
-        ...values,
-        id: rowId.value,
-      };
-
-      await (!isUpdate.value ? createParamConfig : updateParamConfig)(data);
+      if (!unref(isUpdate)) {
+        await createDict(values);
+      } else {
+        await updateDict(rowId.value, values);
+      }
 
       closeModal();
       emit('success', { isUpdate: isUpdate.value, values: { ...values, id: rowId } });

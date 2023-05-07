@@ -1,34 +1,36 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #action="{ record, index }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:edit-outlined',
-              tooltip: '编辑',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              tooltip: '删除此数据',
-              popConfirm: {
-                title: '确认删除吗?',
-                okText: '确认',
-                cancelText: '取消',
-                confirm: handleDelete.bind(null, record, index),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:edit-outlined',
+                tooltip: '编辑',
+                onClick: handleEdit.bind(null, record),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                tooltip: '删除此数据',
+                popConfirm: {
+                  title: '确认删除吗?',
+                  okText: '确认',
+                  cancelText: '取消',
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
       <template #toolbar>
         <a-button type="primary" color="success" @click="handelAdd"> 添加 </a-button>
       </template>
     </BasicTable>
 
-    <ParamConfigModal @register="registerModal" @success="handleSuccess" />
+    <DictModal @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -36,17 +38,18 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
   import { getDictList, deleteDict } from '/@/api/system/dict';
-  import { columns } from './dict.data';
-  import ParamConfigModal from './ParamConfigModal.vue';
+  import { columns, searchFormSchema } from './dict.data';
+  import DictModal from './DictModal.vue';
 
-  const [registerTable, { reload, getDataSource }] = useTable({
-    title: '参数配置',
+  const [registerTable, { reload }] = useTable({
+    title: '字典配置',
     api: getDictList,
-    useSearchForm: true,
     formConfig: {
-      labelWidth: 80,
+      labelWidth: 60,
+      schemas: searchFormSchema,
       autoSubmitOnEnter: true,
     },
+    useSearchForm: true,
     columns: columns,
     bordered: true,
     striped: false,
@@ -57,7 +60,6 @@
       width: 110,
       title: '操作',
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
   const [registerModal, { openModal }] = useModal();
@@ -75,19 +77,12 @@
     });
   }
 
-  async function handleDelete(record: Recordable, index: number) {
+  async function handleDelete(record: Recordable) {
     await deleteDict(record.id);
-    let data = getDataSource();
-    data.splice(index, 1);
   }
 
-  function handleSuccess({ isUpdate, values }) {
-    if (isUpdate) {
-      reload();
-      // updateTableDataRecord(values.id, values);
-    } else {
-      reload();
-    }
+  function handleSuccess() {
+    reload();
   }
 </script>
 
