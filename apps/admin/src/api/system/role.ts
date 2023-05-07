@@ -17,7 +17,7 @@ export interface RoleParam {
   name: string;
   value: string;
   remark: string;
-  menus: string[];
+  menuIds: string[];
 }
 
 /** 角色详情 */
@@ -28,7 +28,7 @@ export interface RoleInfoResult {
   name: string;
   value: string;
   remark: string;
-  menus: number[];
+  menuIds: number[];
 }
 
 enum Api {
@@ -38,12 +38,12 @@ enum Api {
 export const getRoleList = (params?: BasicPageParams) =>
   defHttp.get<RoleListResult>({ url: Api.Base, params });
 
-export const getRoleInfo = (params: { id: number }) =>
-  defHttp.get<RoleInfoResult>({ url: Api.Base, params });
+export const getRoleInfo = (id: number) =>
+  defHttp.get<RoleInfoResult>({ url: `${Api.Base}/${id}` });
 
 export const createRole = (params: RoleParam) => defHttp.post({ url: Api.Base, params });
 
 export const updateRole = (id: number, params: RoleParam) =>
-  defHttp.post({ url: `${Api.Base}/${id}`, params });
+  defHttp.put({ url: `${Api.Base}/${id}`, params });
 
-export const deleteRole = (id: number) => defHttp.post({ url: `${Api.Base}/${id}` });
+export const deleteRole = (id: number) => defHttp.delete({ url: `${Api.Base}/${id}` });

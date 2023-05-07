@@ -11,7 +11,7 @@ import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
 import { PasswordUpdateDto } from '@/modules/system/user/dto/password.dto';
 
-import { AccountInfo } from '../../system/user/user.modal';
+import { AccountInfo } from '../../system/user/user.model';
 import { UserService } from '../../system/user/user.service';
 import { AuthService } from '../auth.service';
 import { AccountUpdateDto } from '../dto/account.dto';

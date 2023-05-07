@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { difference, isEmpty } from 'lodash';
-import { EntityManager, In, Like, Not, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { IAppConfig } from '@/config';
@@ -11,7 +11,8 @@ import { Pagination } from '@/helper/paginate/pagination';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 import { RoleEntity } from '@/modules/system/role/role.entity';
 
-import { RoleDto, RolePageDto } from './role.dto';
+import { RoleDto } from './role.dto';
+import { RoleInfo } from './role.model';
 
 @Injectable()
 export class RoleService {
@@ -35,23 +36,27 @@ export class RoleService {
   }
 
   /**
-   * 列举所有角色条数：除去超级管理员
-   */
-  async count(): Promise<number> {
-    const count = await this.roleRepository.countBy({
-      id: Not(this.configService.get<IAppConfig>('app').adminRoleId),
-    });
-    return count;
-  }
-
-  /**
    * 根据角色获取角色信息
    */
-  async info(rid: number): Promise<any> {
-    const info = await this.roleRepository.findOneBy({ id: rid });
-    const menus = await this.menuRepository.findBy({ roles: { id: rid } });
+  async info(rid: number): Promise<RoleInfo> {
+    const info = await this.roleRepository
+      .createQueryBuilder('role')
+      .where({
+        id: rid,
+      })
+      .getOne();
 
-    return { ...info, menus };
+    if (rid === this.configService.get<IAppConfig>('app').adminRoleId) {
+      const menus = await this.menuRepository.find({ select: ['id'] });
+      return { ...info, menuIds: menus.map((m) => m.id) };
+    }
+
+    const menus = await this.menuRepository.find({
+      where: { roles: { id: rid } },
+      select: ['id'],
+    });
+
+    return { ...info, menuIds: menus.map((m) => m.id) };
   }
 
   async delete(id: number): Promise<void> {
@@ -65,10 +70,12 @@ export class RoleService {
   /**
    * 增加角色
    */
-  async create({ menus, ...data }: RoleDto): Promise<{ roleId: number }> {
+  async create({ menuIds, ...data }: RoleDto): Promise<{ roleId: number }> {
     const role = await this.roleRepository.save({
       ...data,
-      menus: menus ? await this.menuRepository.findByIds(menus) : [],
+      menus: menuIds
+        ? await this.menuRepository.findBy({ id: In(menuIds) })
+        : [],
     });
 
     return { roleId: role.id };
@@ -77,18 +84,20 @@ export class RoleService {
   /**
    * 更新角色信息
    */
-  async update(id, { menus, ...data }: Partial<RoleDto>): Promise<void> {
+  async update(id, { menuIds, ...data }: Partial<RoleDto>): Promise<void> {
+    await this.roleRepository.update(id, data);
+
     // 对比 menu 差异
     const originMenus = await this.menuRepository.find({
       where: { roles: { id } },
     });
     const originMenuIds = originMenus.map((m) => m.id);
-    const insertMenusRowIds = difference(menus, originMenuIds);
-    const deleteMenusRowIds = difference(originMenuIds, menus);
+    const insertMenusRowIds = difference(menuIds, originMenuIds);
+    const deleteMenusRowIds = difference(originMenuIds, menuIds);
 
     // using transaction
     await this.entityManager.transaction(async (manager) => {
-      if (!isEmpty(menus)) {
+      if (!isEmpty(menuIds)) {
         await manager
           .createQueryBuilder()
           .relation(RoleEntity, 'menus')
@@ -96,28 +105,6 @@ export class RoleService {
           .addAndRemove(insertMenusRowIds, deleteMenusRowIds);
       }
     });
-  }
-
-  /**
-   * 分页加载角色信息
-   */
-  async page({
-    page,
-    pageSize,
-    name,
-    value,
-    status,
-  }: RolePageDto): Promise<Pagination<RoleEntity>> {
-    const queryBuilder = await this.roleRepository
-      .createQueryBuilder('role')
-      .where({
-        ...(value ? { value: Like(`%${value}%`) } : null),
-        ...(name ? { name: Like(`%${name}%`) } : null),
-        ...(status ? { status } : null),
-      })
-      .orderBy('role.id', 'ASC');
-
-    return paginate(queryBuilder, { page, pageSize });
   }
 
   /**

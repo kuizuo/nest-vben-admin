@@ -14,7 +14,7 @@ import { EVENT_KICK } from '@/modules/socket/socket.event';
 
 import { UserService } from '../user/user.service';
 
-import { OnlineUserInfo } from './online.modal';
+import { OnlineUserInfo } from './online.model';
 
 @Injectable()
 export class OnlineService {

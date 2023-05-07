@@ -1,7 +1,6 @@
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 import { formatToDateTime } from '/@/utils/dateUtil';
 
 export const columns: BasicColumn[] = [
@@ -41,32 +40,7 @@ export const columns: BasicColumn[] = [
   },
 ];
 
-export const searchFormSchema: FormSchema[] = [
-  {
-    field: 'name',
-    label: '角色名称',
-    component: 'Input',
-    colProps: { span: 6 },
-  },
-  {
-    field: 'value',
-    label: '角色值',
-    component: 'Input',
-    colProps: { span: 6 },
-  },
-  {
-    field: 'status',
-    label: '状态',
-    component: 'Select',
-    componentProps: {
-      options: [
-        { label: '启用', value: 1 },
-        { label: '停用', value: 0 },
-      ],
-    },
-    colProps: { span: 6 },
-  },
-];
+export const searchFormSchema: FormSchema[] = [];
 
 export const formSchema: FormSchema[] = [
   {

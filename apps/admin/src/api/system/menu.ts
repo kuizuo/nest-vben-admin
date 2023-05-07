@@ -40,7 +40,7 @@ enum Api {
 
 export const getMenuList = () => defHttp.get<MenuListResult>({ url: Api.Base });
 
-export const getMenuInfo = (params: { id: number }) => defHttp.get({ url: Api.Base, params });
+export const getMenuInfo = (id: number) => defHttp.get({ url: `${Api.Base}/${id}` });
 
 export const createMenu = (params: MenuParams) => defHttp.post({ url: Api.Base, params });
 

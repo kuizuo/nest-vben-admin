@@ -19,9 +19,9 @@ export function checkStatus(
   const { t } = useI18n();
   const userStore = useUserStoreWithOut();
   let errMessage = '';
-
   switch (status) {
     case 400:
+    case 422:
       errMessage = `${msg}`;
       break;
     // 401: Not logged in

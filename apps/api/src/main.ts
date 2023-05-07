@@ -37,7 +37,7 @@ async function bootstrap() {
     new FastifyAdapter(),
     {
       bufferLogs: true,
-      // snapshot: true,
+      snapshot: true,
     },
   );
 
@@ -89,7 +89,8 @@ async function bootstrap() {
           errors.map((e) => {
             const rule = Object.keys(e.constraints)[0];
             const msg = e.constraints[rule];
-            return `property ${e.property} validation failed: ${msg}, following constraints: ${rule}`;
+            // return `property ${e.property} validation failed: ${msg}, following constraints: ${rule}`;
+            return msg;
           })[0],
         ),
     }),

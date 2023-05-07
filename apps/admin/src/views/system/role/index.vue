@@ -39,8 +39,9 @@
     api: getRoleList,
     columns,
     formConfig: {
-      labelWidth: 120,
+      labelWidth: 60,
       schemas: searchFormSchema,
+      autoSubmitOnEnter: true,
     },
     useSearchForm: true,
     showTableSetting: true,
@@ -70,7 +71,7 @@
 
   async function handleDelete(record: Recordable) {
     await deleteRole(record.id);
-    deleteTableDataRecord(record.id);
+    reload();
   }
 
   function handleSuccess() {

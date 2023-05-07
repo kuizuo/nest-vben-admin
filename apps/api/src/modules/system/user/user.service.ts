@@ -26,7 +26,7 @@ import { RoleEntity } from '../role/role.entity';
 import { PasswordUpdateDto } from './dto/password.dto';
 import { UserDto, UserListDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
-import { AccountInfo } from './user.modal';
+import { AccountInfo } from './user.model';
 
 @Injectable()
 export class UserService {

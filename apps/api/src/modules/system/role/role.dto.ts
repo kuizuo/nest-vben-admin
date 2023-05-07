@@ -8,23 +8,21 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { PageOptionsDto } from '@/common/dto/page-options.dto';
-
 export class RoleDto {
   @ApiProperty({ description: '角色名称' })
   @IsString()
-  @MinLength(2)
+  @MinLength(2, { message: '角色名称长度不能小于2' })
   name: string;
 
   @ApiProperty({ description: '角色值' })
   @IsString()
-  @Matches(/^[a-z0-9A-Z]+$/)
-  @MinLength(2)
+  @Matches(/^[a-z0-9A-Z]+$/, { message: '角色值只能包含字母和数字' })
+  @MinLength(2, { message: '角色值长度不能小于2' })
   value: string;
 
   @ApiProperty({ description: '角色备注' })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   remark?: string;
 
   @ApiProperty({ description: '状态' })
@@ -34,21 +32,5 @@ export class RoleDto {
   @ApiProperty({ description: '关联菜单、权限编号' })
   @IsOptional()
   @IsArray()
-  menus?: number[];
-}
-
-export class RolePageDto extends PageOptionsDto {
-  @ApiProperty({ description: '角色名称' })
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @ApiProperty({ description: '角色值' })
-  @IsOptional()
-  @IsString()
-  value?: string;
-
-  @ApiProperty({ description: '状态' })
-  @IsOptional()
-  status?: number;
+  menuIds?: number[];
 }

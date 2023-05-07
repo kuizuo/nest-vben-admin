@@ -36,6 +36,7 @@
 
   const emit = defineEmits(['success', 'register']);
 
+  const rowId = ref<number>(0);
   const isUpdate = ref(true);
   const treeData = ref<any[]>([]);
   const checkedKeys = ref<number[]>([]);
@@ -55,8 +56,10 @@
     isUpdate.value = !!data?.isUpdate;
 
     if (unref(isUpdate)) {
-      const roleInfo = await getRoleInfo({ id: data.record.id });
-      checkedKeys.value = getCheckedKeys(roleInfo.menus, toRaw(treeData.value));
+      rowId.value = data.record.id;
+
+      const roleInfo = await getRoleInfo(data.record.id);
+      checkedKeys.value = getCheckedKeys(roleInfo.menuIds, toRaw(treeData.value));
       setFieldsValue({
         ...data.record,
       });
@@ -85,11 +88,14 @@
 
       const data = {
         ...values,
-        id: parseInt(values.id),
-        menus: [...unref(treeRef).checkedKeys, ...unref(treeRef).halfCheckedKeys],
+        menuIds: [...unref(treeRef).checkedKeys, ...unref(treeRef).halfCheckedKeys],
       };
 
-      await (!unref(isUpdate) ? createRole : updateRole)(data);
+      if (!unref(isUpdate)) {
+        await createRole(data);
+      } else {
+        await updateRole(rowId.value, data);
+      }
 
       closeDrawer();
       emit('success');

@@ -9,7 +9,7 @@ import { ApiException } from '@/exceptions/api.exception';
 import { AuthUser } from '@/modules/auth/decorators';
 
 import { KickDto } from './online.dto';
-import { OnlineUserInfo } from './online.modal';
+import { OnlineUserInfo } from './online.model';
 import { OnlineService } from './online.service';
 
 @ApiTags('System - 在线用户模块')
