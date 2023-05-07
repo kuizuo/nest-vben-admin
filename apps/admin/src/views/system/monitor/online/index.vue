@@ -1,19 +1,21 @@
 <template>
   <BasicTable @register="registerTable">
-    <template #action="{ record }">
-      <TableAction
-        :actions="[
-          {
-            label: '下线',
-            color: 'error',
-            popConfirm: {
-              title: '是否确认下线',
-              confirm: handleKick.bind(null, record),
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'action'">
+        <TableAction
+          :actions="[
+            {
+              label: '下线',
+              color: 'error',
+              popConfirm: {
+                title: '是否确认下线',
+                confirm: handleKick.bind(null, record),
+              },
+              disabled: record.isCurrent,
             },
-            disabled: record.isCurrent,
-          },
-        ]"
-      />
+          ]"
+        />
+      </template>
     </template>
   </BasicTable>
 </template>
@@ -43,7 +45,6 @@
       width: 120,
       title: '操作',
       dataIndex: 'action',
-      slots: { customRender: 'action' },
     },
   });
 

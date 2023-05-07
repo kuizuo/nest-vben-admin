@@ -6,27 +6,29 @@
           新增任务
         </a-button>
       </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'ant-design:edit-outlined',
-              tooltip: '编辑任务',
-              disabled: !hasPermission('sys:task:update'),
-              onClick: handleEdit.bind(null, record),
-            },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              tooltip: '删除此任务',
-              disabled: !hasPermission('sys:task:delete'),
-              popConfirm: {
-                title: '是否确认删除',
-                confirm: handleDelete.bind(null, record),
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <TableAction
+            :actions="[
+              {
+                icon: 'ant-design:edit-outlined',
+                tooltip: '编辑任务',
+                disabled: !hasPermission('sys:task:update'),
+                onClick: handleEdit.bind(null, record),
               },
-            },
-          ]"
-        />
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                tooltip: '删除此任务',
+                disabled: !hasPermission('sys:task:delete'),
+                popConfirm: {
+                  title: '是否确认删除',
+                  confirm: handleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </template>
       <template #expandedRowRender="{ record }">
         <Descriptions :column="1">
@@ -123,7 +125,6 @@
       dataIndex: 'action',
       align: 'center',
       fixed: 'right',
-      slots: { customRender: 'action' },
     },
   });
   const [registerModal, { openModal }] = useModal();

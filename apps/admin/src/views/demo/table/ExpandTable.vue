@@ -57,7 +57,7 @@
           title: 'Action',
           dataIndex: 'action',
           fixed: 'right',
-          // slots: { customRender: 'action' },
+          
         },
       });
       function handleDelete(record: Recordable) {

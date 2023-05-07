@@ -131,7 +131,7 @@
           width: 250,
           title: 'Action',
           dataIndex: 'action',
-          // slots: { customRender: 'action' },
+          
         },
       });
       function handleEdit(record: Recordable) {

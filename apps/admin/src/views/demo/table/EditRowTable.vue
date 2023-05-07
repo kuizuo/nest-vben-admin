@@ -240,7 +240,7 @@
           width: 160,
           title: 'Action',
           dataIndex: 'action',
-          // slots: { customRender: 'action' },
+          
         },
       });
 
