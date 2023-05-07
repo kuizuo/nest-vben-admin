@@ -9,6 +9,7 @@ import { ApiException } from '@/exceptions/api.exception';
 import { RedisService } from '@/modules/shared/redis/redis.service';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
+import { deleteEmptyChildren } from '@/utils';
 import { generatorMenu, generatorRouters } from '@/utils/permission';
 
 import { RoleService } from '../role/role.service';
@@ -47,6 +48,7 @@ export class MenuService {
     const menuList = generatorMenu(menus);
 
     if (!isEmpty(menuList)) {
+      deleteEmptyChildren(menuList);
       return menuList;
     }
     // 如果生产树形结构为空，则返回原始菜单列表

@@ -14,7 +14,7 @@
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
-  const rowId = ref('');
+  const rowId = ref<number>(0);
 
   const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
     labelWidth: 100,
@@ -33,8 +33,10 @@
 
       setFieldsValue({
         ...data.record,
+        parentId: data.record.parent?.id,
       });
     }
+
     const treeData = await getDeptList();
     updateSchema({
       field: 'parentId',
@@ -49,16 +51,15 @@
       const values = await validate();
       setModalProps({ confirmLoading: true });
 
-      const data = {
-        ...values,
-        id: rowId.value,
-      };
-
-      if (!data.parentId) {
-        data.parentId = -1;
+      if (!values.parentId) {
+        values.parentId = -1;
       }
 
-      await (!unref(isUpdate) ? createDept : updateDept)(data);
+      if (!unref(isUpdate)) {
+        await createDept(values);
+      } else {
+        await updateDept(rowId.value, values);
+      }
 
       closeModal();
       emit('success');

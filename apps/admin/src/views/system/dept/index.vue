@@ -48,8 +48,9 @@
     api: getDeptList,
     columns,
     formConfig: {
-      labelWidth: 120,
+      labelWidth: 80,
       schemas: searchFormSchema,
+      autoSubmitOnEnter: true,
     },
     isTreeTable: true,
     pagination: false,
@@ -63,7 +64,6 @@
       width: 80,
       title: '操作',
       dataIndex: 'action',
-      // slots: { customRender: 'action' },
       fixed: undefined,
     },
   });

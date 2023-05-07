@@ -8,17 +8,11 @@ import { ApiException } from '@/exceptions/api.exception';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
 import { UserEntity } from '@/modules/system/user/entities/user.entity';
 
-import { filterTree } from '@/utils/list2tree';
+import { deleteEmptyChildren } from '@/utils/list2tree';
 
 import { RoleService } from '../role/role.service';
 
-import {
-  MoveDept,
-  DeptUpdateDto,
-  DeptCreateDto,
-  DeptListDto,
-} from './dept.dto';
-import { DeptDetailInfo, DeptTree } from './dept.model';
+import { MoveDept, DeptDto, DeptQueryDto } from './dept.dto';
 
 @Injectable()
 export class DeptService {
@@ -31,59 +25,55 @@ export class DeptService {
     private roleService: RoleService,
   ) {}
 
-  /**
-   * 获取所有部门
-   */
   async list(): Promise<DeptEntity[]> {
     return this.deptRepository.find({ order: { orderNo: 'DESC' } });
   }
 
-  /**
-   * 根据ID查找部门信息
-   */
-  async info(id: number): Promise<DeptDetailInfo> {
-    const dept = await this.deptRepository.findOneBy({ id });
+  async info(id: number): Promise<DeptEntity> {
+    const dept = await this.deptRepository
+      .createQueryBuilder('dept')
+      .leftJoinAndSelect('dept.parent', 'parent')
+      .where({ id })
+      .getOne();
+
     if (isEmpty(dept)) {
       throw new ApiException(ErrorEnum.CODE_1019);
     }
-    let parent = null;
-    if (dept.parent?.id) {
-      parent = await this.deptRepository.findOneBy({
-        id: dept.parent.id,
-      });
-    }
-    return { ...dept, parent };
+    return dept;
   }
 
-  /**
-   * 更新部门信息
-   */
-  async update(dto: DeptUpdateDto): Promise<void> {
-    const { name, orderNo, parentId } = dto;
-    const parent = await this.deptRepository.findOneBy({ id: parentId });
+  async create({ parentId, ...data }: DeptDto): Promise<void> {
+    const parent = await this.deptRepository
+      .createQueryBuilder('dept')
+      .where({ id: parentId })
+      .getOne();
 
-    const dept = new DeptEntity();
-    dept.name = name;
-    dept.parent = parent;
-    dept.orderNo = orderNo;
-    await this.deptRepository.save(dept);
-  }
-
-  /**
-   * 新增部门
-   */
-  async create(dto: DeptCreateDto): Promise<void> {
-    const { name, parentId, orderNo } = dto;
-    const parent = await this.deptRepository.findOne({
-      where: { id: parentId },
+    await this.deptRepository.save({
+      ...data,
+      parent,
     });
+  }
 
-    const dept = new DeptEntity();
-    dept.name = name;
-    dept.parent = parent;
-    dept.orderNo = orderNo;
+  async update(id: number, { parentId, ...data }: DeptDto): Promise<void> {
+    const item = await this.deptRepository
+      .createQueryBuilder('dept')
+      .where({ id })
+      .getOne();
 
-    await this.deptRepository.save(dept);
+    const parent = await this.deptRepository
+      .createQueryBuilder('dept')
+      .where({ id: parentId })
+      .getOne();
+
+    await this.deptRepository.save({
+      ...item,
+      ...data,
+      parent,
+    });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.deptRepository.delete(id);
   }
 
   /**
@@ -93,13 +83,6 @@ export class DeptService {
     await this.entityManager.transaction(async (manager) => {
       await manager.save(depts);
     });
-  }
-
-  /**
-   * 根据ID删除部门
-   */
-  async delete(deptId: number): Promise<void> {
-    await this.deptRepository.delete(deptId);
   }
 
   /**
@@ -120,23 +103,35 @@ export class DeptService {
   /**
    * 获取部门列表树结构
    */
-  async getDeptTree(uid: number, dto: DeptListDto): Promise<DeptTree[]> {
-    if (this.roleService.isAdminRoleByUser(uid)) {
-      return this.deptRepository.findTrees();
+  async getDeptTree(
+    uid: number,
+    { name }: DeptQueryDto,
+  ): Promise<DeptEntity[]> {
+    const tree: DeptEntity[] = [];
+
+    if (name) {
+      const deptList = await this.deptRepository
+        .createQueryBuilder('dept')
+        .where('dept.name like :name', { name: `%${name}%` })
+        .getMany();
+
+      for (const dept of deptList) {
+        const deptTree = await this.deptRepository.findDescendantsTree(dept);
+        tree.push(deptTree);
+      }
+
+      deleteEmptyChildren(tree);
+
+      return tree;
     }
-    const set = new Set<number>();
-    const depts = await this.deptRepository
-      .createQueryBuilder('dept')
-      .leftJoinAndSelect('dept.parent', 'parent')
-      .leftJoinAndSelect('dept.children', 'children')
-      .andWhere('user_dept.user_id = :uid', { uid })
-      .getMany();
 
-    const deptTree = await this.deptRepository.findTrees();
+    const deptTree = await this.deptRepository.findTrees({
+      depth: 2,
+      relations: ['parent'],
+    });
 
-    const ids = Array.from(set);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return filterTree(deptTree, (item) => ids.includes(item.id));
+    deleteEmptyChildren(deptTree);
+
+    return deptTree;
   }
 }

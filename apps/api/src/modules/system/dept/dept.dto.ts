@@ -11,7 +11,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-export class DeptCreateDto {
+export class DeptDto {
   @ApiProperty({ description: '部门名称' })
   @IsString()
   @MinLength(1)
@@ -28,20 +28,6 @@ export class DeptCreateDto {
   @Min(0)
   @IsOptional()
   orderNo: number;
-}
-
-export class DeptUpdateDto extends DeptCreateDto {
-  @ApiProperty({ description: '需要更新的部门id' })
-  @IsInt()
-  @Min(0)
-  id: number;
-}
-
-export class DeptDeleteDto {
-  @ApiProperty({ description: '删除的系统部门ID' })
-  @IsInt()
-  @Min(0)
-  deptId: number;
 }
 
 export class TransferDeptDto {
@@ -76,7 +62,9 @@ export class MoveDeptDto {
   depts: MoveDept[];
 }
 
-export class DeptListDto {
+export class DeptQueryDto {
   @ApiProperty({ description: '部门名称' })
+  @IsString()
+  @IsOptional()
   name: string;
 }

@@ -7,7 +7,7 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
@@ -18,19 +18,12 @@ import { AuthUser } from '@/modules/auth/decorators';
 import { Permission } from '@/modules/rbac/decorators';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
 
-import {
-  DeptCreateDto,
-  DeptDeleteDto,
-  DeptUpdateDto,
-  DeptListDto,
-} from './dept.dto';
-import { DeptDetailInfo, DeptTree } from './dept.model';
+import { DeptDto, DeptQueryDto } from './dept.dto';
 import { DeptService } from './dept.service';
 import { PermissionDept } from './permission';
 
 @ApiSecurityAuth()
 @ApiTags('System - 部门模块')
-@ApiExtraModels(DeptDetailInfo)
 @Controller('depts')
 export class DeptController {
   constructor(private deptService: DeptService) {}
@@ -40,49 +33,49 @@ export class DeptController {
   @ApiResult({ type: [DeptEntity] })
   @Permission(PermissionDept.LIST)
   async list(
+    @Query() dto: DeptQueryDto,
     @AuthUser('uid') uid: number,
-    @Query() dto: DeptListDto,
-  ): Promise<DeptTree[]> {
+  ): Promise<DeptEntity[]> {
     return this.deptService.getDeptTree(uid, dto);
   }
 
   @Post()
   @ApiOperation({ summary: '创建部门' })
   @Permission(PermissionDept.CREATE)
-  async create(@Body() dto: DeptCreateDto): Promise<void> {
+  async create(@Body() dto: DeptDto): Promise<void> {
     await this.deptService.create(dto);
   }
 
   @Get(':id')
   @ApiOperation({ summary: '查询部门信息' })
-  @ApiResult({ type: DeptDetailInfo })
   @Permission(PermissionDept.READ)
-  async info(@IdParam() id: number): Promise<DeptDetailInfo> {
+  async info(@IdParam() id: number) {
     return this.deptService.info(id);
   }
 
   @Put(':id')
   @ApiOperation({ summary: '更新部门' })
   @Permission(PermissionDept.UPDATE)
-  async update(@Body() updateDeptDto: DeptUpdateDto): Promise<void> {
-    await this.deptService.update(updateDeptDto);
+  async update(
+    @IdParam() id: number,
+    @Body() updateDeptDto: DeptDto,
+  ): Promise<void> {
+    await this.deptService.update(id, updateDeptDto);
   }
 
-  @Delete()
+  @Delete(':id')
   @ApiOperation({ summary: '删除部门' })
   @Permission(PermissionDept.DELETE)
-  async delete(@Body() deleteDeptDto: DeptDeleteDto): Promise<void> {
+  async delete(@IdParam() id: number): Promise<void> {
     // 查询是否有关联用户或者部门，如果含有则无法删除
-    const count = await this.deptService.countUserByDeptId(
-      deleteDeptDto.deptId,
-    );
+    const count = await this.deptService.countUserByDeptId(id);
     if (count > 0) throw new ApiException(ErrorEnum.CODE_1009);
 
-    const count2 = await this.deptService.countChildDept(deleteDeptDto.deptId);
+    const count2 = await this.deptService.countChildDept(id);
 
     if (count2 > 0) throw new ApiException(ErrorEnum.CODE_1015);
 
-    await this.deptService.delete(deleteDeptDto.deptId);
+    await this.deptService.delete(id);
   }
 
   // @Post('move')
