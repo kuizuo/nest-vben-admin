@@ -106,7 +106,7 @@ export class DeptService {
    * 根据部门查询关联的用户数量
    */
   async countUserByDeptId(id: number): Promise<number> {
-    return this.userRepository.countBy({ depts: { id } });
+    return this.userRepository.countBy({ dept: { id } });
   }
 
   /**
@@ -138,27 +138,5 @@ export class DeptService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return filterTree(deptTree, (item) => ids.includes(item.id));
-  }
-
-  /**
-   * 根据当前角色id获取部门列表
-   */
-  async getDepts(uid: number): Promise<DeptEntity[]> {
-    const roleIds = await this.roleService.getRoleIdsByUser(uid);
-    let depts: any = [];
-
-    if (this.roleService.hasAdminRole(roleIds)) {
-      // root find all
-      depts = await this.deptRepository.find();
-    } else {
-      // [ 1, 2, 3 ] role find
-      depts = await this.deptRepository
-        .createQueryBuilder('dept')
-        .innerJoinAndSelect('role.depts', 'role')
-        .andWhere('role.id IN (:...roleIds)', { roleIds })
-        .orderBy('dept.order_no', 'ASC')
-        .getMany();
-    }
-    return depts;
   }
 }

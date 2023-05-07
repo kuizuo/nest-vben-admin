@@ -50,7 +50,7 @@ export const baseSetschemas: FormSchema[] = [
     dynamicDisabled: true,
   },
   {
-    field: 'nickName',
+    field: 'nickname',
     component: 'Input',
     label: '昵称',
     colProps: { span: 24 },

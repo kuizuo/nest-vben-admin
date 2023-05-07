@@ -4,6 +4,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { difference, isEmpty } from 'lodash';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
 
+import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { IAppConfig } from '@/config';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
@@ -26,12 +27,11 @@ export class RoleService {
   /**
    * 列举所有角色：除去超级管理员
    */
-  async findAll(): Promise<RoleEntity[]> {
-    const result = await this.roleRepository.findBy({
-      // id: Not(this.adminRoleId),
-    });
-
-    return result;
+  async findAll({
+    page,
+    pageSize,
+  }: PageOptionsDto): Promise<Pagination<RoleEntity>> {
+    return paginate(this.roleRepository, { page, pageSize });
   }
 
   /**

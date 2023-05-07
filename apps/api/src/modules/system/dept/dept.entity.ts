@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
-  ManyToMany,
+  OneToMany,
   Tree,
   TreeChildren,
   TreeParent,
@@ -29,6 +29,6 @@ export class DeptEntity extends AbstractEntity {
   @TreeParent({ onDelete: 'SET NULL' })
   parent?: DeptEntity | null;
 
-  @ManyToMany(() => UserEntity, (user) => user.depts)
+  @OneToMany(() => UserEntity, (user) => user.dept)
   users: UserEntity[];
 }

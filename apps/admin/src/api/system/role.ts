@@ -1,7 +1,7 @@
 import { BasicPageParams, BasicPaginationResult } from '../model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 
-export interface RoleListResultItem {
+export interface Role {
   createdAt: string;
   updatedAt: string;
   id: number;
@@ -10,7 +10,7 @@ export interface RoleListResultItem {
   remark: string;
 }
 
-export type RoleListResult = BasicPaginationResult<RoleListResultItem>;
+export type RoleListResult = BasicPaginationResult<Role>;
 
 /** 新增角色 */
 export interface RoleParam {

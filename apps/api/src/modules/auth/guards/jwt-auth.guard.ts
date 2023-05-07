@@ -31,7 +31,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const response = context.switchToHttp().getResponse<FastifyReply>();
 
-    let requestToken = request.headers.authorization?.replace('Bearer ', '');
+    let requestToken = request.headers.authorization;
 
     let result: any = false;
     try {

@@ -1,6 +1,15 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { PageOptionsDto } from '@/common/dto/page-options.dto';
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
@@ -26,8 +35,8 @@ export class RoleController {
   @ApiOperation({ summary: '获取角色列表' })
   @ApiResult({ type: [RoleEntity] })
   @Permission(PermissionRole.LIST)
-  async list(): Promise<RoleEntity[]> {
-    return this.roleService.findAll();
+  async list(@Query() dto: PageOptionsDto) {
+    return this.roleService.findAll(dto);
   }
 
   @Get(':id')
@@ -45,7 +54,7 @@ export class RoleController {
     await this.roleService.create(dto);
   }
 
-  @Post(':id')
+  @Put(':id')
   @ApiOperation({ summary: '更新角色' })
   @Permission(PermissionRole.UPDATE)
   async update(
@@ -56,7 +65,7 @@ export class RoleController {
     await this.menuService.refreshOnlineUserPerms();
   }
 
-  @Delete()
+  @Delete(':id')
   @ApiOperation({ summary: '删除角色' })
   @Permission(PermissionRole.DELETE)
   async delete(@IdParam() id: number): Promise<void> {

@@ -8,7 +8,7 @@ export interface UploadApiResult {
   url: string;
 }
 
-const { uploadUrl = '' } = useGlobSetting();
+export const { uploadUrl = '' } = useGlobSetting();
 
 /**
  * @description: Upload interface

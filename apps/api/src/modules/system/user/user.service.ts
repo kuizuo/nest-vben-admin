@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { findIndex, isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 import { EntityManager, Like, Repository } from 'typeorm';
 
@@ -10,7 +10,7 @@ import { ErrorEnum } from '@/constants/error';
 import { SYS_USER_INITPASSWORD } from '@/constants/param-config';
 import { ApiException } from '@/exceptions/api.exception';
 
-import { paginateRaw } from '@/helper/paginate';
+import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 import { AccountUpdateDto } from '@/modules/auth/dto/account.dto';
 import { RegisterDto } from '@/modules/auth/dto/auth.dto';
@@ -26,7 +26,7 @@ import { RoleEntity } from '../role/role.entity';
 import { PasswordUpdateDto } from './dto/password.dto';
 import { UserDto, UserListDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
-import { AccountInfo, UserInfoPage } from './user.modal';
+import { AccountInfo } from './user.modal';
 
 @Injectable()
 export class UserService {
@@ -61,15 +61,7 @@ export class UserService {
     if (isEmpty(user)) {
       throw new ApiException(ErrorEnum.CODE_1017);
     }
-    return {
-      username: user.username,
-      nickName: user.nickName,
-      email: user.email,
-      phone: user.phone,
-      remark: user.remark,
-      avatar: user.avatar,
-      qq: user.qq,
-    };
+    return user;
   }
 
   /**
@@ -82,7 +74,7 @@ export class UserService {
     }
 
     const data = {
-      ...(info.nickName ? { nickName: info.nickName } : null),
+      ...(info.nickname ? { nickname: info.nickname } : null),
       ...(info.avatar ? { avatar: info.avatar } : null),
       ...(info.email ? { email: info.email } : null),
       ...(info.phone ? { phone: info.phone } : null),
@@ -177,7 +169,7 @@ export class UserService {
    */
   async update(
     id,
-    { password, deptId, roleIds, status, ...data }: UserDto,
+    { password, deptId, roleIds, status, ...data }: Partial<UserDto>,
   ): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
       if (password) {
@@ -192,7 +184,7 @@ export class UserService {
       const user = await this.userRepository
         .createQueryBuilder('user')
         .leftJoinAndSelect('user.roles', 'roles')
-        .leftJoinAndSelect('user.depts', 'depts')
+        .leftJoinAndSelect('user.dept', 'dept')
         .where('user.id = :id', { id })
         .getOne();
 
@@ -204,9 +196,9 @@ export class UserService {
 
       await manager
         .createQueryBuilder()
-        .relation(UserEntity, 'depts')
+        .relation(UserEntity, 'dept')
         .of(id)
-        .addAndRemove(deptId, user.depts);
+        .set(deptId);
 
       if (status === 0) {
         // 禁用状态
@@ -223,7 +215,7 @@ export class UserService {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
-      .leftJoinAndSelect('user.depts', 'depts')
+      .leftJoinAndSelect('user.dept', 'dept')
       .where('user.id = :id', { id })
       .getOne();
 
@@ -262,19 +254,19 @@ export class UserService {
     page,
     pageSize,
     username,
-    nickName,
+    nickname,
     deptId,
     email,
     status,
-  }: UserListDto): Promise<Pagination<UserInfoPage>> {
+  }: UserListDto): Promise<Pagination<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.depts', 'dept')
-      .innerJoinAndSelect('user.roles', 'role')
+      .leftJoinAndSelect('user.dept', 'dept')
+      .leftJoinAndSelect('user.roles', 'role')
       // .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
       .where({
         ...(username ? { username: Like(`%${username}%`) } : null),
-        ...(nickName ? { nickName: Like(`%${nickName}%`) } : null),
+        ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),
         ...(email ? { email: Like(`%${email}%`) } : null),
         ...(status ? { status } : null),
       });
@@ -283,46 +275,10 @@ export class UserService {
       queryBuilder.andWhere('dept.id = :deptId', { deptId });
     }
 
-    const { items, ...rest } = await paginateRaw<UserEntity>(queryBuilder, {
+    return paginate<UserEntity>(queryBuilder, {
       page,
       pageSize,
     });
-
-    const dealResult: UserInfoPage[] = [];
-    // 过滤去重
-    items.forEach((e: any) => {
-      const index = findIndex(dealResult, (e2) => e2.id === e.user_id);
-      if (index < 0) {
-        // 当前元素不存在则插入
-        dealResult.push({
-          createdAt: e.user_created_at,
-          email: e.user_email,
-          qq: e.user_qq,
-          avatar: e.user_avatar,
-          id: e.user_id,
-          name: e.user_name,
-          nickName: e.user_nick_name,
-          phone: e.user_phone,
-          remark: e.user_remark,
-          status: e.user_status,
-          updatedAt: e.user_updated_at,
-          username: e.user_username,
-          deptName: e.dept_name,
-          roleNames: [e.role_name],
-        });
-      } else {
-        // 已存在
-        dealResult[index].roleNames.push(e.role_name);
-      }
-    });
-
-    return {
-      items: dealResult,
-      meta: {
-        ...rest.meta,
-        itemCount: dealResult.length,
-      },
-    };
   }
 
   /**

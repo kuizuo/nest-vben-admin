@@ -20,7 +20,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '昵称',
-    dataIndex: 'nickName',
+    dataIndex: 'nickname',
     width: 80,
   },
   {
@@ -30,19 +30,20 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '部门',
-    dataIndex: 'deptName',
+    dataIndex: 'dept',
     width: 120,
+    customRender: ({ record }) => {
+      return h(Tag, {}, () => record.dept?.name);
+    },
   },
   {
     title: '角色',
-    dataIndex: 'roleNames',
+    dataIndex: 'role',
     width: 180,
     customRender: ({ record }) => {
-      const roleNames = record.roleNames;
-
       return h(Space, {}, () =>
-        roleNames.map((r) => {
-          return h(Tag, { color: 'green' }, () => r);
+        record.roles.map((r) => {
+          return h(Tag, { color: 'green' }, () => r.name);
         }),
       );
     },
@@ -66,7 +67,7 @@ export const columns: BasicColumn[] = [
   {
     title: '创建时间',
     dataIndex: 'createdAt',
-    width: 150,
+    width: 165,
     format: (text) => {
       return formatToDateTime(text);
     },
@@ -81,7 +82,7 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { sm: 12, xl: 6 },
   },
   {
-    field: 'nickName',
+    field: 'nickname',
     label: '昵称',
     component: 'Input',
     colProps: { sm: 12, xl: 6 },
@@ -89,12 +90,6 @@ export const searchFormSchema: FormSchema[] = [
   {
     field: 'email',
     label: '邮箱',
-    component: 'Input',
-    colProps: { sm: 12, xl: 6 },
-  },
-  {
-    field: 'qq',
-    label: 'QQ',
     component: 'Input',
     colProps: { sm: 12, xl: 6 },
   },
@@ -113,6 +108,13 @@ export const searchFormSchema: FormSchema[] = [
 ];
 
 export const formSchema: FormSchema[] = [
+  {
+    field: 'avatar',
+    label: '头像',
+    component: 'Input',
+    slot: 'avatar',
+    colProps: { span: 24 },
+  },
   {
     field: 'username',
     label: '用户名',
@@ -145,7 +147,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     label: '角色',
-    field: 'roles',
+    field: 'roleIds',
     component: 'ApiSelect',
     componentProps: {
       api: getRoleList,
@@ -155,7 +157,7 @@ export const formSchema: FormSchema[] = [
       mode: 'multiple',
     },
     colProps: { span: 24 },
-    itemProps: { validateTrigger: 'blur' },
+    // itemProps: { validateTrigger: 'blur' },
     required: true,
   },
   {
@@ -174,15 +176,9 @@ export const formSchema: FormSchema[] = [
     required: true,
   },
   {
-    field: 'nickName',
+    field: 'nickname',
     label: '昵称',
     component: 'Input',
-  },
-  {
-    field: 'qq',
-    label: 'QQ',
-    component: 'Input',
-    required: true,
   },
   {
     label: '邮箱',

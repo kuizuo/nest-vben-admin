@@ -1,57 +1,32 @@
 import { MultipartFile } from '@fastify/multipart';
-import { BadRequestException, Controller, Post, Req } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { FastifyRequest } from 'fastify';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator';
 
-import { AuthUser } from '@/modules/auth/decorators';
-import {
-  fileRename,
-  getExtname,
-  getFilePath,
-  getFileType,
-  getName,
-  getSize,
-  saveFile,
-} from '@/utils/file';
+import { Permission } from '@/modules/rbac/decorators';
 
-import { StorageService } from '../storage/storage.service';
+import { UploadService } from './upload.service';
 
-import { FileUploadDto } from './upload.dto';
-
-@ApiTags('System - 上传模块')
 @ApiSecurityAuth()
-@Controller()
+@ApiTags('Tools - 上传模块')
+@Controller('upload')
 export class UploadController {
-  constructor(private storageService: StorageService) {}
+  constructor(private uploadService: UploadService) {}
 
   @Post()
+  @ApiOperation({ summary: '上传' })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: FileUploadDto,
-  })
-  async upload(@Req() req: FastifyRequest, @AuthUser() user: IAuthUser) {
-    const file: MultipartFile = await req.file();
-    const fileName = file.filename;
-    const size = getSize(file.file.bytesRead);
-    const extName = getExtname(fileName);
-    const type = getFileType(extName);
-
-    const name = fileRename(fileName);
-    const path = getFilePath(name);
+  @Permission('upload')
+  async upload(
+    @Body() dto: { file: MultipartFile },
+    @AuthUser() user: IAuthUser,
+  ) {
+    const { file } = dto;
 
     try {
-      await saveFile(file, name);
-      await this.storageService.save({
-        name: getName(fileName),
-        fileName,
-        extName,
-        path,
-        type,
-        size,
-        userId: user?.uid,
-      });
+      const path = await this.uploadService.saveFile(file, user.uid);
 
       return {
         filename: path,

@@ -4,7 +4,7 @@ import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
 @Entity({ name: 'tool-storage' })
-export class ToolStorage extends AbstractEntity {
+export class Storage extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

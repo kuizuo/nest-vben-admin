@@ -1,6 +1,10 @@
 <template>
   <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
-    <BasicForm @register="registerForm" />
+    <BasicForm @register="registerForm">
+      <template #avatar="{ model, field }">
+        <AvatarUpload :avatar="model[field]" @change="onAvatarChange" />
+      </template>
+    </BasicForm>
   </BasicModal>
 </template>
 <script lang="ts" setup>
@@ -8,13 +12,14 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { createUser, updateUser, getUserInfo } from '/@/api/system/user';
+  import { AvatarUpload } from '/@/components/Upload';
   import { formSchema } from './user.data';
   import { getDeptList } from '/@/api/system/dept';
 
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
-  const rowId = ref('');
+  const rowId = ref<number>(0);
   const getTitle = computed(() => (!unref(isUpdate) ? '新增账号' : '编辑账号'));
 
   const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
@@ -40,6 +45,8 @@
       rowId.value = data.record.id;
       const userInfo = await getUserInfo(data.record.id);
       setFieldsValue(userInfo);
+      setFieldsValue({ roleIds: userInfo.roles.map((item) => item.id) });
+      setFieldsValue({ deptId: userInfo.dept.id });
     } else {
       updateSchema([
         { field: 'username', componentProps: { disabled: false } },
@@ -66,19 +73,30 @@
       const values = await validate();
       setModalProps({ confirmLoading: true });
 
-      const data = {
-        ...values,
-        id: rowId.value,
-      };
+      if (!values.password) delete values.password;
 
-      if (!data.password) delete data.password;
-
-      await (!unref(isUpdate) ? createUser : updateUser)(data);
+      if (!unref(isUpdate)) {
+        await createUser(values);
+      } else {
+        await updateUser(rowId.value, values);
+      }
 
       closeModal();
       emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });
     } finally {
       setModalProps({ confirmLoading: false });
+    }
+  }
+
+  async function onAvatarChange(file) {
+    if (file?.response) {
+      setFieldsValue({
+        avatar: file.response.data.filename,
+      });
+    } else {
+      setFieldsValue({
+        avatar: null,
+      });
     }
   }
 </script>

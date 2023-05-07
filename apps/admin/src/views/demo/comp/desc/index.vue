@@ -29,7 +29,7 @@
 
   const mockData: Recordable = {
     username: 'test',
-    nickName: 'VB',
+    nickname: 'VB',
     age: '123',
     phone: '15695909xxx',
     email: '190848757@qq.com',
@@ -44,7 +44,7 @@
       label: '用户名',
     },
     {
-      field: 'nickName',
+      field: 'nickname',
       label: '昵称',
       render: (curVal, data) => {
         return `${data.username}-${curVal}`;

@@ -55,7 +55,7 @@
     rowKey: 'id',
     columns,
     formConfig: {
-      labelWidth: 120,
+      labelWidth: 60,
       schemas: searchFormSchema,
       autoSubmitOnEnter: true,
     },
@@ -84,16 +84,12 @@
   }
 
   function handleDelete(record: Recordable) {
-    deleteUser({ ids: [record.id] });
+    deleteUser(record.id);
     deleteTableDataRecord(record.id);
   }
 
-  function handleSuccess({ isUpdate, values }) {
-    if (isUpdate) {
-      updateTableDataRecord(values.id, values);
-    } else {
-      reload();
-    }
+  function handleSuccess() {
+    reload();
   }
 
   function handleSelect(deptId) {

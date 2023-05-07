@@ -68,6 +68,12 @@ export function getFilePath(name: string) {
   return `/upload/${name}`;
 }
 
+export function saveLocalFile(buffer: Buffer, name: string) {
+  const filePath = path.join(__dirname, '../../', 'public/upload', name);
+  const writeStream = fs.createWriteStream(filePath);
+  writeStream.write(buffer);
+}
+
 export async function saveFile(file: MultipartFile, name: string) {
   const filePath = path.join(__dirname, '../../', 'public/upload', name);
   const writeStream = fs.createWriteStream(filePath);

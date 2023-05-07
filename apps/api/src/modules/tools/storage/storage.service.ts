@@ -3,33 +3,29 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository } from 'typeorm';
 
 import { paginateRaw } from '@/helper/paginate';
+import { PaginationTypeEnum } from '@/helper/paginate/interface';
+import { Pagination } from '@/helper/paginate/pagination';
 import { UserEntity } from '@/modules/system/user/entities/user.entity';
+import { Storage } from '@/modules/tools/storage/storage.entity';
+
 import { deleteFile } from '@/utils/file';
 
 import { StorageCreateDto, StoragePageDto } from './storage.dto';
-import { ToolStorage } from './storage.entity';
+import { StorageInfo } from './storage.modal';
 
 @Injectable()
 export class StorageService {
   constructor(
-    @InjectRepository(ToolStorage)
-    private storageRepo: Repository<ToolStorage>,
+    @InjectRepository(Storage)
+    private storageRepository: Repository<Storage>,
     @InjectRepository(UserEntity)
-    private userRepo: Repository<UserEntity>,
+    private userRepository: Repository<UserEntity>,
   ) {}
 
-  /**
-   * 保存文件上传记录
-   */
-  async save(file: StorageCreateDto & { userId: number }): Promise<void> {
-    await this.storageRepo.save({
-      name: file.name,
-      fileName: file.fileName,
-      extName: file.extName,
-      path: file.path,
-      type: file.type,
-      size: file.size,
-      userId: file.userId,
+  async create(dto: StorageCreateDto, userId: number): Promise<void> {
+    await this.storageRepository.save({
+      ...dto,
+      userId,
     });
   }
 
@@ -37,51 +33,67 @@ export class StorageService {
    * 删除文件
    */
   async delete(fileIds: number[]): Promise<void> {
-    const items = await this.storageRepo.findByIds(fileIds);
-    await this.storageRepo.delete(fileIds);
+    const items = await this.storageRepository.findByIds(fileIds);
+    await this.storageRepository.delete(fileIds);
 
     items.forEach((el) => {
       deleteFile(el.path);
     });
   }
 
-  async page(dto: StoragePageDto) {
-    const { page, pageSize, name, type, size, extName, time, username } = dto;
-
-    const queryBuilder = this.storageRepo
+  async list({
+    page,
+    pageSize,
+    name,
+    type,
+    size,
+    extName,
+    time,
+    username,
+  }: StoragePageDto): Promise<Pagination<StorageInfo>> {
+    const queryBuilder = this.storageRepository
       .createQueryBuilder('storage')
+      .leftJoinAndSelect('sys_user', 'user', 'storage.user_id = user.id')
       .where({
-        ...(name ? { name: Like(`%${name}%`) } : null),
-        ...(type ? { type } : null),
-        ...(extName ? { extName } : null),
-        ...(size ? { size: Between(size[0], size[1]) } : null),
-        ...(time ? { createdAt: Between(time[0], time[1]) } : null),
+        ...(name && { name: Like(`%${name}%`) }),
+        ...(type && { type }),
+        ...(extName && { extName }),
+        ...(size && { size: Between(size[0], size[1]) }),
+        ...(time && { createdAt: Between(time[0], time[1]) }),
+        ...(username && {
+          userId: await (await this.userRepository.findOneBy({ username })).id,
+        }),
       })
       .orderBy('storage.created_at', 'DESC');
 
-    if (username) {
-      const user = await this.userRepo.findOneBy({ username });
-      queryBuilder.andWhere('storage.userId = :userId', { userId: user.id });
+    const { items, ...rest } = await paginateRaw<Storage>(queryBuilder, {
+      page,
+      pageSize,
+      paginationType: PaginationTypeEnum.LIMIT_AND_OFFSET,
+    });
+
+    function formatResult(result: Storage[]) {
+      return result.map((e: any) => {
+        return {
+          id: e.storage_id,
+          name: e.storage_name,
+          extName: e.storage_ext_name,
+          path: e.storage_path,
+          type: e.storage_type,
+          size: e.storage_size,
+          createdAt: e.storage_created_at,
+          username: e.user_username,
+        };
+      });
     }
 
-    const { items, meta } = await paginateRaw(queryBuilder, { page, pageSize });
-
     return {
-      items: items.map((e: any) => ({
-        id: e.storage_id,
-        name: e.storage_name,
-        extName: e.storage_ext_name,
-        path: e.storage_path,
-        type: e.storage_type,
-        size: e.storage_size,
-        createdAt: e.storage_created_at,
-        username: e.user_username,
-      })),
-      meta,
+      items: formatResult(items),
+      ...rest,
     };
   }
 
   async count(): Promise<number> {
-    return this.storageRepo.count();
+    return this.storageRepository.count();
   }
 }

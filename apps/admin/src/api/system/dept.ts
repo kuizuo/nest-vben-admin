@@ -1,7 +1,7 @@
 import { BasicPageParams, BasicPaginationResult } from '../model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 
-interface DeptListItem {
+export interface Dept {
   createAt: string;
   updatedAt: string;
   id: number;
@@ -10,19 +10,19 @@ interface DeptListItem {
   orderNo: number;
 }
 
-export type DeptListResult = BasicPaginationResult<DeptListItem>;
+export type DeptListResult = BasicPaginationResult<Dept>;
 
-interface CreateDeptParams {
+export interface CreateDeptParams {
   parentId: number;
   name: string;
   orderNo: number;
 }
 
-interface UpdateDeptParams extends CreateDeptParams {
+export interface UpdateDeptParams extends CreateDeptParams {
   id: number;
 }
 
-interface DeptInfo {
+export interface DeptInfo {
   createAt: string;
   updatedAt: string;
   id: number;

@@ -6,6 +6,8 @@ import {
   ManyToMany,
   JoinTable,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
@@ -31,7 +33,7 @@ export class UserEntity extends AbstractEntity {
   psalt: string;
 
   @Column({ name: 'nick_name', nullable: true })
-  nickName: string;
+  nickname: string;
 
   @Column({ name: 'avatar', nullable: true })
   avatar: string;
@@ -55,9 +57,9 @@ export class UserEntity extends AbstractEntity {
   @JoinTable()
   roles: RoleEntity[];
 
-  @ManyToMany(() => DeptEntity, (dept) => dept.users)
-  @JoinTable()
-  depts: DeptEntity[];
+  @ManyToOne(() => DeptEntity, (dept) => dept.users)
+  @JoinColumn()
+  dept: DeptEntity;
 
   @OneToMany(() => AccessTokenEntity, (accessToken) => accessToken.user, {
     cascade: true,

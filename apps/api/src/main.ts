@@ -22,13 +22,12 @@ import { AppModule } from './app.module';
 
 import { IAppConfig } from './config';
 import { AppFilter } from './filters/app.filter';
-import { catchError } from './helper/catchError';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { AppLoggerService } from './modules/shared/services/app-logger.service';
 import { setupSwagger } from './utils/setup-swagger';
 
-catchError();
+// catchError();
 
 declare const module: any;
 
@@ -38,7 +37,7 @@ async function bootstrap() {
     new FastifyAdapter(),
     {
       bufferLogs: true,
-      snapshot: true,
+      // snapshot: true,
     },
   );
 
@@ -58,6 +57,7 @@ async function bootstrap() {
   // https://github.com/fastify/fastify-multipart/
   // eslint-disable-next-line global-require
   await app.register(require('@fastify/multipart'), {
+    attachFieldsToBody: true,
     limits: {
       fileSize: 1024 * 1024 * 10, // 10M
       files: 1,

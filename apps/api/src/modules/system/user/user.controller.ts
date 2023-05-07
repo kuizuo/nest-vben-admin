@@ -8,24 +8,20 @@ import {
   Patch,
   Query,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiResult } from '@/decorators/api-result.decorator';
 import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { Pagination } from '@/helper/paginate/pagination';
 import { Permission } from '@/modules/rbac/decorators';
 import { MenuService } from '@/modules/system/menu/menu.service';
 
 import { UserPasswordDto } from './dto/password.dto';
 import { UserDto, UserListDto } from './dto/user.dto';
 import { PermissionUser } from './permission';
-import { UserInfoPage } from './user.modal';
 import { UserService } from './user.service';
 
 @ApiTags('System - 用户模块')
 @ApiSecurityAuth()
-@ApiExtraModels(UserInfoPage)
 @Controller('users')
 export class UserController {
   constructor(
@@ -35,16 +31,15 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: '获取用户列表' })
-  @ApiResult({ type: [UserInfoPage] })
   @Permission(PermissionUser.LIST)
-  async list(@Query() dto: UserListDto): Promise<Pagination<UserInfoPage>> {
+  async list(@Query() dto: UserListDto) {
     return this.userService.findAll(dto);
   }
 
   @Get(':id')
   @ApiOperation({ summary: '查询用户' })
   @Permission(PermissionUser.READ)
-  async detail(@IdParam() id: number) {
+  async read(@IdParam() id: number) {
     return this.userService.info(id);
   }
 
@@ -58,7 +53,10 @@ export class UserController {
   @Put(':id')
   @ApiOperation({ summary: '更新用户' })
   @Permission(PermissionUser.UPDATE)
-  async update(@IdParam() id: number, @Body() dto: UserDto): Promise<void> {
+  async update(
+    @IdParam() id: number,
+    @Body() dto: Partial<UserDto>,
+  ): Promise<void> {
     await this.userService.update(id, dto);
     await this.menuService.refreshPerms(id);
   }

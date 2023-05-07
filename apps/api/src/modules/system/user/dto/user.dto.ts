@@ -50,7 +50,7 @@ export class UserDto {
   @ApiProperty({ description: '呢称', example: 'kz-admin' })
   @IsOptional()
   @IsString()
-  nickName: string;
+  nickname: string;
 
   @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
   @IsUnique(UserEntity, { message: '邮箱已被注册' })
@@ -89,7 +89,7 @@ export class UserListDto extends PageOptionsDto<UserDto> {
 
   @ApiProperty({ description: '呢称' })
   @IsOptional()
-  nickName: string;
+  nickname: string;
 
   @ApiProperty({ description: '归属大区', example: 1 })
   @IsInt()
