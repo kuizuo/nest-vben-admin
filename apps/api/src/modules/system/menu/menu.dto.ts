@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsIn,
   IsInt,
@@ -10,7 +9,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-export class MenuCreateDto {
+export class MenuDto {
   @ApiProperty({ description: '菜单类型' })
   @IsIn([0, 1, 2])
   type: number;
@@ -72,30 +71,7 @@ export class MenuCreateDto {
   component?: string;
 }
 
-export class MenuUpdateDto extends MenuCreateDto {
-  @ApiProperty({ description: '更新的菜单ID' })
-  @IsInt()
-  @Min(1)
-  id: number;
-}
-
-export class MenuDeleteDto {
-  @ApiProperty({ description: '删除的菜单ID' })
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  id: number;
-}
-
-export class MenuInfoDto {
-  @ApiProperty({ description: '查询的菜单ID' })
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  menuId: number;
-}
-
-export class MenuSearchDto {
+export class MenuQueryDto {
   @ApiProperty({ description: '菜单名称' })
   @IsString()
   @IsOptional()

@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
@@ -12,7 +20,7 @@ import { ApiException } from '@/exceptions/api.exception';
 import { Permission } from '@/modules/rbac/decorators';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
-import { MenuCreateDto, MenuUpdateDto } from './menu.dto';
+import { MenuDto, MenuQueryDto } from './menu.dto';
 import { MenuService } from './menu.service';
 import { PermissionMenu } from './permission';
 
@@ -29,8 +37,8 @@ export class MenuController {
   @ApiOperation({ summary: '获取所有菜单列表' })
   @ApiResult({ type: [MenuEntity] })
   @Permission(PermissionMenu.LIST)
-  async list(): Promise<string[]> {
-    return this.menuService.list();
+  async list(@Query() dto: MenuQueryDto) {
+    return this.menuService.list(dto);
   }
 
   @Get(':id')
@@ -43,7 +51,7 @@ export class MenuController {
   @Post()
   @ApiOperation({ summary: '新增菜单或权限' })
   @Permission(PermissionMenu.CREATE)
-  async create(@Body() dto: MenuCreateDto): Promise<void> {
+  async create(@Body() dto: MenuDto): Promise<void> {
     // check
     await this.menuService.check(dto);
     if (!dto.parent) {
@@ -53,7 +61,7 @@ export class MenuController {
       dto.component = 'LAYOUT';
     }
 
-    await this.menuService.save(dto);
+    await this.menuService.create(dto);
     if (dto.type === 2) {
       // 如果是权限发生更改，则刷新所有在线用户的权限
       await this.menuService.refreshOnlineUserPerms();
@@ -65,7 +73,7 @@ export class MenuController {
   @Permission(PermissionMenu.UPDATE)
   async update(
     @IdParam() id: number,
-    @Body() dto: MenuUpdateDto,
+    @Body() dto: Partial<MenuDto>,
   ): Promise<void> {
     if (id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId)
       throw new ApiException(ErrorEnum.CODE_1016);
@@ -75,11 +83,8 @@ export class MenuController {
     if (dto.parent === -1 || !dto.parent) {
       dto.parent = null;
     }
-    const insertData: MenuCreateDto & { id: number } = {
-      ...dto,
-      id: dto.id,
-    };
-    await this.menuService.save(insertData);
+
+    await this.menuService.update(id, dto);
     if (dto.type === 2) {
       // 如果是权限发生更改，则刷新所有在线用户的权限
       await this.menuService.refreshOnlineUserPerms();

@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { concat, isEmpty, uniq } from 'lodash';
 
-import { In, IsNull, Not, Repository } from 'typeorm';
+import { In, IsNull, Like, Not, Repository } from 'typeorm';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
@@ -14,41 +13,52 @@ import { generatorMenu, generatorRouters } from '@/utils/permission';
 
 import { RoleService } from '../role/role.service';
 
-import { MenuCreateDto } from './menu.dto';
+import { MenuDto, MenuQueryDto } from './menu.dto';
 
 @Injectable()
 export class MenuService {
   constructor(
-    @InjectRepository(MenuEntity) private menuRepo: Repository<MenuEntity>,
+    @InjectRepository(MenuEntity)
+    private menuRepository: Repository<MenuEntity>,
     private roleService: RoleService,
     private redisService: RedisService,
-    private configService: ConfigService,
   ) {}
 
   /**
    * 获取所有菜单以及权限
    */
-  async list(): Promise<string[]> {
-    // const { name, path, permission, component, status } = dto;
-    // const where = {
-    //   ...(name ? { name: Like(`%${name}%`) } : null),
-    //   ...(path ? { path: Like(`%${path}%`) } : null),
-    //   ...(permission ? { permission: Like(`%${permission}%`) } : null),
-    //   ...(component ? { component: Like(`%${component}%`) } : null),
-    //   ...(status ? { status: status } : null),
-    // };
-    const menus = await this.menuRepo.find({
+  async list({
+    name,
+    path,
+    permission,
+    component,
+    status,
+  }: MenuQueryDto): Promise<MenuEntity[]> {
+    const menus = await this.menuRepository.find({
+      where: {
+        ...(name && { name: Like(`%${name}%`) }),
+        ...(path && { path: Like(`%${path}%`) }),
+        ...(permission && { permission: Like(`%${permission}%`) }),
+        ...(component && { component: Like(`%${component}%`) }),
+        ...(status && { status }),
+      },
       order: { orderNo: 'ASC' },
     });
     const menuList = generatorMenu(menus);
-    return menuList;
+
+    if (!isEmpty(menuList)) {
+      return menuList;
+    }
+    // 如果生产树形结构为空，则返回原始菜单列表
+    return menus;
   }
 
-  /**
-   * 保存或新增菜单
-   */
-  async save(menu: MenuCreateDto & { id?: number }): Promise<void> {
-    await this.menuRepo.save(menu);
+  async create(menu: MenuDto): Promise<void> {
+    await this.menuRepository.save(menu);
+  }
+
+  async update(id: number, menu: Partial<MenuDto>): Promise<void> {
+    await this.menuRepository.update(id, menu);
   }
 
   /**
@@ -59,9 +69,9 @@ export class MenuService {
     let menus: MenuEntity[] = [];
 
     if (this.roleService.hasAdminRole(roleIds)) {
-      menus = await this.menuRepo.find({ order: { orderNo: 'ASC' } });
+      menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } });
     } else {
-      menus = await this.menuRepo
+      menus = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
         .andWhere('role.id IN (:...roleIds)', { roleIds })
@@ -76,7 +86,7 @@ export class MenuService {
   /**
    * 检查菜单创建规则是否符合
    */
-  async check(dto: MenuCreateDto): Promise<void | never> {
+  async check(dto: Partial<MenuDto>): Promise<void | never> {
     if (dto.type === 2 && !dto.parent) {
       // 无法直接创建权限，必须有parent
       throw new ApiException(ErrorEnum.CODE_1005);
@@ -98,7 +108,7 @@ export class MenuService {
    */
   async findChildMenus(mid: number): Promise<any> {
     const allMenus: any = [];
-    const menus = await this.menuRepo.findBy({ parent: mid });
+    const menus = await this.menuRepository.findBy({ parent: mid });
     // if (_.isEmpty(menus)) {
     //   return allMenus;
     // }
@@ -119,7 +129,7 @@ export class MenuService {
    * @param mid menu id
    */
   async getMenuItemInfo(mid: number): Promise<MenuEntity> {
-    const menu = await this.menuRepo.findOneBy({ id: mid });
+    const menu = await this.menuRepository.findOneBy({ id: mid });
     return menu;
   }
 
@@ -127,10 +137,10 @@ export class MenuService {
    * 获取某个菜单以及关联的父菜单的信息
    */
   async getMenuItemAndParentInfo(mid: number) {
-    const menu = await this.menuRepo.findOneBy({ id: mid });
+    const menu = await this.menuRepository.findOneBy({ id: mid });
     let parentMenu: MenuEntity | undefined;
     if (menu && menu.parent) {
-      parentMenu = await this.menuRepo.findOneBy({ id: menu.parent });
+      parentMenu = await this.menuRepository.findOneBy({ id: menu.parent });
     }
     return { menu, parentMenu };
   }
@@ -139,7 +149,7 @@ export class MenuService {
    * 查找节点路由是否存在
    */
   async findRouterExist(path: string): Promise<boolean> {
-    const menus = await this.menuRepo.findOneBy({ path });
+    const menus = await this.menuRepository.findOneBy({ path });
     return !isEmpty(menus);
   }
 
@@ -151,7 +161,7 @@ export class MenuService {
     let permission: any[] = [];
     let result: any = null;
     if (this.roleService.hasAdminRole(roleIds)) {
-      result = await this.menuRepo.findBy({
+      result = await this.menuRepository.findBy({
         permission: Not(IsNull()),
         type: In([1, 2]),
       });
@@ -159,7 +169,7 @@ export class MenuService {
       if (isEmpty(roleIds)) {
         return permission;
       }
-      result = await this.menuRepo
+      result = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
         .andWhere('role.id IN (:...roleIds)', { roleIds })
@@ -182,7 +192,7 @@ export class MenuService {
    * 删除多项菜单
    */
   async deleteMenuItem(mids: number[]): Promise<void> {
-    await this.menuRepo.delete(mids);
+    await this.menuRepository.delete(mids);
   }
 
   /**

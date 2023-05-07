@@ -31,7 +31,6 @@
   </div>
 </template>
 <script lang="ts" setup name="菜单管理">
-  import { nextTick } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useDrawer } from '/@/components/Drawer';
   import MenuDrawer from './MenuDrawer.vue';
@@ -44,8 +43,9 @@
     api: getMenuList,
     columns,
     formConfig: {
-      labelWidth: 120,
+      labelWidth: 80,
       schemas: searchFormSchema,
+      autoSubmitOnEnter: true,
     },
     isTreeTable: true,
     pagination: false,
@@ -79,7 +79,7 @@
   }
 
   async function handleDelete(record: Recordable) {
-    await deleteMenu({ id: record.id });
+    await deleteMenu(record.id);
     reload();
   }
 

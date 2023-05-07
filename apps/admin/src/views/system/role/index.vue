@@ -45,6 +45,7 @@
     },
     useSearchForm: true,
     showTableSetting: true,
+    pagination: false,
     bordered: true,
     showIndexColumn: false,
     actionColumn: {

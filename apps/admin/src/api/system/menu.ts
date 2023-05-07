@@ -1,7 +1,7 @@
 import { BasicPaginationResult } from '../model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 
-export interface MenuListItem {
+export interface Menu {
   createTime: string;
   updatedAt: string;
   id: number;
@@ -18,7 +18,14 @@ export interface MenuListItem {
   show: number;
 }
 
-export type MenuListResult = BasicPaginationResult<MenuListItem>;
+export type MenuListResult = BasicPaginationResult<Menu>;
+
+export interface MenuQueryParams {
+  name?: string;
+  path?: string;
+  permission?: string;
+  component?: string;
+}
 
 export interface MenuParams {
   type: number;
@@ -38,7 +45,8 @@ enum Api {
   Base = '/system/menus',
 }
 
-export const getMenuList = () => defHttp.get<MenuListResult>({ url: Api.Base });
+export const getMenuList = (params?: MenuQueryParams) =>
+  defHttp.get<MenuListResult>({ url: Api.Base, params });
 
 export const getMenuInfo = (id: number) => defHttp.get({ url: `${Api.Base}/${id}` });
 
