@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsIn,
@@ -41,7 +40,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
   }
 }
 
-export class TaskCreateDto {
+export class TaskDto {
   @ApiProperty({ description: '任务名称' })
   @IsString()
   @MinLength(2)
@@ -100,20 +99,7 @@ export class TaskCreateDto {
   remark?: string;
 }
 
-export class TaskUpdateDto extends TaskCreateDto {
-  @ApiProperty({ description: '需要更新的任务ID' })
-  @IsInt()
-  id: number;
-}
-
-export class TaskCheckIdDto {
-  @ApiProperty({ description: '任务ID' })
-  @IsInt()
-  @Type(() => Number)
-  id: number;
-}
-
-export class TaskPageDto extends PageOptionsDto {
+export class TaskQueryDto extends PageOptionsDto {
   @ApiProperty({ description: '任务名称' })
   @IsOptional()
   @IsString()

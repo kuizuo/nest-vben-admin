@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { LessThan, Repository } from 'typeorm';
 
-import { paginateRaw } from '@/helper/paginate';
+import { paginate } from '@/helper/paginate';
 
 import { TaskLogQueryDto } from '../dto/log.dto';
 import { TaskLogEntity } from '../entities/task-log.entity';
@@ -22,42 +22,24 @@ export class TaskLogService {
     err?: string,
   ): Promise<number> {
     const result = await this.taskLogRepository.save({
-      taskId: tid,
       status,
       detail: err,
+      time,
+      task: { id: tid },
     });
     return result.id;
   }
 
-  async paginate({ page, pageSize }: TaskLogQueryDto) {
+  async list({ page, pageSize }: TaskLogQueryDto) {
     const queryBuilder = await this.taskLogRepository
       .createQueryBuilder('task_log')
-      .leftJoinAndSelect('sys_task', 'task', 'task_log.task_id = task.id')
+      .leftJoinAndSelect('task_log.task', 'task')
       .orderBy('task_log.id', 'DESC');
 
-    const { items, ...rest } = await paginateRaw<TaskLogEntity>(queryBuilder, {
+    return paginate<TaskLogEntity>(queryBuilder, {
       page,
       pageSize,
     });
-
-    const taskInfos = await Promise.all(
-      items.map(async (e: any) => {
-        return {
-          id: e.task_log_id,
-          taskId: e.task_id,
-          name: e.task_name,
-          createdAt: e.task_log_created_at,
-          consumeTime: e.task_log_consume_time,
-          detail: e.task_log_detail,
-          status: e.task_log_status,
-        };
-      }),
-    );
-
-    return {
-      items: taskInfos,
-      ...rest,
-    };
   }
 
   async clearLog(): Promise<void> {

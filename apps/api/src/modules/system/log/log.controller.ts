@@ -13,7 +13,8 @@ import {
   TaskLogQueryDto,
 } from './dto/log.dto';
 import { CaptchaLogEntity } from './entities/captcha-log.entity';
-import { LoginLogInfo, TaskLogInfo } from './log.modal';
+import { TaskLogEntity } from './entities/task-log.entity';
+import { LoginLogInfo } from './log.modal';
 import { CaptchaLogService } from './services/captcha-log.service';
 import { LoginLogService } from './services/login-log.service';
 import { TaskLogService } from './services/task-log.service';
@@ -40,12 +41,10 @@ export class LogController {
 
   @Get('task/list')
   @ApiOperation({ summary: '查询任务日志列表' })
-  @ApiResult({ type: [TaskLogInfo], isPage: true })
+  @ApiResult({ type: [TaskLogEntity], isPage: true })
   @Permission('system:log:task:list')
-  async taskList(
-    @Query() dto: TaskLogQueryDto,
-  ): Promise<Pagination<TaskLogInfo>> {
-    return this.taskService.paginate(dto);
+  async taskList(@Query() dto: TaskLogQueryDto) {
+    return this.taskService.list(dto);
   }
 
   @Get('captcha/list')

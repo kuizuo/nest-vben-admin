@@ -13,7 +13,7 @@
   const emit = defineEmits(['success', 'register']);
 
   const isUpdate = ref(true);
-  const rowId = ref('');
+  const rowId = ref<number>(0);
   const getTitle = computed(() => (!unref(isUpdate) ? '新增任务' : '编辑任务'));
 
   const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
@@ -32,7 +32,7 @@
 
     if (unref(isUpdate)) {
       rowId.value = data.record.id;
-      const taskInfo = await getTaskInfo({ id: data.record.id });
+      const taskInfo = await getTaskInfo(data.record.id);
       setFieldsValue({
         ...data.record,
         ...taskInfo,
@@ -45,12 +45,11 @@
       const values = await validate();
       setModalProps({ confirmLoading: true });
 
-      const data = {
-        ...values,
-        id: rowId.value,
-      };
-
-      await (!unref(isUpdate) ? taskAdd : taskUpdate)(data);
+      if (!unref(isUpdate)) {
+        await taskAdd(values);
+      } else {
+        await taskUpdate(rowId.value, values);
+      }
 
       closeModal();
       emit('success', { isUpdate: unref(isUpdate), values: { ...values, id: rowId.value } });

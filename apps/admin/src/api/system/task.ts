@@ -1,16 +1,16 @@
 import { BasicPageParams, BasicPaginationResult } from '../model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 
-export interface SysTaskItem {
+export interface Task {
+  id: number;
   createdAt: string;
   updatedAt: string;
-  id: number;
   name: string;
   service: string;
   type: number;
   status: number;
-  startTime: string;
-  endTime: string;
+  startTime: any;
+  endTime: any;
   limit: number;
   cron: string;
   every: number;
@@ -18,8 +18,18 @@ export interface SysTaskItem {
   jobOpts: string;
   remark: string;
 }
-/** 添加任务参数 */
-export interface SysTaskAdd {
+
+export interface TaskLog {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  status: number;
+  detail: string;
+  consumeTime: number;
+  task: Task;
+}
+
+export interface SysTaskParam {
   name: string;
   service: string;
   type: number;
@@ -33,10 +43,6 @@ export interface SysTaskAdd {
   remark: string;
 }
 
-/** 更新任务参数 */
-export type SysTaskUpdate = SysTaskAdd & {
-  id: number;
-};
 /** 获取任务详情返回结果 */
 export interface SysTaskInfo {
   createdAt: string;
@@ -57,34 +63,27 @@ export interface SysTaskInfo {
 }
 
 enum Api {
-  List = '/system/task/page',
-  Info = '/system/task/info',
-  Add = '/system/task/add',
-  Update = '/system/task/update',
-  Delete = '/system/task/delete',
-  Once = '/system/task/once',
-  Start = '/system/task/start',
-  Stop = '/sys/task/stop',
+  Base = '/system/tasks',
 }
 
-type CommonParams = {
-  id: number;
-};
-
 export const getTaskList = (params?: BasicPageParams) =>
-  defHttp.get<BasicPaginationResult<SysTaskItem[]>>({ url: Api.List, params });
+  defHttp.get<BasicPaginationResult<Task>>({ url: Api.Base, params });
 
-export const getTaskInfo = (params: CommonParams) =>
-  defHttp.get<SysTaskInfo>({ url: Api.Info, params });
+export const getTaskInfo = (id: number) => defHttp.get<SysTaskInfo>({ url: `${Api.Base}/${id}` });
 
-export const taskAdd = (params?: SysTaskAdd) => defHttp.post({ url: Api.Add, params });
+export const taskAdd = (params?: SysTaskParam) =>
+  defHttp.post({ url: Api.Base, params }, { successMessageMode: 'message' });
 
-export const taskUpdate = (params?: SysTaskUpdate) => defHttp.post({ url: Api.Update, params });
+export const taskUpdate = (id: number, params?: SysTaskParam) =>
+  defHttp.put({ url: `${Api.Base}/${id}`, params }, { successMessageMode: 'message' });
 
-export const taskDelete = (params: CommonParams) => defHttp.post({ url: Api.Delete, params });
+export const taskDelete = (id: number) => defHttp.delete({ url: `${Api.Base}/${id}` });
 
-export const taskOnce = (params: CommonParams) => defHttp.post({ url: Api.Once, params });
+export const taskOnce = (id: number) =>
+  defHttp.put({ url: `${Api.Base}/${id}/once` }, { successMessageMode: 'message' });
 
-export const taskStart = (params: CommonParams) => defHttp.post({ url: Api.Start, params });
+export const taskStart = (id: number) =>
+  defHttp.put({ url: `${Api.Base}/${id}/start` }, { successMessageMode: 'message' });
 
-export const taskStop = (params: CommonParams) => defHttp.post({ url: Api.Stop, params });
+export const taskStop = (id: number) =>
+  defHttp.put({ url: `${Api.Base}/${id}/stop` }, { successMessageMode: 'message' });

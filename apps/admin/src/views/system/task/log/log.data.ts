@@ -11,12 +11,12 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '任务编号',
-    dataIndex: 'taskId',
+    dataIndex: ['task', 'id'],
     width: 80,
   },
   {
     title: '任务名称',
-    dataIndex: 'name',
+    dataIndex: ['task', 'name'],
     width: 140,
   },
   {
@@ -45,7 +45,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '执行时间',
-    width: 150,
+    width: 165,
     dataIndex: 'createdAt',
     format: (text: string) => {
       return formatToDateTime(text);
@@ -55,8 +55,8 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: `name`,
-    label: `任务名称`,
+    field: 'name',
+    label: '任务名称',
     component: 'Input',
     colProps: {
       sm: 12,
@@ -64,8 +64,8 @@ export const searchFormSchema: FormSchema[] = [
     },
   },
   {
-    field: `异常信息`,
-    label: `detail`,
+    field: '异常信息',
+    label: 'detail',
     component: 'Input',
     colProps: {
       sm: 12,

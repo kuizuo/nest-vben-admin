@@ -1,8 +1,9 @@
 import { h } from 'vue';
 import { Tag, Badge } from 'ant-design-vue';
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { Task } from '/@/api/system/task';
 
-export type TableListItem = SysTaskItem;
+export type TableListItem = Task;
 
 const getStatusColor = (status) => {
   switch (status) {

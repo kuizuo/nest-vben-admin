@@ -2,7 +2,11 @@
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" :disabled="!hasPermission('sys:task:add')" @click="handleCreate">
+        <a-button
+          type="primary"
+          :disabled="!hasPermission('system:task:create')"
+          @click="handleCreate"
+        >
           新增任务
         </a-button>
       </template>
@@ -13,14 +17,14 @@
               {
                 icon: 'ant-design:edit-outlined',
                 tooltip: '编辑任务',
-                disabled: !hasPermission('sys:task:update'),
+                disabled: !hasPermission('system:task:update'),
                 onClick: handleEdit.bind(null, record),
               },
               {
                 icon: 'ant-design:delete-outlined',
                 color: 'error',
                 tooltip: '删除此任务',
-                disabled: !hasPermission('sys:task:delete'),
+                disabled: !hasPermission('system:task:delete'),
                 popConfirm: {
                   title: '是否确认删除',
                   confirm: handleDelete.bind(null, record),
@@ -51,35 +55,35 @@
           <Descriptions.Item label="执行操作">
             <Popconfirm
               title="确认手动执行一次该任务吗?"
-              :disabled="!hasPermission('sys:task:once')"
+              :disabled="!hasPermission('system:task:once')"
               @confirm="handleOnce(record)"
             >
-              <Button type="link" size="small" :disabled="!hasPermission('sys:task:once')">
+              <Button type="link" size="small" :disabled="!hasPermission('system:task:once')">
                 <template #icon><ToolOutlined /></template>仅一次
               </Button>
             </Popconfirm>
             <Popconfirm
               title="确认运行该任务吗?"
-              :disabled="!hasPermission('sys:task:start') || !(record.status === 0)"
+              :disabled="!hasPermission('system:task:start') || !(record.status === 0)"
               @confirm="handleStart(record)"
             >
               <Button
                 type="link"
                 size="small"
-                :disabled="!hasPermission('sys:task:start') || !(record.status === 0)"
+                :disabled="!hasPermission('system:task:start') || !(record.status === 0)"
               >
                 <template #icon><CaretRightOutlined /></template>运行
               </Button>
             </Popconfirm>
             <Popconfirm
               title="确认停止该任务吗?"
-              :disabled="!hasPermission('sys:task:stop') || !(record.status === 1)"
+              :disabled="!hasPermission('system:task:stop') || !(record.status === 1)"
               @confirm="handleStop(record)"
             >
               <Button
                 type="link"
                 size="small"
-                :disabled="!hasPermission('sys:task:stop') || !(record.status === 1)"
+                :disabled="!hasPermission('system:task:stop') || !(record.status === 1)"
               >
                 <template #icon><PoweroffOutlined /></template>停止
               </Button>
@@ -151,23 +155,23 @@
     }
   }
 
-  function handleDelete(record: Recordable) {
-    taskDelete({ id: record.id });
-    deleteTableDataRecord(record.id);
+  function handleDelete({ id }: Recordable) {
+    taskDelete(id);
+    deleteTableDataRecord(id);
   }
 
-  const handleOnce = async (record: TableListItem) => {
-    await taskOnce({ id: record.id });
+  const handleOnce = async ({ id }: TableListItem) => {
+    await taskOnce(id);
     reload();
   };
 
-  const handleStart = async (record: TableListItem) => {
-    await taskStart({ id: record.id });
+  const handleStart = async ({ id }: TableListItem) => {
+    await taskStart(id);
     reload();
   };
 
-  const handleStop = async (record: TableListItem) => {
-    await taskStop({ id: record.id });
+  const handleStop = async ({ id }: TableListItem) => {
+    await taskStop(id);
     reload();
   };
 

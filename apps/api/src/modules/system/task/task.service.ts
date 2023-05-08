@@ -12,18 +12,20 @@ import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '@/constants/task';
 import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
-import { MISSION_DECORATOR_KEY } from '@/mission/mission.decorator';
 import { RedisService } from '@/modules/shared/redis/redis.service';
 import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
 
 import { TaskEntity } from '@/modules/system/task/task.entity';
+import { MISSION_DECORATOR_KEY } from '@/modules/tasks/mission.decorator';
 
-import { TaskCreateDto, TaskPageDto, TaskUpdateDto } from './task.dto';
+import { TaskStatus } from './constant';
+import { TaskDto, TaskQueryDto } from './task.dto';
 
 @Injectable()
 export class TaskService implements OnModuleInit {
   constructor(
-    @InjectRepository(TaskEntity) private taskRepo: Repository<TaskEntity>,
+    @InjectRepository(TaskEntity)
+    private taskRepository: Repository<TaskEntity>,
     @InjectQueue(SYS_TASK_QUEUE_NAME) private taskQueue: Queue,
     private moduleRef: ModuleRef,
     private reflector: Reflector,
@@ -63,12 +65,12 @@ export class TaskService implements OnModuleInit {
       'waiting',
       'completed',
     ]);
-    for (let i = 0; i < jobs.length; i++) {
-      // 先移除所有已存在的任务
-      await jobs[i].remove();
-    }
+    jobs.forEach((j) => {
+      j.remove();
+    });
+
     // 查找所有需要运行的任务
-    const tasks = await this.taskRepo.findBy({ status: 1 });
+    const tasks = await this.taskRepository.findBy({ status: 1 });
     if (tasks && tasks.length > 0) {
       for (const t of tasks) {
         await this.start(t);
@@ -78,18 +80,15 @@ export class TaskService implements OnModuleInit {
     await this.redisService.getRedis().del(initKey);
   }
 
-  /**
-   * 分页查询
-   */
-  async page({
+  async list({
     page,
     pageSize,
     name,
     service,
     type,
     status,
-  }: TaskPageDto): Promise<Pagination<TaskEntity>> {
-    const queryBuilder = this.taskRepo
+  }: TaskQueryDto): Promise<Pagination<TaskEntity>> {
+    const queryBuilder = this.taskRepository
       .createQueryBuilder('task')
       .where({
         ...(name ? { name: Like(`%${name}%`) } : null),
@@ -103,17 +102,13 @@ export class TaskService implements OnModuleInit {
   }
 
   /**
-   * count task
-   */
-  async count(): Promise<number> {
-    return this.taskRepo.count();
-  }
-
-  /**
    * task info
    */
   async info(id: number): Promise<TaskEntity> {
-    return this.taskRepo.findOneBy({ id });
+    return this.taskRepository
+      .createQueryBuilder('task')
+      .where({ id })
+      .getOne();
   }
 
   /**
@@ -124,7 +119,7 @@ export class TaskService implements OnModuleInit {
       throw new BadRequestException('Task is Empty');
     }
     await this.stop(task);
-    await this.taskRepo.delete(task.id);
+    await this.taskRepository.delete(task.id);
   }
 
   /**
@@ -141,15 +136,22 @@ export class TaskService implements OnModuleInit {
     }
   }
 
-  /**
-   * 添加任务
-   */
-  async addOrUpdate(param: TaskCreateDto | TaskUpdateDto): Promise<void> {
-    const result = await this.taskRepo.save(param);
+  async create(dto: TaskDto): Promise<void> {
+    const result = await this.taskRepository.save(dto);
     const task = await this.info(result.id);
     if (result.status === 0) {
       await this.stop(task);
-    } else if (result.status === 1) {
+    } else if (result.status === TaskStatus.Activited) {
+      await this.start(task);
+    }
+  }
+
+  async update(id: number, dto: Partial<TaskDto>): Promise<void> {
+    await this.taskRepository.update(id, dto);
+    const task = await this.info(id);
+    if (task.status === 0) {
+      await this.stop(task);
+    } else if (task.status === TaskStatus.Activited) {
       await this.start(task);
     }
   }
@@ -190,14 +192,16 @@ export class TaskService implements OnModuleInit {
       { jobId: task.id, removeOnComplete: true, removeOnFail: true, repeat },
     );
     if (job && job.opts) {
-      await this.taskRepo.update(task.id, {
+      await this.taskRepository.update(task.id, {
         jobOpts: JSON.stringify(job.opts.repeat),
         status: 1,
       });
     } else {
       // update status to 0，标识暂停任务，因为启动失败
-      job && (await job.remove());
-      await this.taskRepo.update(task.id, { status: 0 });
+      await job?.remove();
+      await this.taskRepository.update(task.id, {
+        status: TaskStatus.Disabled,
+      });
       throw new BadRequestException('Task Start failed');
     }
   }
@@ -211,7 +215,9 @@ export class TaskService implements OnModuleInit {
     }
     const exist = await this.existJob(task.id.toString());
     if (!exist) {
-      await this.taskRepo.update(task.id, { status: 0 });
+      await this.taskRepository.update(task.id, {
+        status: TaskStatus.Disabled,
+      });
       return;
     }
     const jobs = await this.taskQueue.getJobs([
@@ -222,16 +228,17 @@ export class TaskService implements OnModuleInit {
       'waiting',
       'completed',
     ]);
-    for (let i = 0; i < jobs.length; i++) {
-      if (jobs[i].data.id === task.id) {
-        await jobs[i].remove();
-      }
-    }
-    await this.taskRepo.update(task.id, { status: 0 });
+    jobs
+      .filter((j) => j.data.id === task.id)
+      .forEach(async (j) => {
+        await j.remove();
+      });
+
+    await this.taskRepository.update(task.id, { status: TaskStatus.Disabled });
     // if (task.jobOpts) {
     //   await this.app.queue.sys.removeRepeatable(JSON.parse(task.jobOpts));
     //   // update status
-    //   await this.getRepo().admin.sys.Task.update(task.id, { status: 0 });
+    //   await this.getRepo().admin.sys.Task.update(task.id, { status: TaskStatus.Disabled, });
     // }
   }
 
@@ -252,7 +259,7 @@ export class TaskService implements OnModuleInit {
    */
   async updateTaskCompleteStatus(tid: number): Promise<void> {
     const jobs = await this.taskQueue.getRepeatableJobs();
-    const task = await this.taskRepo.findOneBy({ id: tid });
+    const task = await this.taskRepository.findOneBy({ id: tid });
     // 如果下次执行时间小于当前时间，则表示已经执行完成。
     for (const job of jobs) {
       const currentTime = new Date().getTime();
@@ -306,14 +313,16 @@ export class TaskService implements OnModuleInit {
   /**
    * 根据serviceName调用service，例如 LogService.clearReqLog
    */
-  async callService(serviceName: string, args: string): Promise<void> {
-    if (serviceName) {
-      const arr = serviceName.split('.');
-      if (arr.length < 1) {
+  async callService(name: string, args: string): Promise<void> {
+    if (name) {
+      const [serviceName, methodName] = name.split('.');
+      if (!methodName) {
         throw new BadRequestException('serviceName define BadRequestException');
       }
-      const methodName = arr[1];
-      const service = await this.moduleRef.get(arr[0], { strict: false });
+      const service = await this.moduleRef.get(serviceName, {
+        strict: false,
+      });
+
       // 安全注解检查
       await this.checkHasMissionMeta(service, methodName);
       if (isEmpty(args)) {

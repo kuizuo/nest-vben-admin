@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { AppLoggerService } from '../../modules/shared/services/app-logger.service';
+import { AppLoggerService } from '../../shared/services/app-logger.service';
 import { Mission } from '../mission.decorator';
 
 /**

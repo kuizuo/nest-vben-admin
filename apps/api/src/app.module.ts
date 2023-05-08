@@ -7,13 +7,12 @@ import { SharedModule } from '@/modules/shared/shared.module';
 import { AppConfigModule } from './config/config.module';
 import { AppDatabaseModule } from './database/database.module';
 
-import { MissionModule } from './mission/mission.module';
-
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RbacGuard } from './modules/rbac/guards/rbac.guard';
 import { SocketModule } from './modules/socket/socket.module';
 import { SystemModule } from './modules/system/system.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 import { ToolsModule } from './modules/tools/tools.module';
 
 @Module({
@@ -23,7 +22,7 @@ import { ToolsModule } from './modules/tools/tools.module';
     SharedModule,
     AuthModule,
     SystemModule,
-    MissionModule,
+    TasksModule,
     ToolsModule,
     SocketModule,
   ],

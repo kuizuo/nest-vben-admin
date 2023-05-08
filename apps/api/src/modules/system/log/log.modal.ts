@@ -22,26 +22,3 @@ export class LoginLogInfo {
   @ApiProperty({ description: '登录用户名', example: 'admin' })
   username: string;
 }
-
-export class TaskLogInfo {
-  @ApiProperty({ description: '日志编号' })
-  id: number;
-
-  @ApiProperty({ description: '任务编号' })
-  taskId: number;
-
-  @ApiProperty({ description: '任务名称' })
-  name: string;
-
-  @ApiProperty({ description: '创建时间' })
-  createdAt: string;
-
-  @ApiProperty({ description: '耗时' })
-  consumeTime: number;
-
-  @ApiProperty({ description: '执行信息' })
-  detail: string;
-
-  @ApiProperty({ description: '任务执行状态' })
-  status: number;
-}

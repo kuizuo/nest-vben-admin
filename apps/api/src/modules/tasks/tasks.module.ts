@@ -31,13 +31,13 @@ function createAliasProviders(): ExistingProvider[] {
  * 所有需要执行的定时任务都需要在这里注册
  */
 @Module({})
-export class MissionModule {
+export class TasksModule {
   static forRoot(): DynamicModule {
     // 使用Alias定义别名，使得可以通过字符串类型获取定义的Service，否则无法获取
     const aliasProviders = createAliasProviders();
     return {
       global: true,
-      module: MissionModule,
+      module: TasksModule,
       imports: [SystemModule, LogModule],
       providers: [...providers, ...aliasProviders],
       exports: aliasProviders,

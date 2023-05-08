@@ -1,4 +1,5 @@
 import { BasicPaginationResult } from '../model/baseModel';
+import { TaskLog } from './task';
 import { defHttp } from '/@/utils/http/axios';
 import qs from 'qs';
 
@@ -24,17 +25,6 @@ export interface OperationLog {
   method: string;
   status: number;
   consumeTime: number;
-}
-
-// 任务日志
-export interface TaskLog {
-  id: number;
-  taskId: number;
-  name: string;
-  createdAt: string;
-  consumeTime: number;
-  detail: string;
-  status: number;
 }
 
 enum Api {
