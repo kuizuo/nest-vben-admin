@@ -28,22 +28,22 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: SSH Deploy frontend
+      - name: SSH Deploy admin
         uses: easingthemes/ssh-deploy@v2.2.11
         env:
           SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           ARGS: '-avzr --delete'
-          SOURCE: 'apps/frontend/dist'
+          SOURCE: 'apps/admin/dist'
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: '/www/wwwroot/admin.kuizuo.cn'
 
-      - name: SSH Deploy backend
+      - name: SSH Deploy api
         uses: easingthemes/ssh-deploy@v2.2.11
         env:
           SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           ARGS: '-avzr --delete'
-          SOURCE: 'apps/backend/dist'
+          SOURCE: 'apps/api/dist'
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: '/www/wwwroot/NodeProject/kz-admin'
