@@ -9,6 +9,7 @@ import { AppDatabaseModule } from './database/database.module';
 
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { HealthModule } from './modules/health/health.module';
 import { RbacGuard } from './modules/rbac/guards/rbac.guard';
 import { SocketModule } from './modules/socket/socket.module';
 import { SystemModule } from './modules/system/system.module';
@@ -25,6 +26,7 @@ import { ToolsModule } from './modules/tools/tools.module';
     TasksModule,
     ToolsModule,
     SocketModule,
+    HealthModule,
   ],
   providers: [
     {
