@@ -14,7 +14,7 @@ import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 
 import { AllowAnon } from '@/modules/rbac/decorators';
 
-import { ServeStatInfo } from './serve.class';
+import { ServeStatInfo } from './serve.model';
 import { ServeService } from './serve.service';
 
 @ApiTags('System - 服务监控')

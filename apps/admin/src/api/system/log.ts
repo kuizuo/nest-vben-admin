@@ -1,19 +1,19 @@
+import { BasicPaginationResult } from '../model/baseModel';
 import { defHttp } from '/@/utils/http/axios';
 import qs from 'qs';
 
 // 登录日志
-type LoginLogItem = {
+export interface LoginLog {
   id: number;
   ip: string;
   os: string;
   browser: string;
   time: string;
   username: string;
-};
-type LoginLogList = LoginLogItem[];
+}
 
 // 操作日志
-type ReqLogItem = {
+export interface OperationLog {
   createTime: string;
   updateTime: string;
   id: number;
@@ -24,11 +24,10 @@ type ReqLogItem = {
   method: string;
   status: number;
   consumeTime: number;
-};
-type ReqLogList = ReqLogItem[];
+}
 
 // 任务日志
-type TaskLogItem = {
+export interface TaskLog {
   id: number;
   taskId: number;
   name: string;
@@ -36,23 +35,22 @@ type TaskLogItem = {
   consumeTime: number;
   detail: string;
   status: number;
-};
-type TaskLogList = TaskLogItem[];
+}
 
 enum Api {
-  LoginLogList = '/sys/log/login/page',
-  TaskLogList = '/sys/log/task/page',
+  LoginLogList = '/system/log/login/list',
+  TaskLogList = '/system/log/task/list',
 }
 
 export const getLoginLogList = (params) =>
-  defHttp.get<TableListResult<LoginLogList>>({
+  defHttp.get<BasicPaginationResult<LoginLog>>({
     url: Api.LoginLogList,
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
   });
 
 export const getTaskLogList = (params) =>
-  defHttp.get<TableListResult<TaskLogList>>({
+  defHttp.get<BasicPaginationResult<TaskLog>>({
     url: Api.TaskLogList,
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),

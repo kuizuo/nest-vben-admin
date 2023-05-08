@@ -23,6 +23,7 @@ import { DictService } from '../dict/dict.service';
 
 import { RoleEntity } from '../role/role.entity';
 
+import { UserStatus } from './constant';
 import { PasswordUpdateDto } from './dto/password.dto';
 import { UserDto, UserListDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -46,10 +47,13 @@ export class UserService {
    * 根据用户名查找已经启用的用户
    */
   async findUserByUserName(username: string): Promise<UserEntity | undefined> {
-    return this.userRepository.findOneBy({
-      username,
-      status: 1,
-    });
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where({
+        username,
+        status: UserStatus.Enabled,
+      })
+      .getOne();
   }
 
   /**

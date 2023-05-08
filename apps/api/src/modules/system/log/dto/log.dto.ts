@@ -5,18 +5,18 @@ import { PageOptionsDto } from '@/common/dto/page-options.dto';
 
 export class LoginLogQueryDto extends PageOptionsDto {
   @ApiProperty({ description: '用户名' })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   username: string;
 
   @ApiProperty({ description: '登录IP' })
-  @IsString()
   @IsOptional()
+  @IsString()
   ip?: string;
 
   @ApiProperty({ description: '登录地点' })
-  @IsString()
   @IsOptional()
+  @IsString()
   address?: string;
 
   @ApiProperty({ description: '登录时间' })

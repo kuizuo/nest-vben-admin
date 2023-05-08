@@ -1,14 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
+import { UserEntity } from '../../user/entities/user.entity';
+
 @Entity({ name: 'sys_login_log' })
 export class LoginLogEntity extends AbstractEntity {
-  @Column({ nullable: true, name: 'user_id' })
-  @ApiProperty({ description: '用户ID' })
-  userId: number;
-
   @Column({ nullable: true })
   @ApiProperty({ description: 'IP' })
   ip: string;
@@ -28,4 +26,8 @@ export class LoginLogEntity extends AbstractEntity {
   @Column({ length: 500, nullable: true })
   @ApiProperty({ description: '浏览器ua' })
   ua: string;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn()
+  user: UserEntity;
 }

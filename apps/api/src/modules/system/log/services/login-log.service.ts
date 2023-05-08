@@ -9,7 +9,6 @@ import { paginateRaw } from '@/helper/paginate';
 
 import { IpService } from '@/modules/shared/ip/ip.service';
 
-import { UserService } from '../../user/user.service';
 import { LoginLogQueryDto } from '../dto/log.dto';
 import { LoginLogEntity } from '../entities/login-log.entity';
 import { LoginLogInfo } from '../log.modal';
@@ -35,7 +34,6 @@ export class LoginLogService {
     private loginLogRepository: Repository<LoginLogEntity>,
 
     private ipService: IpService,
-    private userService: UserService,
   ) {}
 
   async create(uid: number, ip: string, ua: string): Promise<void> {
@@ -44,16 +42,16 @@ export class LoginLogService {
 
       await this.loginLogRepository.save({
         ip,
-        userId: uid,
         ua,
         address,
+        user: { id: uid },
       });
     } catch (e) {
       console.error(e);
     }
   }
 
-  async paginate({
+  async list({
     page,
     pageSize,
     username,
@@ -63,15 +61,15 @@ export class LoginLogService {
   }: LoginLogQueryDto) {
     const queryBuilder = await this.loginLogRepository
       .createQueryBuilder('login_log')
-      .innerJoinAndSelect('sys_user', 'user', 'login_log.user_id = user.id')
+      .innerJoinAndSelect('login_log.user', 'user')
       .where({
-        ...(ip ? { ip: Like(`%${ip}%`) } : null),
-        ...(address ? { address: Like(`%${address}%`) } : null),
-        ...(time ? { createdAt: Between(time[0], time[1]) } : null),
+        ...(ip && { ip: Like(`%${ip}%`) }),
+        ...(address && { address: Like(`%${address}%`) }),
+        ...(time && { createdAt: Between(time[0], time[1]) }),
         ...(username && {
-          userId: await (
-            await this.userService.findUserByUserName(username)
-          ).id,
+          user: {
+            username: Like(`%${username}%`),
+          },
         }),
       })
       .orderBy('login_log.created_at', 'DESC');

@@ -5,6 +5,8 @@ import { ApiResult } from '@/decorators';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { Pagination } from '@/helper/paginate/pagination';
 
+import { Permission } from '@/modules/rbac/decorators';
+
 import {
   CaptchaLogQueryDto,
   LoginLogQueryDto,
@@ -26,28 +28,31 @@ export class LogController {
     private captchaLogService: CaptchaLogService,
   ) {}
 
-  @ApiOperation({ summary: '分页查询登录日志' })
+  @Get('login/list')
+  @ApiOperation({ summary: '查询登录日志列表' })
   @ApiResult({ type: [LoginLogInfo], isPage: true })
-  @Get('login/page')
+  @Permission('system:log:task:list')
   async loginLogPage(
     @Query() dto: LoginLogQueryDto,
   ): Promise<Pagination<LoginLogInfo>> {
-    return this.loginLogService.paginate(dto);
+    return this.loginLogService.list(dto);
   }
 
-  @ApiOperation({ summary: '分页查询任务日志' })
+  @Get('task/list')
+  @ApiOperation({ summary: '查询任务日志列表' })
   @ApiResult({ type: [TaskLogInfo], isPage: true })
-  @Get('task/page')
-  async taskPage(
+  @Permission('system:log:task:list')
+  async taskList(
     @Query() dto: TaskLogQueryDto,
   ): Promise<Pagination<TaskLogInfo>> {
     return this.taskService.paginate(dto);
   }
 
-  @ApiOperation({ summary: '分页查询验证码日志' })
+  @Get('captcha/list')
+  @ApiOperation({ summary: '查询验证码日志列表' })
   @ApiResult({ type: [CaptchaLogEntity], isPage: true })
-  @Get('captcha/page')
-  async captchaPage(
+  @Permission('system:log:captcha:list')
+  async captchaList(
     @Query() dto: CaptchaLogQueryDto,
   ): Promise<Pagination<CaptchaLogEntity>> {
     return this.captchaLogService.paginate(dto);

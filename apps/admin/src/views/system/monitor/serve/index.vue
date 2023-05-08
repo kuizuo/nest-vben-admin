@@ -80,7 +80,7 @@
   import { reactive, computed, toRefs, onMounted, onBeforeUnmount } from 'vue';
   import { Card, Descriptions, Tag } from 'ant-design-vue';
   import Progress from '/@/components/Progress/index.vue';
-  import { getServeStat } from '/@/api/system';
+  import { getServeStat } from '/@/api/system/serve';
 
   let intervalId: NodeJS.Timer;
 
