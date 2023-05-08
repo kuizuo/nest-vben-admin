@@ -75,6 +75,7 @@
     "qs": "^6.11.1",
     "resize-observer-polyfill": "^1.5.1",
     "showdown": "^2.1.0",
+    "socket.io-client": "^4.6.1",
     "sortablejs": "^1.15.0",
     "tinymce": "^5.10.7",
     "vditor": "^3.9.1",

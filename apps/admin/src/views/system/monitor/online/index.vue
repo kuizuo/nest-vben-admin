@@ -23,7 +23,7 @@
 <script setup lang="ts" name="在线用户">
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useSocket } from '/@/hooks/web/useSocket';
-  import { getOnlineList, kickUser } from '/@/api/system/online';
+  import { OnlineUserListItem, getOnlineList, kickUser } from '/@/api/system/online';
   import { columns, searchFormSchema } from './online.data';
 
   const [registerTable, { reload }] = useTable({

@@ -8,6 +8,8 @@ import { ApiException } from '@/exceptions/api.exception';
 
 import { AuthUser } from '@/modules/auth/decorators';
 
+import { Permission } from '@/modules/rbac/decorators';
+
 import { KickDto } from './online.dto';
 import { OnlineUserInfo } from './online.model';
 import { OnlineService } from './online.service';
@@ -19,15 +21,17 @@ import { OnlineService } from './online.service';
 export class OnlineController {
   constructor(private onlineService: OnlineService) {}
 
+  @Get('list')
   @ApiOperation({ summary: '查询当前在线用户' })
   @ApiResult({ type: [OnlineUserInfo] })
-  @Get('list')
+  @Permission('system:online:list')
   async list(@AuthUser() user: IAuthUser): Promise<OnlineUserInfo[]> {
     return this.onlineService.listOnlineUser(user.uid);
   }
 
-  @ApiOperation({ summary: '下线指定在线用户' })
   @Post('kick')
+  @ApiOperation({ summary: '下线指定在线用户' })
+  @Permission('system:online:kick')
   async kick(@Body() dto: KickDto, @AuthUser() user: IAuthUser): Promise<void> {
     if (dto.id === user.uid) {
       throw new ApiException(ErrorEnum.CODE_1012);
