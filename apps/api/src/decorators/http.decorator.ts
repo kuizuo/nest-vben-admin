@@ -1,16 +1,13 @@
 import type { ExecutionContext } from '@nestjs/common';
 
 import { createParamDecorator } from '@nestjs/common';
-import type { Request } from 'express';
+import type { FastifyRequest } from 'fastify';
 
 /**
  * 快速获取IP
  */
 export const Ip = createParamDecorator((_, context: ExecutionContext) => {
-  const request = context.switchToHttp().getRequest<Request>();
-
-  // see https://expressjs.com/en/guide/behind-proxies.html
-  // app.set('trust proxy', 1); can use request.ip
+  const request = context.switchToHttp().getRequest<FastifyRequest>();
 
   return (
     // 判断是否有反向代理 IP
@@ -26,6 +23,6 @@ export const Ip = createParamDecorator((_, context: ExecutionContext) => {
  * 快速获取request path，并不包括url params
  */
 export const Uri = createParamDecorator((_, context: ExecutionContext) => {
-  const request = context.switchToHttp().getRequest<Request>();
-  return request.path;
+  const request = context.switchToHttp().getRequest<FastifyRequest>();
+  return request.routerPath;
 });
