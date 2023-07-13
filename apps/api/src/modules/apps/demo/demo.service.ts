@@ -14,19 +14,19 @@ import { DemoDto, DemoPageDto } from './demo.dto';
 export class DemoService {
   constructor(
     @InjectRepository(DemoEntity)
-    private testRepo: Repository<DemoEntity>,
+    private demoRepository: Repository<DemoEntity>,
   ) {}
 
   async list(): Promise<DemoEntity[]> {
-    return this.testRepo.find();
+    return this.demoRepository.find();
   }
 
   async page({ page, pageSize }: DemoPageDto): Promise<Pagination<DemoEntity>> {
-    return paginate(this.testRepo, { page, pageSize });
+    return paginate(this.demoRepository, { page, pageSize });
   }
 
   async detail(id: number): Promise<DemoEntity> {
-    const item = await this.testRepo.findOneBy({ id });
+    const item = await this.demoRepository.findOneBy({ id });
     if (!item) throw new ApiException(ErrorEnum.CODE_2004);
 
     return item;
@@ -36,16 +36,16 @@ export class DemoService {
     let test = new DemoEntity();
     test = Object.assign(dto);
 
-    await this.testRepo.save(test);
+    await this.demoRepository.save(test);
   }
 
-  async update(id: number, { ...data }: DemoDto) {
-    await this.testRepo.update(id, data);
+  async update(id: number, data: Partial<DemoDto>) {
+    await this.demoRepository.update(id, data);
   }
 
   async delete(id: number) {
     const item = await this.detail(id);
 
-    await this.testRepo.remove(item);
+    await this.demoRepository.remove(item);
   }
 }

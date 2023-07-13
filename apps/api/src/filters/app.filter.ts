@@ -5,7 +5,6 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { FastifyReply } from 'fastify';
 
 import { ErrorEnum } from '../constants/error';
@@ -13,8 +12,6 @@ import { ApiException } from '../exceptions/api.exception';
 
 @Catch()
 export class AppFilter implements ExceptionFilter {
-  constructor(private readonly configService: ConfigService) {}
-
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
