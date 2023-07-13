@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loadingRef" loading-tip="发送中...">
+  <div v-loading="loading" loading-tip="发送中...">
     <BasicForm @register="register" @submit="handleSubmit" />
     <Loading :loading="loading" :absolute="true" tip="发送中..." />
   </div>
@@ -8,7 +8,7 @@
   import { ref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form';
   import { sendSchemas } from './data';
-  import { sendEmail } from '/@/api/admin/tools/email/index';
+  import { sendEmail } from '/@/api/tools/email';
   import { Loading } from '/@/components/Loading';
 
   const loading = ref(false);

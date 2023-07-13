@@ -23,8 +23,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm unbuild",
-    "stub": "pnpm unbuild --stub",
+    "//build": "pnpm unbuild",
+    "//stub": "pnpm unbuild --stub",
     "clean": "pnpm rimraf .turbo node_modules dist",
     "lint": "pnpm eslint ."
   },

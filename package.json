@@ -21,6 +21,11 @@
     "node": ">=16.15.1",
     "pnpm": ">=8.1.0"
   },
+  "workspaces": [
+    "apps/*",
+    "internal/*",
+    "packages/*"
+  ],
   "scripts": {
     "bootstrap": "pnpm install",
     "build": "turbo run build",

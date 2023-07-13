@@ -7,7 +7,7 @@
   import { onMounted } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form';
   import { baseSetschemas } from './data';
-  import { getEmailConfig, saveEmailConfig } from '/@/api/admin/tools/email/index';
+  import { getEmailConfig, saveEmailConfig } from '/@/api/tools/email';
 
   const [register, { setFieldsValue }] = useForm({
     labelWidth: 120,
