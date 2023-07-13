@@ -65,7 +65,7 @@ async function bootstrap() {
   });
 
   // 处理异常请求
-  app.useGlobalFilters(new AppFilter(app.get(AppLoggerService)));
+  app.useGlobalFilters(new AppFilter());
 
   app.useGlobalInterceptors(
     // 请求超时处理

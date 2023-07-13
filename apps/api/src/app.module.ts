@@ -7,6 +7,7 @@ import { SharedModule } from '@/modules/shared/shared.module';
 import { AppConfigModule } from './config/config.module';
 import { AppDatabaseModule } from './database/database.module';
 
+import { AppsModule } from './modules/apps/apps.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { HealthModule } from './modules/health/health.module';
@@ -27,6 +28,8 @@ import { ToolsModule } from './modules/tools/tools.module';
     ToolsModule,
     SocketModule,
     HealthModule,
+
+    AppsModule,
   ],
   providers: [
     {

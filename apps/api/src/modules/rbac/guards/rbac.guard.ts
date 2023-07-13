@@ -2,6 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { FastifyRequest } from 'fastify';
 
+import { DataSource } from 'typeorm';
+
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 import { AuthService } from '@/modules/auth/auth.service';
@@ -12,7 +14,11 @@ import { ALLOW_ANON_KEY, PERMISSION_KEY } from '../constant';
 
 @Injectable()
 export class RbacGuard implements CanActivate {
-  constructor(private reflector: Reflector, private authService: AuthService) {}
+  constructor(
+    private reflector: Reflector,
+    private dataSource: DataSource,
+    private authService: AuthService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -39,17 +45,15 @@ export class RbacGuard implements CanActivate {
       string | string[]
     >(PERMISSION_KEY, [context.getHandler(), context.getClass()]);
 
-    let allPermissions = await this.authService.getPermissionsByUid(
-      request.user.uid,
-    );
+    let allPermissions = await this.authService.getPermissionsByUid(user.uid);
 
     if (!allPermissions) {
-      const res = await this.authService.getPermissions(user.id);
+      const res = await this.authService.getPermissions(user.uid);
 
       allPermissions = res;
 
       // set permissions into cache
-      await this.authService.setPermissions(user, allPermissions);
+      await this.authService.setPermissions(user.uid, allPermissions);
     }
 
     // 如果没有设置接口权限，则默认通过
@@ -70,8 +74,6 @@ export class RbacGuard implements CanActivate {
     if (!canNext) {
       throw new ApiException(ErrorEnum.CODE_1103);
     }
-
-    // TODO: check owner data permission
 
     return true;
   }
