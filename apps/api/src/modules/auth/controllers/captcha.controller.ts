@@ -1,13 +1,14 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
+import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 import * as svgCaptcha from 'svg-captcha';
 
 import { ApiResult } from '@/decorators';
-import { RedisService } from '@/modules/shared/redis/redis.service';
 
 import { generateUUID } from '@/utils';
 
@@ -20,7 +21,7 @@ import { ImageCaptcha } from '../models/auth.model';
 @UseGuards(ThrottlerGuard)
 @Controller('auth/captcha')
 export class CaptchaController {
-  constructor(private redisService: RedisService) {}
+  constructor(@InjectRedis() private redis: Redis) {}
 
   @Get('img')
   @ApiOperation({ summary: '获取登录图片验证码' })
@@ -45,12 +46,7 @@ export class CaptchaController {
       id: generateUUID(),
     };
     // 5分钟过期时间
-    await this.redisService.client.set(
-      `captcha:img:${result.id}`,
-      svg.text,
-      'EX',
-      60 * 5,
-    );
+    await this.redis.set(`captcha:img:${result.id}`, svg.text, 'EX', 60 * 5);
     return result;
   }
 }

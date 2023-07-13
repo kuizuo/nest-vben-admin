@@ -1,9 +1,11 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { InjectQueue } from '@nestjs/bull';
 import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef, Reflector } from '@nestjs/core';
 import { UnknownElementException } from '@nestjs/core/errors/exceptions/unknown-element.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from 'bull';
+import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 import { Like, Repository } from 'typeorm';
 
@@ -12,7 +14,6 @@ import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '@/constants/task';
 import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
-import { RedisService } from '@/modules/shared/redis/redis.service';
 import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
 
 import { TaskEntity } from '@/modules/system/task/task.entity';
@@ -29,7 +30,8 @@ export class TaskService implements OnModuleInit {
     @InjectQueue(SYS_TASK_QUEUE_NAME) private taskQueue: Queue,
     private moduleRef: ModuleRef,
     private reflector: Reflector,
-    private redisService: RedisService,
+    @InjectRedis() private redis: Redis,
+
     private logger: AppLoggerService,
   ) {}
 
@@ -46,8 +48,7 @@ export class TaskService implements OnModuleInit {
   async initTask(): Promise<void> {
     const initKey = `${SYS_TASK_QUEUE_PREFIX}:init`;
     // 防止重复初始化
-    const result = await this.redisService
-      .getRedis()
+    const result = await this.redis
       .multi()
       .setnx(initKey, new Date().getTime())
       .expire(initKey, 60 * 30)
@@ -77,7 +78,7 @@ export class TaskService implements OnModuleInit {
       }
     }
     // 启动后释放锁
-    await this.redisService.getRedis().del(initKey);
+    await this.redis.del(initKey);
   }
 
   async list({

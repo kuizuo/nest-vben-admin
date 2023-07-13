@@ -1,11 +1,12 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable } from '@nestjs/common';
 
+import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
 
-import { RedisService } from '@/modules/shared/redis/redis.service';
 import { UserService } from '@/modules/system/user/user.service';
 
 import { MD5 } from '@/utils';
@@ -19,7 +20,7 @@ import { TokenService } from './services/token.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private redisService: RedisService,
+    @InjectRedis() private readonly redis: Redis,
     private menuService: MenuService,
     private roleService: RoleService,
     private userService: UserService,
@@ -74,13 +75,10 @@ export class AuthService {
     // 包含access_token和refresh_token
     const token = await this.tokenService.generateAccessToken(user.id, roles);
 
-    await this.redisService.client.set(
-      `auth:token:${user.id}`,
-      token.accessToken,
-    );
+    await this.redis.set(`auth:token:${user.id}`, token.accessToken);
 
     // 设置密码版本号 当密码修改时，版本号+1
-    await this.redisService.client.set(`auth:passwordVersion:${user.id}`, 1);
+    await this.redis.set(`auth:passwordVersion:${user.id}`, 1);
 
     // 设置菜单权限
     const permissions = await this.menuService.getPermissions(user.id);
@@ -143,24 +141,19 @@ export class AuthService {
   }
 
   async setPermissions(uid: number, permissions: string[]): Promise<void> {
-    await this.redisService.client.set(
-      `auth:permission:${uid}`,
-      JSON.stringify(permissions),
-    );
+    await this.redis.set(`auth:permission:${uid}`, JSON.stringify(permissions));
   }
 
   async getPasswordVersionByUid(uid: number): Promise<string> {
-    return this.redisService.client.get(`auth:passwordVersion:${uid}`);
+    return this.redis.get(`auth:passwordVersion:${uid}`);
   }
 
   async getTokenByUid(uid: number): Promise<string> {
-    return this.redisService.client.get(`auth:token:${uid}`);
+    return this.redis.get(`auth:token:${uid}`);
   }
 
   async getPermissionsByUid(uid: number): Promise<string[]> {
-    const permissionString = await this.redisService.client.get(
-      `auth:permission:${uid}`,
-    );
+    const permissionString = await this.redis.get(`auth:permission:${uid}`);
     return permissionString ? JSON.parse(permissionString) : [];
   }
 }

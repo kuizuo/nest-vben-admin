@@ -1,16 +1,18 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable } from '@nestjs/common';
 
+import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { RedisService } from '@/modules/shared/redis/redis.service';
 import { CaptchaLogService } from '@/modules/system/log/services/captcha-log.service';
 
 @Injectable()
 export class CaptchaService {
   constructor(
-    private redisService: RedisService,
+    @InjectRedis() private redis: Redis,
+
     private captchaLogService: CaptchaLogService,
   ) {}
 
@@ -18,12 +20,12 @@ export class CaptchaService {
    * 校验图片验证码
    */
   async checkImgCaptcha(id: string, code: string): Promise<void> {
-    const result = await this.redisService.client.get(`captcha:img:${id}`);
+    const result = await this.redis.get(`captcha:img:${id}`);
     if (isEmpty(result) || code.toLowerCase() !== result.toLowerCase()) {
       throw new ApiException(ErrorEnum.CODE_1002);
     }
     // 校验成功后移除验证码
-    await this.redisService.client.del(`captcha:img:${id}`);
+    await this.redis.del(`captcha:img:${id}`);
   }
 
   async log(

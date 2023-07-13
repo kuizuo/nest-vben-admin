@@ -1,12 +1,13 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import Redis from 'ioredis';
 import { concat, isEmpty, uniq } from 'lodash';
 
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
 
 import { ErrorEnum } from '@/constants/error';
 import { ApiException } from '@/exceptions/api.exception';
-import { RedisService } from '@/modules/shared/redis/redis.service';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
 import { deleteEmptyChildren } from '@/utils';
@@ -19,10 +20,10 @@ import { MenuDto, MenuQueryDto } from './menu.dto';
 @Injectable()
 export class MenuService {
   constructor(
+    @InjectRedis() private redis: Redis,
     @InjectRepository(MenuEntity)
     private menuRepository: Repository<MenuEntity>,
     private roleService: RoleService,
-    private redisService: RedisService,
   ) {}
 
   /**
@@ -202,12 +203,10 @@ export class MenuService {
    */
   async refreshPerms(uid: number): Promise<void> {
     const perms = await this.getPermissions(uid);
-    const online = await this.redisService.getRedis().get(`admin:token:${uid}`);
+    const online = await this.redis.get(`admin:token:${uid}`);
     if (online) {
       // 判断是否在线
-      await this.redisService
-        .getRedis()
-        .set(`admin:perms:${uid}`, JSON.stringify(perms));
+      await this.redis.set(`admin:perms:${uid}`, JSON.stringify(perms));
     }
   }
 
@@ -215,19 +214,14 @@ export class MenuService {
    * 刷新所有在线用户的权限
    */
   async refreshOnlineUserPerms(): Promise<void> {
-    const onlineUserIds: string[] = await this.redisService
-      .getRedis()
-      .keys('admin:token:*');
+    const onlineUserIds: string[] = await this.redis.keys('admin:token:*');
     if (onlineUserIds && onlineUserIds.length > 0) {
       onlineUserIds
         .map((i) => i.split('admin:token:')[1])
         .filter((i) => i)
         .forEach(async (uid) => {
           const perms = await this.getPermissions(parseInt(uid));
-          await this.redisService
-
-            .getRedis()
-            .set(`admin:perms:${uid}`, JSON.stringify(perms));
+          await this.redis.set(`admin:perms:${uid}`, JSON.stringify(perms));
         });
     }
   }

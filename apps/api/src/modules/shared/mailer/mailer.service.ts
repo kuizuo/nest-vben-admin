@@ -1,8 +1,11 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { MailerService as NestMailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
 import dayjs from 'dayjs';
+
+import Redis from 'ioredis';
 
 import { IAppConfig } from '@/config';
 import { ErrorEnum } from '@/constants/error';
@@ -10,13 +13,11 @@ import { ApiException } from '@/exceptions/api.exception';
 
 import { randomValue } from '@/utils';
 
-import { RedisService } from '../redis/redis.service';
-
 @Injectable()
 export class MailerService {
   constructor(
+    @InjectRedis() private redis: Redis,
     private mailerService: NestMailerService,
-    private redisService: RedisService,
     private configService: ConfigService,
   ) {}
 
@@ -67,26 +68,26 @@ export class MailerService {
   }
 
   async checkCode(to, code) {
-    const ret = await this.redisService.client.get(`captcha:${to}`);
+    const ret = await this.redis.get(`captcha:${to}`);
     if (ret !== code) {
       throw new ApiException(ErrorEnum.CODE_1002);
     }
-    await this.redisService.client.del(`captcha:${to}`);
+    await this.redis.del(`captcha:${to}`);
   }
 
   async checkLimit(to, ip) {
     const LIMIT_TIME = 5;
 
     // ip限制
-    const ipLimit = await this.redisService.client.get(`ip:${ip}:send:limit`);
+    const ipLimit = await this.redis.get(`ip:${ip}:send:limit`);
     if (ipLimit) throw new ApiException(ErrorEnum.CODE_1201);
 
     // 1分钟最多接收1条
-    const limit = await this.redisService.client.get(`captcha:${to}:limit`);
+    const limit = await this.redis.get(`captcha:${to}:limit`);
     if (limit) throw new ApiException(ErrorEnum.CODE_1201);
 
     // 1天一个邮箱最多接收5条
-    let limitCountOfDay: string | number = await this.redisService.client.get(
+    let limitCountOfDay: string | number = await this.redis.get(
       `captcha:${to}:limit-day`,
     );
     limitCountOfDay = limitCountOfDay ? Number(limitCountOfDay) : 0;
@@ -94,7 +95,7 @@ export class MailerService {
       throw new ApiException(ErrorEnum.CODE_1202);
 
     // 1天一个ip最多发送5条
-    let ipLimitCountOfDay: string | number = await this.redisService.client.get(
+    let ipLimitCountOfDay: string | number = await this.redis.get(
       `ip:${ip}:send:limit-day`,
     );
     ipLimitCountOfDay = ipLimitCountOfDay ? Number(ipLimitCountOfDay) : 0;
@@ -108,24 +109,20 @@ export class MailerService {
       return now.endOf('day').diff(now, 'second');
     };
 
-    await this.redisService.client.set(`captcha:${to}`, code, 'EX', 60 * 5);
+    await this.redis.set(`captcha:${to}`, code, 'EX', 60 * 5);
 
-    const limitCountOfDay = await this.redisService.client.get(
-      `captcha:${to}:limit-day`,
-    );
-    const ipLimitCountOfDay = await this.redisService.client.get(
-      `ip:${ip}:send:limit-day`,
-    );
+    const limitCountOfDay = await this.redis.get(`captcha:${to}:limit-day`);
+    const ipLimitCountOfDay = await this.redis.get(`ip:${ip}:send:limit-day`);
 
-    await this.redisService.client.set(`ip:${ip}:send:limit`, 1, 'EX', 60);
-    await this.redisService.client.set(`captcha:${to}:limit`, 1, 'EX', 60);
-    await this.redisService.client.set(
+    await this.redis.set(`ip:${ip}:send:limit`, 1, 'EX', 60);
+    await this.redis.set(`captcha:${to}:limit`, 1, 'EX', 60);
+    await this.redis.set(
       `captcha:${to}:send:limit-count-day`,
       limitCountOfDay,
       'EX',
       getRemainTime(),
     );
-    await this.redisService.client.set(
+    await this.redis.set(
       `ip:${ip}:send:limit-count-day`,
       ipLimitCountOfDay,
       'EX',

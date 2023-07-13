@@ -1,6 +1,8 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import Redis from 'ioredis';
 import { isEmpty, isNil } from 'lodash';
 
 import { EntityManager, Like, Repository } from 'typeorm';
@@ -15,7 +17,6 @@ import { Pagination } from '@/helper/paginate/pagination';
 import { AccountUpdateDto } from '@/modules/auth/dto/account.dto';
 import { RegisterDto } from '@/modules/auth/dto/auth.dto';
 import { QQService } from '@/modules/shared/qq/qq.service';
-import { RedisService } from '@/modules/shared/redis/redis.service';
 
 import { MD5, randomValue } from '@/utils';
 
@@ -32,13 +33,14 @@ import { AccountInfo } from './user.model';
 @Injectable()
 export class UserService {
   constructor(
-    private readonly redisService: RedisService,
-    private readonly dictService: DictService,
+    @InjectRedis()
+    private readonly redis: Redis,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
+    private readonly dictService: DictService,
     private readonly qqService: QQService,
     private readonly configService: ConfigService,
   ) {}
@@ -289,9 +291,9 @@ export class UserService {
    * 禁用用户
    */
   async forbidden(uid: number): Promise<void> {
-    await this.redisService.getRedis().del(`admin:passwordVersion:${uid}`);
-    await this.redisService.getRedis().del(`admin:token:${uid}`);
-    await this.redisService.getRedis().del(`admin:perms:${uid}`);
+    await this.redis.del(`admin:passwordVersion:${uid}`);
+    await this.redis.del(`admin:token:${uid}`);
+    await this.redis.del(`admin:perms:${uid}`);
   }
 
   /**
@@ -307,9 +309,9 @@ export class UserService {
         ts.push(`admin:token:${e}`);
         ps.push(`admin:perms:${e}`);
       });
-      await this.redisService.getRedis().del(pvs);
-      await this.redisService.getRedis().del(ts);
-      await this.redisService.getRedis().del(ps);
+      await this.redis.del(pvs);
+      await this.redis.del(ts);
+      await this.redis.del(ps);
     }
   }
 
@@ -318,13 +320,9 @@ export class UserService {
    */
   async upgradePasswordV(id: number): Promise<void> {
     // admin:passwordVersion:${param.id}
-    const v = await this.redisService
-      .getRedis()
-      .get(`admin:passwordVersion:${id}`);
+    const v = await this.redis.get(`admin:passwordVersion:${id}`);
     if (!isEmpty(v)) {
-      await this.redisService
-        .getRedis()
-        .set(`admin:passwordVersion:${id}`, parseInt(v) + 1);
+      await this.redis.set(`admin:passwordVersion:${id}`, parseInt(v) + 1);
     }
   }
 

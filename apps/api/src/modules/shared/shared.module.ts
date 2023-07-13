@@ -1,3 +1,4 @@
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HttpModule } from '@nestjs/axios';
 import { Global, CacheModule, Module } from '@nestjs/common';
@@ -9,17 +10,9 @@ import { IMailerConfig, IRedisConfig } from '@/config';
 import { IpService } from './ip/ip.service';
 import { MailerService } from './mailer/mailer.service';
 import { QQService } from './qq/qq.service';
-import { RedisModule } from './redis/redis.module';
-import { RedisService } from './redis/redis.service';
 import { AppLoggerService } from './services/app-logger.service';
 
-const providers = [
-  AppLoggerService,
-  RedisService,
-  MailerService,
-  IpService,
-  QQService,
-];
+const providers = [AppLoggerService, MailerService, IpService, QQService];
 
 @Global()
 @Module({
@@ -45,12 +38,13 @@ const providers = [
         limit: 5,
       }),
     }),
-
     // redis
-    RedisModule.registerAsync({
+    RedisModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) =>
-        configService.get<IRedisConfig>('redis'),
+      useFactory: (configService: ConfigService) => ({
+        readyLog: true,
+        config: configService.get<IRedisConfig>('redis'),
+      }),
       inject: [ConfigService],
     }),
     // mailer
