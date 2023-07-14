@@ -1,20 +1,20 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DemoEntity } from '@/modules/apps/demo/demo.entity';
+import { TodoEntity } from '@/modules/apps/todo/todo.entity';
 
 import { SystemModule } from '../system/system.module';
 
-import { DemoController } from './demo/demo.controller';
-import { DemoService } from './demo/demo.service';
+import { TodoController } from './todo/todo.controller';
+import { TodoService } from './todo/todo.service';
 
 @Module({
   imports: [
     forwardRef(() => SystemModule),
-    TypeOrmModule.forFeature([DemoEntity]),
+    TypeOrmModule.forFeature([TodoEntity]),
   ],
-  controllers: [DemoController],
-  providers: [DemoService],
+  controllers: [TodoController],
+  providers: [TodoService],
   exports: [TypeOrmModule],
 })
 export class AppsModule {}

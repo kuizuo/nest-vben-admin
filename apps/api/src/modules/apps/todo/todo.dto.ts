@@ -3,10 +3,10 @@ import { IsString } from 'class-validator';
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
 
-export class DemoDto {
+export class TodoDto {
   @ApiProperty({ description: '名称' })
   @IsString()
-  name: string;
+  value: string;
 }
 
-export class DemoPageDto extends PageOptionsDto<DemoDto> {}
+export class TodoPageDto extends PageOptionsDto<TodoDto> {}

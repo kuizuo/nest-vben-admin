@@ -47,5 +47,5 @@ export enum ErrorEnum {
   CODE_1303 = '任务执行失败',
   CODE_1304 = '任务不存在',
 
-  CODE_2004 = 'demo 数据不存在',
+  CODE_2004 = 'todo 数据不存在',
 }
