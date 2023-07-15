@@ -1,9 +1,10 @@
 import { RedisModule } from '@liaoliaots/nestjs-redis';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { HttpModule } from '@nestjs/axios';
-import { Global, CacheModule, Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 import { IMailerConfig, IRedisConfig } from '@/config';
 
@@ -33,7 +34,7 @@ const providers = [AppLoggerService, MailerService, IpService, QQService];
     ThrottlerModule.forRootAsync({
       imports: [],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
+      useFactory: () => ({
         ttl: 60,
         limit: 5,
       }),

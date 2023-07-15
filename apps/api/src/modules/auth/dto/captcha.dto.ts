@@ -34,13 +34,13 @@ export class ImageCaptchaDto {
 
 export class SendEmailCodeDto {
   @ApiProperty({ description: '邮箱' })
-  @IsEmail({ message: ErrorEnum.CODE_1025 })
+  @IsEmail({}, { message: ErrorEnum.CODE_1025 })
   email: string;
 }
 
 export class SendSmsCodeDto {
   @ApiProperty({ description: '手机号' })
-  @IsMobilePhone('zh-CN', { message: ErrorEnum.CODE_1026 })
+  @IsMobilePhone('zh-CN', {}, { message: ErrorEnum.CODE_1026 })
   phone: string;
 }
 
