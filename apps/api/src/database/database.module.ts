@@ -28,7 +28,6 @@ const providers = [EntityExistConstraint, UniqueConstraint];
 
         return {
           ...configService.get<IDatabaseConfig>('database'),
-          type: 'mysql',
           autoLoadEntities: true,
           logging: loggerOptions,
           logger: new TypeORMLogger(loggerOptions),

@@ -12,7 +12,7 @@ export class TodoEntity extends AbstractEntity {
 
   @ApiProperty({ description: 'todo' })
   @Column({ default: false })
-  status: string;
+  status: boolean;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()

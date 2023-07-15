@@ -23,7 +23,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "doc": "compodoc -p tsconfig.json -s"
+    "doc": "compodoc -p tsconfig.json -s",
+    "typeorm": "cross-env NODE_ENV=development typeorm -d ./dist/config/modules/database.config.js",
+    "migration:create": "typeorm migration:create",
+    "migration:generate": "typeorm -- migration:generate",
+    "migration:run": "typeorm -- migration:run",
+    "migration:revert": "typeorm -- migration:revert"
   },
   "dependencies": {
     "@fastify/multipart": "^7.3.0",
@@ -76,7 +81,7 @@
     "stacktrace-js": "^2.0.2",
     "svg-captcha": "^1.4.0",
     "systeminformation": "^5.12.11",
-    "typeorm": "^0.3.10",
+    "typeorm": "^0.3.17",
     "ua-parser-js": "^1.0.32"
   },
   "devDependencies": {
