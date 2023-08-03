@@ -1,4 +1,6 @@
+import cluster from 'cluster';
 import path from 'path';
+import { performance } from 'perf_hooks';
 
 import {
   ClassSerializerInterceptor,
@@ -22,6 +24,8 @@ import { AppModule } from './app.module';
 
 import { IAppConfig } from './config';
 import { AppFilter } from './filters/app.filter';
+import { isDev, isMainProcess } from './global/env';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { AppLoggerService } from './modules/shared/services/app-logger.service';
@@ -68,11 +72,13 @@ async function bootstrap() {
   app.useGlobalFilters(new AppFilter());
 
   app.useGlobalInterceptors(
-    // 请求超时处理
+    // 请求超时
     new TimeoutInterceptor(30000),
-    // 序列化处理
+    // 序列化
     new ClassSerializerInterceptor(reflector),
-    // 返回数据处理
+    // Logging
+    isDev ? new LoggingInterceptor() : null,
+    // 返回数据转换
     new TransformInterceptor(new Reflector()),
   );
 
@@ -105,14 +111,25 @@ async function bootstrap() {
 
   setupSwagger(app, configService);
 
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port, '0.0.0.0', async () => {
+    const url = await app.getUrl();
+    const { pid } = process;
+    const env = cluster.isPrimary;
+    const prefix = env ? 'P' : 'W';
 
-  // started log
-  const logger = new Logger('NestApplication');
-  logger.log(`Server running on ${await app.getUrl()}`);
+    if (!isMainProcess) {
+      return;
+    }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+    const logger = new Logger('NestApplication');
+    logger.log(`[${prefix + pid}] Server running on ${url}`);
+
+    if (isDev) {
+      logger.log(`[${prefix + pid}] OpenApi: ${url}/api-docs`);
+    }
+    logger.log(`Server is up. ${`+${performance.now() | 0}ms`}`);
+  });
+
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
