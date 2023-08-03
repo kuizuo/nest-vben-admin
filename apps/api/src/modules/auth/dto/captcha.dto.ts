@@ -8,8 +8,6 @@ import {
   IsString,
 } from 'class-validator';
 
-import { ErrorEnum } from '@/constants/error';
-
 export class ImageCaptchaDto {
   @ApiProperty({
     required: false,
@@ -34,13 +32,13 @@ export class ImageCaptchaDto {
 
 export class SendEmailCodeDto {
   @ApiProperty({ description: '邮箱' })
-  @IsEmail({}, { message: ErrorEnum.CODE_1025 })
+  @IsEmail({}, { message: '邮箱格式不正确' })
   email: string;
 }
 
 export class SendSmsCodeDto {
   @ApiProperty({ description: '手机号' })
-  @IsMobilePhone('zh-CN', {}, { message: ErrorEnum.CODE_1026 })
+  @IsMobilePhone('zh-CN', {}, { message: '手机号格式不正确' })
   phone: string;
 }
 

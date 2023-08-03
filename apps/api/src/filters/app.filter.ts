@@ -4,15 +4,25 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 
-import { ErrorEnum } from '../constants/error';
-import { ApiException } from '../exceptions/api.exception';
+import { ErrorEnum } from '@/constants/error-code.constant';
+import { ApiException } from '@/exceptions/api.exception';
+import { isDev } from '@/global/env';
 
 @Catch()
 export class AppFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AppFilter.name);
+
+  constructor() {
+    this.registerCatchAllExceptionsHook();
+  }
+
   catch(exception: unknown, host: ArgumentsHost) {
+    this.logger.error(exception);
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
 
@@ -29,11 +39,8 @@ export class AppFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.message : `${exception}`;
 
     // 系统内部错误时，在生产模式下隐藏具体异常消息
-    if (
-      process.env.NODE_ENV === 'production' &&
-      httpStatus === HttpStatus.INTERNAL_SERVER_ERROR
-    ) {
-      errorMessage = ErrorEnum.CODE_500;
+    if (!isDev && httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) {
+      errorMessage = ErrorEnum.SERVER_ERROR?.split(':')[1];
     }
 
     // 返回基础响应结果
@@ -44,5 +51,15 @@ export class AppFilter implements ExceptionFilter {
     };
 
     response.status(httpStatus).send(resBody);
+  }
+
+  registerCatchAllExceptionsHook() {
+    process.on('unhandledRejection', (reason: any) => {
+      console.error('unhandledRejection: ', reason);
+    });
+
+    process.on('uncaughtException', (err) => {
+      console.error('uncaughtException: ', err);
+    });
   }
 }

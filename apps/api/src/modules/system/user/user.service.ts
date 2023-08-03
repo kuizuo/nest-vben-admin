@@ -8,8 +8,8 @@ import { isEmpty, isNil } from 'lodash';
 import { EntityManager, Like, Repository } from 'typeorm';
 
 import { IAppConfig } from '@/config';
-import { ErrorEnum } from '@/constants/error';
-import { SYS_USER_INITPASSWORD } from '@/constants/param-config';
+import { ErrorEnum } from '@/constants/error-code.constant';
+import { SYS_USER_INITPASSWORD } from '@/constants/system.constant';
 import { ApiException } from '@/exceptions/api.exception';
 
 import { paginate } from '@/helper/paginate';
@@ -64,9 +64,8 @@ export class UserService {
    */
   async getAccountInfo(uid: number): Promise<AccountInfo> {
     const user: UserEntity = await this.userRepository.findOneBy({ id: uid });
-    if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1017);
-    }
+    if (isEmpty(user)) throw new ApiException(ErrorEnum.USER_NOT_FOUND);
+
     return user;
   }
 
@@ -75,9 +74,7 @@ export class UserService {
    */
   async updateAccountInfo(uid: number, info: AccountUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid });
-    if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1017);
-    }
+    if (isEmpty(user)) throw new ApiException(ErrorEnum.USER_NOT_FOUND);
 
     const data = {
       ...(info.nickname ? { nickname: info.nickname } : null),
@@ -104,12 +101,12 @@ export class UserService {
   async updatePassword(uid: number, dto: PasswordUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid });
     if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1017);
+      throw new ApiException(ErrorEnum.USER_NOT_FOUND);
     }
     const comparePassword = MD5(`${dto.oldPassword}${user.psalt}`);
     // 原密码不一致，不允许更改
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.CODE_1011);
+      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
     }
     const password = MD5(`${dto.newPassword}${user.psalt}`);
     await this.userRepository.update({ id: uid }, { password });
@@ -141,7 +138,7 @@ export class UserService {
       username,
     });
     if (!isEmpty(exists)) {
-      throw new ApiException(ErrorEnum.CODE_1001);
+      throw new ApiException(ErrorEnum.SYSTEM_USER_EXISTS);
     }
 
     await this.entityManager.transaction(async (manager) => {
@@ -332,7 +329,7 @@ export class UserService {
   async exist(username: string) {
     const user = await this.userRepository.findOneBy({ username });
     if (isNil(user)) {
-      throw new ApiException(ErrorEnum.CODE_1001);
+      throw new ApiException(ErrorEnum.SYSTEM_USER_EXISTS);
     }
     return true;
   }
@@ -344,7 +341,7 @@ export class UserService {
     const exists = await this.userRepository.findOneBy({
       username,
     });
-    if (!isEmpty(exists)) throw new ApiException(ErrorEnum.CODE_1001);
+    if (!isEmpty(exists)) throw new ApiException(ErrorEnum.SYSTEM_USER_EXISTS);
 
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32);

@@ -6,7 +6,7 @@ import { EntityManager } from 'typeorm';
 
 import { UAParser } from 'ua-parser-js';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway';
 import { AdminWSService } from '@/modules/socket/admin-ws.service';
@@ -48,7 +48,7 @@ export class OnlineService {
     const rootUserId = await this.userService.findRootUserId();
     const currentUserInfo = await this.userService.getAccountInfo(currentUid);
     if (uid === rootUserId) {
-      throw new ApiException(ErrorEnum.CODE_1013);
+      throw new ApiException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
     }
     // reset redis keys
     await this.userService.forbidden(uid);

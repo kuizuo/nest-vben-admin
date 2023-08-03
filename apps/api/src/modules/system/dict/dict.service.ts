@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
@@ -75,7 +75,7 @@ export class DictService {
   async isExistKey(key: string): Promise<void | never> {
     const result = await this.dictRepository.findOneBy({ key });
     if (result) {
-      throw new ApiException(ErrorEnum.CODE_1021);
+      throw new ApiException(ErrorEnum.PARAMETER_CONFIG_KEY_EXISTS);
     }
   }
 

@@ -12,7 +12,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
 
 import { IAppConfig } from '@/config';
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
@@ -76,7 +76,7 @@ export class MenuController {
     @Body() dto: Partial<MenuDto>,
   ): Promise<void> {
     if (id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId)
-      throw new ApiException(ErrorEnum.CODE_1016);
+      throw new ApiException(ErrorEnum.SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED);
 
     // check
     await this.menuService.check(dto);
@@ -100,7 +100,7 @@ export class MenuController {
       id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId
     ) {
       // 系统内置功能不提供删除
-      throw new ApiException(ErrorEnum.CODE_1016);
+      throw new ApiException(ErrorEnum.SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED);
     }
     // 如果有子目录，一并删除
     const childMenus = await this.menuService.findChildMenus(id);

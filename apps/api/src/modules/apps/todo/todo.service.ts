@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { ErrorEnum } from '@/constants/error';
-import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
 import { TodoEntity } from '@/modules/apps/todo/todo.entity';
@@ -27,7 +25,7 @@ export class TodoService {
 
   async detail(id: number): Promise<TodoEntity> {
     const item = await this.todoRepository.findOneBy({ id });
-    if (!item) throw new ApiException(ErrorEnum.CODE_2004);
+    if (!item) throw new NotFoundException('未找到该记录');
 
     return item;
   }

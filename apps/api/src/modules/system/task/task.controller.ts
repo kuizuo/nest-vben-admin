@@ -8,13 +8,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { isEmpty } from 'lodash';
 
-import { ErrorEnum } from '@/constants/error';
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { ApiException } from '@/exceptions/api.exception';
 import { Pagination } from '@/helper/paginate/pagination';
 import { Permission } from '@/modules/rbac/decorators';
 import { TaskEntity } from '@/modules/system/task/task.entity';
@@ -71,11 +68,7 @@ export class TaskController {
   @Permission(PermissionTask.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     const task = await this.taskService.info(id);
-    if (!isEmpty(task)) {
-      await this.taskService.delete(task);
-    } else {
-      throw new ApiException(ErrorEnum.CODE_1304);
-    }
+    await this.taskService.delete(task);
   }
 
   @Put(':id/once')
@@ -83,11 +76,7 @@ export class TaskController {
   @Permission(PermissionTask.ONCE)
   async once(@IdParam() id: number): Promise<void> {
     const task = await this.taskService.info(id);
-    if (!isEmpty(task)) {
-      await this.taskService.once(task);
-    } else {
-      throw new ApiException(ErrorEnum.CODE_1304);
-    }
+    await this.taskService.once(task);
   }
 
   @Put(':id/stop')
@@ -95,11 +84,7 @@ export class TaskController {
   @Permission(PermissionTask.STOP)
   async stop(@IdParam() id: number): Promise<void> {
     const task = await this.taskService.info(id);
-    if (!isEmpty(task)) {
-      await this.taskService.stop(task);
-    } else {
-      throw new ApiException(ErrorEnum.CODE_1304);
-    }
+    await this.taskService.stop(task);
   }
 
   @Put(':id/start')
@@ -107,10 +92,7 @@ export class TaskController {
   @Permission(PermissionTask.START)
   async start(@IdParam() id: number): Promise<void> {
     const task = await this.taskService.info(id);
-    if (!isEmpty(task)) {
-      await this.taskService.start(task);
-    } else {
-      throw new ApiException(ErrorEnum.CODE_1304);
-    }
+
+    await this.taskService.start(task);
   }
 }

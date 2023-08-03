@@ -1,6 +1,11 @@
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { InjectQueue } from '@nestjs/bull';
-import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ModuleRef, Reflector } from '@nestjs/core';
 import { UnknownElementException } from '@nestjs/core/errors/exceptions/unknown-element.exception';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +14,8 @@ import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 import { Like, Repository } from 'typeorm';
 
-import { ErrorEnum } from '@/constants/error';
-import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from '@/constants/task';
+import { ErrorEnum } from '@/constants/error-code.constant';
+
 import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
@@ -19,7 +24,12 @@ import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
 import { TaskEntity } from '@/modules/system/task/task.entity';
 import { MISSION_DECORATOR_KEY } from '@/modules/tasks/mission.decorator';
 
-import { TaskStatus } from './constant';
+import {
+  SYS_TASK_QUEUE_NAME,
+  SYS_TASK_QUEUE_PREFIX,
+  TaskStatus,
+} from './constant';
+
 import { TaskDto, TaskQueryDto } from './task.dto';
 
 @Injectable()
@@ -106,10 +116,15 @@ export class TaskService implements OnModuleInit {
    * task info
    */
   async info(id: number): Promise<TaskEntity> {
-    return this.taskRepository
+    const task = this.taskRepository
       .createQueryBuilder('task')
       .where({ id })
       .getOne();
+
+    if (!task) {
+      throw new NotFoundException('Task Not Found');
+    }
+    return task;
   }
 
   /**
@@ -289,7 +304,7 @@ export class TaskService implements OnModuleInit {
       }
       // 所执行的任务不存在
       if (!service || !(exec in service)) {
-        throw new ApiException(ErrorEnum.CODE_1302);
+        throw new NotFoundException('任务不存在');
       }
       // 检测是否有Mission注解
       const hasMission = this.reflector.get<boolean>(
@@ -298,12 +313,12 @@ export class TaskService implements OnModuleInit {
       );
       // 如果没有，则抛出错误
       if (!hasMission) {
-        throw new ApiException(ErrorEnum.CODE_1301);
+        throw new ApiException(ErrorEnum.INSECURE_MISSION);
       }
     } catch (e) {
       if (e instanceof UnknownElementException) {
         // 任务不存在
-        throw new ApiException(ErrorEnum.CODE_1302);
+        throw new NotFoundException('任务不存在');
       } else {
         // 其余错误则不处理，继续抛出
         throw e;

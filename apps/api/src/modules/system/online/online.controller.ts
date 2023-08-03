@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
 import { ApiException } from '@/exceptions/api.exception';
@@ -34,7 +34,7 @@ export class OnlineController {
   @Permission('system:online:kick')
   async kick(@Body() dto: KickDto, @AuthUser() user: IAuthUser): Promise<void> {
     if (dto.id === user.uid) {
-      throw new ApiException(ErrorEnum.CODE_1012);
+      throw new ApiException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
     }
     await this.onlineService.kickUser(dto.id, user.uid);
   }

@@ -6,7 +6,7 @@ import { concat, isEmpty, uniq } from 'lodash';
 
 import { In, IsNull, Like, Not, Repository } from 'typeorm';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
@@ -92,16 +92,16 @@ export class MenuService {
   async check(dto: Partial<MenuDto>): Promise<void | never> {
     if (dto.type === 2 && !dto.parent) {
       // 无法直接创建权限，必须有parent
-      throw new ApiException(ErrorEnum.CODE_1005);
+      throw new ApiException(ErrorEnum.PERMISSION_REQUIRES_PARENT);
     }
     if (dto.type === 1 && dto.parent) {
       const parent = await this.getMenuItemInfo(dto.parent);
       if (isEmpty(parent)) {
-        throw new ApiException(ErrorEnum.CODE_1014);
+        throw new ApiException(ErrorEnum.PARENT_MENU_NOT_FOUND);
       }
       if (parent && parent.type === 1) {
         // 当前新增为菜单但父节点也为菜单时为非法操作
-        throw new ApiException(ErrorEnum.CODE_1006);
+        throw new ApiException(ErrorEnum.ILLEGAL_OPERATION_DIRECTORY_PARENT);
       }
     }
   }

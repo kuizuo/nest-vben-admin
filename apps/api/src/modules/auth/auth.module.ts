@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { IJwtConfig } from '@/config';
+import { isDev } from '@/global/env';
 
 import { LogModule } from '../system/log/log.module';
 import { MenuModule } from '../system/menu/menu.module';
@@ -46,7 +46,7 @@ const strategies = [LocalStrategy, JwtStrategy];
         return {
           secret,
           expires,
-          ignoreExpiration: process.env.NODE_ENV === 'development',
+          ignoreExpiration: isDev,
         };
       },
       inject: [ConfigService],

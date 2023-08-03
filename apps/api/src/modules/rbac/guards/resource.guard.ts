@@ -6,18 +6,20 @@ import { isNil } from 'lodash';
 
 import { DataSource, Repository } from 'typeorm';
 
-import { ErrorEnum } from '@/constants/error';
-import { Roles } from '@/constants/role';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 
 import { IS_PUBLIC_KEY } from '../../auth/constants';
 
-import { POLICY_KEY } from '../constant';
+import { POLICY_KEY, Roles } from '../constant';
 import { ResourceObject } from '../decorators/resource.decorator';
 
 @Injectable()
 export class ResourceGuard implements CanActivate {
-  constructor(private reflector: Reflector, private dataSource: DataSource) {}
+  constructor(
+    private reflector: Reflector,
+    private dataSource: DataSource,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -57,16 +59,16 @@ export class ResourceGuard implements CanActivate {
 
       const id = getRequestItemId(request);
       if (!id) {
-        throw new ApiException(ErrorEnum.CODE_1108);
+        throw new ApiException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND);
       }
 
       const item = await repo.findOne({ where: { id }, relations: ['user'] });
       if (!item) {
-        throw new ApiException(ErrorEnum.CODE_1108);
+        throw new ApiException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND);
       }
 
       if (!item?.user) {
-        throw new ApiException(ErrorEnum.CODE_1017);
+        throw new ApiException(ErrorEnum.USER_NOT_FOUND);
       }
 
       if (condition) {
@@ -75,7 +77,7 @@ export class ResourceGuard implements CanActivate {
 
       // 如果没有设置policy，则默认只能操作自己的数据
       if (item.user?.id !== user.uid) {
-        throw new ApiException(ErrorEnum.CODE_1108);
+        throw new ApiException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND);
       }
     }
 

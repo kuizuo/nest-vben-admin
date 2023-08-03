@@ -4,7 +4,7 @@ import { FastifyRequest } from 'fastify';
 
 import { DataSource } from 'typeorm';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 import { AuthService } from '@/modules/auth/auth.service';
 
@@ -72,7 +72,7 @@ export class RbacGuard implements CanActivate {
     }
 
     if (!canNext) {
-      throw new ApiException(ErrorEnum.CODE_1103);
+      throw new ApiException(ErrorEnum.NO_PERMISSION);
     }
 
     return true;

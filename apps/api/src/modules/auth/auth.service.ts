@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 
 import { UserService } from '@/modules/system/user/user.service';
@@ -32,12 +32,12 @@ export class AuthService {
     const user = await this.userService.findUserByUserName(credential);
 
     if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1003);
+      throw new ApiException(ErrorEnum.USER_NOT_FOUND);
     }
 
     const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.CODE_1003);
+      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
     }
 
     if (user) {
@@ -60,12 +60,12 @@ export class AuthService {
   ): Promise<string> {
     const user = await this.userService.findUserByUserName(username);
     if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.CODE_1003);
+      throw new ApiException(ErrorEnum.USER_NOT_FOUND);
     }
 
     const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.CODE_1003);
+      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
     }
 
     const roleIds = await this.roleService.getRoleIdsByUser(user.id);
@@ -97,7 +97,7 @@ export class AuthService {
 
     const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.CODE_1003);
+      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
     }
   }
 

@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { isEmpty, isNil } from 'lodash';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiException } from '@/exceptions/api.exception';
 import { AuthService } from '@/modules/auth/auth.service';
 import { TokenService } from '@/modules/auth/services/token.service';
@@ -40,21 +40,21 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       if (isPublic) return true;
 
       if (isEmpty(requestToken)) {
-        throw new ApiException(ErrorEnum.CODE_1101);
+        throw new ApiException(ErrorEnum.INVALID_LOGIN);
       }
 
       // 判断token是否存在,如果不存在则认证失败
       const accessToken = isNil(requestToken)
         ? undefined
         : await this.tokenService.checkAccessToken(requestToken!);
-      if (!accessToken) throw new ApiException(ErrorEnum.CODE_1101);
+      if (!accessToken) throw new ApiException(ErrorEnum.INVALID_LOGIN);
 
       // 无法通过token校验
       // 尝试通过refreshToken刷新token
 
       if (!isNil(requestToken)) {
         const token = await this.tokenService.refreshToken(accessToken);
-        if (isNil(token)) throw new ApiException(ErrorEnum.CODE_1101);
+        if (isNil(token)) throw new ApiException(ErrorEnum.INVALID_LOGIN);
 
         if (token.accessToken) {
           // 将新的token挂载到当前请求上
@@ -67,7 +67,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
           // 刷新失败(refreshToken过期)则再次抛出认证失败的异常
           result = await super.canActivate(context);
         } catch (error) {
-          throw new ApiException(ErrorEnum.CODE_1102);
+          throw new ApiException(ErrorEnum.INVALID_LOGIN);
         }
       }
     }
@@ -75,13 +75,13 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     if (isPublic) return true;
 
     if (isEmpty(request.user)) {
-      throw new ApiException(ErrorEnum.CODE_1101);
+      throw new ApiException(ErrorEnum.INVALID_LOGIN);
     }
 
     const pv = await this.authService.getPasswordVersionByUid(request.user.uid);
     if (pv !== `${request.user.pv}`) {
       // 密码版本不一致，登录期间已更改过密码
-      throw new ApiException(ErrorEnum.CODE_1102);
+      throw new ApiException(ErrorEnum.INVALID_LOGIN);
     }
 
     // 不允许多端登录

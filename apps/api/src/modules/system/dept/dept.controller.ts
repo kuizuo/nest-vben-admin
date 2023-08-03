@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ErrorEnum } from '@/constants/error';
+import { ErrorEnum } from '@/constants/error-code.constant';
 import { ApiResult } from '@/decorators/api-result.decorator';
 import { IdParam } from '@/decorators/id-param.decorator';
 import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
@@ -69,11 +69,13 @@ export class DeptController {
   async delete(@IdParam() id: number): Promise<void> {
     // 查询是否有关联用户或者部门，如果含有则无法删除
     const count = await this.deptService.countUserByDeptId(id);
-    if (count > 0) throw new ApiException(ErrorEnum.CODE_1009);
+    if (count > 0)
+      throw new ApiException(ErrorEnum.DEPARTMENT_HAS_ASSOCIATED_USERS);
 
     const count2 = await this.deptService.countChildDept(id);
 
-    if (count2 > 0) throw new ApiException(ErrorEnum.CODE_1015);
+    if (count2 > 0)
+      throw new ApiException(ErrorEnum.DEPARTMENT_HAS_CHILD_DEPARTMENTS);
 
     await this.deptService.delete(id);
   }
