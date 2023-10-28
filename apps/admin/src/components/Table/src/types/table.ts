@@ -1,7 +1,11 @@
 import type { VNodeChild } from 'vue';
 import type { PaginationProps } from './pagination';
 import type { FormProps } from '/@/components/Form';
-import type { TableRowSelection as ITableRowSelection } from 'ant-design-vue/lib/table/interface';
+import type {
+  TableRowSelection as ITableRowSelection,
+  Key,
+} from 'ant-design-vue/lib/table/interface';
+
 import type { ColumnProps } from 'ant-design-vue/lib/table';
 
 import { ComponentType } from './componentType';
@@ -19,7 +23,7 @@ export interface TableRowSelection<T = any> extends ITableRowSelection {
    * Callback executed when selected rows change
    * @type Function
    */
-  onChange?: (selectedRowKeys: string[] | number[], selectedRows: T[]) => any;
+  onChange?: (selectedRowKeys: Key[], selectedRows: T[]) => any;
 
   /**
    * Callback executed when select/deselect one row
@@ -37,7 +41,7 @@ export interface TableRowSelection<T = any> extends ITableRowSelection {
    * Callback executed when row selection is inverted
    * @type Function
    */
-  onSelectInvert?: (selectedRows: string[] | number[]) => any;
+  onSelectInvert?: (selectedRows: Key[]) => any;
 }
 
 export interface TableCustomRecord<T> {
@@ -88,10 +92,10 @@ export interface TableActionType {
   getSelectRows: <T = Recordable>() => T[];
   clearSelectedRowKeys: () => void;
   expandAll: () => void;
-  expandRows: (keys: string[] | number[]) => void;
+  expandRows: (keys: (string | number)[]) => void;
   collapseAll: () => void;
   scrollTo: (pos: string) => void; // pos: id | "top" | "bottom"
-  getSelectRowKeys: () => string[];
+  getSelectRowKeys: () => Key[];
   deleteSelectRowByKey: (key: string) => void;
   setPagination: (info: Partial<PaginationProps>) => void;
   setTableData: <T = Recordable>(values: T[]) => void;
@@ -106,7 +110,7 @@ export interface TableActionType {
   setLoading: (loading: boolean) => void;
   setProps: (props: Partial<BasicTableProps>) => void;
   redoHeight: () => void;
-  setSelectedRowKeys: (rowKeys: string[] | number[]) => void;
+  setSelectedRowKeys: (rowKeys: Key[]) => void;
   getPaginationRef: () => PaginationProps | boolean;
   getSize: () => SizeType;
   getRowSelection: () => TableRowSelection<Recordable>;
@@ -116,6 +120,7 @@ export interface TableActionType {
   setShowPagination: (show: boolean) => Promise<void>;
   getShowPagination: () => boolean;
   setCacheColumnsByField?: (dataIndex: string | undefined, value: BasicColumn) => void;
+  setCacheColumns?: (columns: BasicColumn[]) => void;
 }
 
 export interface FetchSetting {
@@ -429,6 +434,8 @@ export interface BasicColumn extends ColumnProps<Recordable> {
 
   slots?: Recordable;
 
+  // 自定义header渲染
+  customHeaderRender?: (column: BasicColumn) => string | VNodeChild | JSX.Element;
   // Whether to hide the column by default, it can be displayed in the column configuration
   defaultHidden?: boolean;
 

@@ -63,8 +63,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       ant-design-vue:
-        specifier: ^3.2.20
-        version: 3.2.20(vue@3.3.7)
+        specifier: ^4.0.6
+        version: 4.0.6(vue@3.3.7)
       axios:
         specifier: ^1.6.0
         version: 1.6.0
@@ -107,6 +107,9 @@ importers:
       pinia:
         specifier: 2.0.33
         version: 2.0.33(typescript@5.2.2)(vue@3.3.7)
+      pinia-plugin-persistedstate:
+        specifier: ^3.2.0
+        version: 3.2.0(pinia@2.0.33)
       print-js:
         specifier: ^1.6.0
         version: 1.6.0
@@ -821,6 +824,16 @@ packages:
       '@ant-design/colors': 6.0.0
       '@ant-design/icons-svg': 4.2.1
       vue: 3.3.7(typescript@5.2.2)
+
+  /@ant-design/icons-vue@7.0.1(vue@3.3.7):
+    resolution: {integrity: sha512-eCqY2unfZK6Fe02AwFlDHLfoyEFreP6rBwAZMIJ1LugmfMiVgwWDYlp1YsRugaPtICYOabV1iWxXdP12u9U43Q==}
+    peerDependencies:
+      vue: '>=3.0.3'
+    dependencies:
+      '@ant-design/colors': 6.0.0
+      '@ant-design/icons-svg': 4.2.1
+      vue: 3.3.7(typescript@5.2.2)
+    dev: false
 
   /@antfu/install-pkg@0.1.1:
     resolution: {integrity: sha512-LyB/8+bSfa0DFGC06zpCEfs89/XoWZwws5ygEa5D+Xsm3OfI+aXQ86VgVG7Acyef+rSZ5HE7J8rrxzrQeM3PjQ==}
@@ -2676,6 +2689,14 @@ packages:
   /@ctrl/tinycolor@3.6.0:
     resolution: {integrity: sha512-/Z3l6pXthq0JvMYdUFyX9j0MaCltlIn6mfh9jLyQwg5aPKxkyNa0PTHtU1AlFXLNk55ZuAeJRcpvq+tmLfKmaQ==}
     engines: {node: '>=10'}
+
+  /@emotion/hash@0.9.1:
+    resolution: {integrity: sha512-gJB6HLm5rYwSLI6PQa+X1t5CFGrv1J1TWG+sOyMCeKz2ojaj6Fnl/rZEspogG+cvqbt4AE/2eIyD2QfLKTBNlQ==}
+    dev: false
+
+  /@emotion/unitless@0.8.1:
+    resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
+    dev: false
 
   /@esbuild/android-arm64@0.17.19:
     resolution: {integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==}
@@ -6618,19 +6639,22 @@ packages:
       warning: 4.0.3
     dev: true
 
-  /ant-design-vue@3.2.20(vue@3.3.7):
-    resolution: {integrity: sha512-YWpMfGaGoRastIXEYfCoJiaRiDHk4chqtYhlKQM5GqPt6NfvrM1Vg2e60yHtjxlZjed91wCMm0rAmyUr7Hwzdg==}
+  /ant-design-vue@4.0.6(vue@3.3.7):
+    resolution: {integrity: sha512-6kh3b8Ito9SAbOKTW0wyfcCnd859uhQQlttjo8RjMj6YjLK52yNO2TdgYRwed06scUm5RwEnQ2JKMxYYoeG1MA==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
     dependencies:
       '@ant-design/colors': 6.0.0
-      '@ant-design/icons-vue': 6.1.0(vue@3.3.7)
+      '@ant-design/icons-vue': 7.0.1(vue@3.3.7)
       '@babel/runtime': 7.22.6
       '@ctrl/tinycolor': 3.6.0
+      '@emotion/hash': 0.9.1
+      '@emotion/unitless': 0.8.1
       '@simonwep/pickr': 1.8.2
       array-tree-filter: 2.1.0
       async-validator: 4.2.5
+      csstype: 3.1.2
       dayjs: 1.11.10
       dom-align: 1.12.4
       dom-scroll-into-view: 2.0.1
@@ -6639,6 +6663,8 @@ packages:
       resize-observer-polyfill: 1.5.1
       scroll-into-view-if-needed: 2.2.31
       shallow-equal: 1.2.1
+      stylis: 4.3.0
+      throttle-debounce: 5.0.0
       vue: 3.3.7(typescript@5.2.2)
       vue-types: 3.0.2(vue@3.3.7)
       warning: 4.0.3
@@ -15600,6 +15626,14 @@ packages:
     requiresBuild: true
     optional: true
 
+  /pinia-plugin-persistedstate@3.2.0(pinia@2.0.33):
+    resolution: {integrity: sha512-tZbNGf2vjAQcIm7alK40sE51Qu/m9oWr+rEgNm/2AWr1huFxj72CjvpQcIQzMknDBJEkQznCLAGtJTIcLKrKdw==}
+    peerDependencies:
+      pinia: ^2.0.0
+    dependencies:
+      pinia: 2.0.33(typescript@5.2.2)(vue@3.3.7)
+    dev: false
+
   /pinia@2.0.33(typescript@5.2.2)(vue@3.3.7):
     resolution: {integrity: sha512-HOj1yVV2itw6rNIrR2f7+MirGNxhORjrULL8GWgRwXsGSvEqIQ+SE0MYt6cwtpegzCda3i+rVTZM+AM7CG+kRg==}
     peerDependencies:
@@ -17785,6 +17819,10 @@ packages:
       - supports-color
     dev: true
 
+  /stylis@4.3.0:
+    resolution: {integrity: sha512-E87pIogpwUsUwXw7dNyU4QDjdgVMy52m+XEOPEKUn161cCzWjjhPSQhByfd1CcNvrOLnXQ6OnnZDwnJrz/Z4YQ==}
+    dev: false
+
   /superagent-proxy@3.0.0(superagent@8.0.9):
     resolution: {integrity: sha512-wAlRInOeDFyd9pyonrkJspdRAxdLrcsZ6aSnS+8+nu4x1aXbz6FWSTT9M6Ibze+eG60szlL7JA8wEIV7bPWuyQ==}
     engines: {node: '>=6'}
@@ -18060,6 +18098,11 @@ packages:
 
   /throat@6.0.2:
     resolution: {integrity: sha512-WKexMoJj3vEuK0yFEapj8y64V0A6xcuPuK9Gt1d0R+dzCSJc0lHqQytAbSB4cDAK0dWh4T0E2ETkoLE2WZ41OQ==}
+    dev: false
+
+  /throttle-debounce@5.0.0:
+    resolution: {integrity: sha512-2iQTSgkkc1Zyk0MeVrt/3BvuOXYPl/R8Z0U2xxo9rjwNciaHDG3R+Lm6dh4EeUci49DanvBnuqI6jshoQQRGEg==}
+    engines: {node: '>=12.22'}
     dev: false
 
   /through2@2.0.5:

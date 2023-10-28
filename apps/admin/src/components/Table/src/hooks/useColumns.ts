@@ -9,13 +9,14 @@ import { isArray, isBoolean, isFunction, isMap, isString } from '/@/utils/is';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { formatToDate } from '/@/utils/dateUtil';
 import { ACTION_COLUMN_FLAG, DEFAULT_ALIGN, INDEX_COLUMN_FLAG, PAGE_SIZE } from '../const';
+import { ColumnType } from 'ant-design-vue/es/table';
 
 function handleItem(item: BasicColumn, ellipsis: boolean) {
   const { key, dataIndex, children } = item;
   item.align = item.align || DEFAULT_ALIGN;
   if (ellipsis) {
     if (!key) {
-      item.key = dataIndex;
+      item.key = typeof dataIndex == 'object' ? dataIndex.join('-') : dataIndex;
     }
     if (!isBoolean(item.ellipsis)) {
       Object.assign(item, {
@@ -150,9 +151,7 @@ export function useColumns(
       const { slots, customRender, format, edit, editRow, flag } = column;
 
       if (!slots || !slots?.title) {
-        // column.slots = { title: `header-${dataIndex}`, ...(slots || {}) };
         column.customTitle = column.title;
-        Reflect.deleteProperty(column, 'title');
       }
       const isDefaultAction = [INDEX_COLUMN_FLAG, ACTION_COLUMN_FLAG].includes(flag!);
       if (!customRender && format && !edit && !isDefaultAction) {
@@ -260,14 +259,26 @@ export function useColumns(
   function getCacheColumns() {
     return cacheColumns;
   }
+  function setCacheColumns(columns: BasicColumn[]) {
+    if (!isArray(columns)) return;
+    cacheColumns = columns.filter((item) => !item.flag);
+  }
+  /**
+   * 拖拽列宽修改列的宽度
+   */
+  function setColumnWidth(w: number, col: ColumnType<BasicColumn>) {
+    col.width = w;
+  }
 
   return {
     getColumnsRef,
     getCacheColumns,
     getColumns,
     setColumns,
+    setColumnWidth,
     getViewColumns,
     setCacheColumnsByField,
+    setCacheColumns,
   };
 }
 

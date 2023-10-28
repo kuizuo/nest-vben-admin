@@ -70,7 +70,7 @@
         const valueField = isCheckValue ? 'checked' : 'value';
         const val = unref(currentValueRef);
 
-        const value = isCheckValue ? (isNumber(val) && isBoolean(val) ? val : !!val) : val;
+        const value = isCheckValue ? (isNumber(val) || isBoolean(val) ? val : !!val) : val;
 
         let compProps = props.column?.editComponentProps ?? ({} as any);
         const { record, column, index } = props;
@@ -273,8 +273,8 @@
             }
           }
         }
-
         set(record, dataKey, value);
+        defaultValueRef.value = value;
         //const record = await table.updateTableData(index, dataKey, value);
         needEmit && table.emit?.('edit-end', { record, index, key: dataKey, value });
         isEdit.value = false;
@@ -483,6 +483,7 @@
   }
   .@{prefix-cls} {
     position: relative;
+    min-height: 24px; //设置高度让其始终可被hover
 
     &__wrapper {
       display: flex;

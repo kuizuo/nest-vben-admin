@@ -15,7 +15,6 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
 import { h } from 'vue';
-import { useWsStore } from './ws';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -110,6 +109,7 @@ export const useUserStore = defineStore({
         this.setSessionTimeout(false);
       } else {
         const permissionStore = usePermissionStore();
+
         if (!permissionStore.isDynamicAddedRoute) {
           const routes = await permissionStore.buildRoutesAction();
           routes.forEach((route) => {
@@ -134,11 +134,6 @@ export const useUserStore = defineStore({
         this.setRoleList([]);
       }
       this.setUserInfo(userInfo);
-      if (import.meta.env.PROD) {
-        const wsStore = useWsStore();
-        !wsStore.client && wsStore.initSocket();
-      }
-
       return userInfo;
     },
     /**
@@ -152,8 +147,6 @@ export const useUserStore = defineStore({
           console.log('注销Token失败');
         }
       }
-      const wsStore = useWsStore();
-      wsStore.closeSocket();
       this.setToken(undefined);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
