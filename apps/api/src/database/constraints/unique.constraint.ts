@@ -6,8 +6,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import merge from 'deepmerge';
-import { isNil } from 'lodash';
+import { isNil, merge } from 'lodash';
 import { DataSource, ObjectType } from 'typeorm';
 
 type Condition = {
@@ -22,7 +21,7 @@ type Condition = {
 @ValidatorConstraint({ name: 'entityItemUnique', async: true })
 @Injectable()
 export class UniqueConstraint implements ValidatorConstraintInterface {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource) { }
 
   async validate(value: any, args: ValidationArguments) {
     // 获取要验证的模型和字段
@@ -32,9 +31,9 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
     const condition = ('entity' in args.constraints[0]
       ? merge(config, args.constraints[0])
       : {
-          ...config,
-          entity: args.constraints[0],
-        }) as unknown as Required<Condition>;
+        ...config,
+        entity: args.constraints[0],
+      }) as unknown as Required<Condition>;
     if (!condition.entity) return false;
     try {
       // 查询是否存在数据,如果已经存在则验证失败
