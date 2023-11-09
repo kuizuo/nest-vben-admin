@@ -23,6 +23,11 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '排序',
+    dataIndex: 'orderNo',
+    width: 50,
+  },
+  {
     title: '权限标识',
     dataIndex: 'permission',
     width: 180,
@@ -35,11 +40,6 @@ export const columns: BasicColumn[] = [
   {
     title: '组件',
     dataIndex: 'component',
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderNo',
-    width: 50,
   },
   {
     title: '缓存',

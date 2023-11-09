@@ -1,13 +1,12 @@
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-// @ts-ignore: type unless
-import DefineOptions from 'unplugin-vue-define-options/vite';
 import { type PluginOption } from 'vite';
 import purgeIcons from 'vite-plugin-purge-icons';
 
-import { createAppConfigPlugin } from './appConfig';
+import { createConfigPluginConfig } from './appConfig';
 import { configCompressPlugin } from './compress';
 import { configHtmlPlugin } from './html';
+import { configMockPlugin } from './mock';
 import { configSvgIconsPlugin } from './svgSprite';
 import { configVisualizerConfig } from './visualizer';
 
@@ -19,10 +18,10 @@ interface Options {
   enableAnalyze?: boolean;
 }
 
-async function createPlugins({ isBuild, root, enableMock, compress, enableAnalyze }: Options) {
-  const vitePlugins: (PluginOption | PluginOption[])[] = [vue(), vueJsx(), DefineOptions()];
+async function createPlugins({ isBuild, enableMock, compress, enableAnalyze }: Options) {
+  const vitePlugins: (PluginOption | PluginOption[])[] = [vue(), vueJsx()];
 
-  const appConfigPlugin = await createAppConfigPlugin({ root, isBuild });
+  const appConfigPlugin = await createConfigPluginConfig(isBuild);
   vitePlugins.push(appConfigPlugin);
 
   // vite-plugin-html
@@ -50,9 +49,9 @@ async function createPlugins({ isBuild, root, enableMock, compress, enableAnalyz
   }
 
   // vite-plugin-mock
-  // if (enableMock) {
-  //   vitePlugins.push(configMockPlugin({ isBuild }));
-  // }
+  if (enableMock) {
+    vitePlugins.push(configMockPlugin({ isBuild }));
+  }
 
   return vitePlugins;
 }

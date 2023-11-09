@@ -22,7 +22,6 @@ export function checkStatus(
 
   switch (status) {
     case 400:
-    case 422:
       errMessage = `${msg}`;
       break;
     // 401: Not logged in

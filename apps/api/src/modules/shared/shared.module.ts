@@ -31,14 +31,12 @@ const providers = [AppLoggerService, MailerService, IpService, QQService];
       // port: 6379,
     }),
     // rate limit
-    ThrottlerModule.forRootAsync({
-      imports: [],
-      inject: [ConfigService],
-      useFactory: () => ({
-        ttl: 60,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
         limit: 5,
-      }),
-    }),
+      },
+    ]),
     // redis
     RedisModule.forRootAsync({
       imports: [ConfigModule],

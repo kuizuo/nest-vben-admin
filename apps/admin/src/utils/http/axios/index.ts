@@ -10,7 +10,7 @@ import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
-import { isString, isUnDef, isNull, isEmpty } from '/@/utils/is';
+import { isString, isUndefined, isNull, isEmpty } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
@@ -46,10 +46,10 @@ const transform: AxiosTransform = {
     // 错误的时候返回
 
     const { data } = res;
-    if (!data) {
-      // return '[HTTP] Request has no return value';
-      throw new Error(t('sys.api.apiRequestFailed'));
-    }
+    // if (!data) {
+    //   // return '[HTTP] Request has no return value';
+    //   throw new Error(t('sys.api.apiRequestFailed'));
+    // }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, data: result, message } = data;
 
@@ -58,7 +58,7 @@ const transform: AxiosTransform = {
     if (hasSuccess) {
       let successMsg = message;
 
-      if (isNull(successMsg) || isUnDef(successMsg) || isEmpty(successMsg)) {
+      if (isNull(successMsg) || isUndefined(successMsg) || isEmpty(successMsg)) {
         successMsg = t(`sys.api.operationSuccess`);
       }
 

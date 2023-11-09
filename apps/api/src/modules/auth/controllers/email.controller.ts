@@ -19,7 +19,7 @@ export class EmailController {
   @Post('send')
   @ApiOperation({ summary: '发送邮箱验证码' })
   @Public()
-  @Throttle(2, 60)
+  @Throttle({ default: { limit: 2, ttl: 60000 } })
   async sendEmailCode(
     @Body() dto: SendEmailCodeDto,
     @Ip() ip: string,

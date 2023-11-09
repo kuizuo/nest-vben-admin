@@ -1,7 +1,7 @@
 {
   "name": "nest-vben-admin",
   "version": "0.1.0",
-  "packageManager": "pnpm@8.10.0",
+  "packageManager": "pnpm@8.10.2",
   "description": "基于NestJs + Vben Admin编写的一款前后端分离的权限管理系统",
   "author": {
     "name": "kuizuo",
@@ -40,11 +40,11 @@
   "devDependencies": {
     "@kuizuo/eslint-config-ts": "^1.0.1",
     "cross-env": "7.0.3",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.4.6",
-    "rimraf": "^4.4.1",
+    "rimraf": "^5.0.5",
     "turbo": "^1.10.16",
     "typescript": "^5.2.2",
-    "unbuild": "^1.2.1"
+    "unbuild": "^2.0.0"
   }
 }

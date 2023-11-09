@@ -6,7 +6,7 @@ import { defHttp } from '/@/utils/http/axios';
 export interface User {
   id: number;
   username: string;
-  realName: string;
+  nickname: string;
 }
 
 export type UserListResult = BasicPaginationResult<User>;

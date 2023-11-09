@@ -4,7 +4,7 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="50%"
+    width="40%"
     @ok="handleSubmit"
   >
     <BasicForm @register="registerForm" />
@@ -15,10 +15,11 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './menu.data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
-  import { getMenuList, createMenu, updateMenu } from '/@/api/system/menu';
+  import { getMenuList, createMenu, updateMenu, MenuParams } from '/@/api/system/menu';
 
   const emit = defineEmits(['success', 'register']);
 
+  const rowId = ref<number>(0);
   const isUpdate = ref(true);
 
   const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
@@ -40,6 +41,8 @@
     });
 
     if (unref(isUpdate)) {
+      rowId.value = data.record.id;
+
       setFieldsValue({
         ...data.record,
       });
@@ -54,9 +57,9 @@
       setDrawerProps({ confirmLoading: true });
 
       if (!unref(isUpdate)) {
-        await createMenu(values);
+        await createMenu(values as MenuParams);
       } else {
-        await updateMenu(values.id, values);
+        await updateMenu(rowId.value, values);
       }
 
       closeDrawer();

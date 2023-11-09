@@ -27,7 +27,7 @@ export class CaptchaController {
   @ApiOperation({ summary: '获取登录图片验证码' })
   @ApiResult({ type: ImageCaptcha })
   @Public()
-  @Throttle(2, 60)
+  @Throttle({ default: { limit: 2, ttl: 60000 } })
   async captchaByImg(@Query() dto: ImageCaptchaDto): Promise<ImageCaptcha> {
     const { width, height } = dto;
 
