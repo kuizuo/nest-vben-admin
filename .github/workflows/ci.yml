@@ -7,31 +7,36 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # macos-latest, windows-latest
+        node: [18]
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-
-      - name: Setup Node.js environment
+      - name: Set node version to ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-          cache: pnpm
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: pnpm install
+      - run: corepack enable
+
+      - name: Setup
+        run: npm i -g @antfu/ni
+
+      - name: Install
+        run: nci
 
       - name: Build
-        run: pnpm build
+        run: nr build
 
       - name: SSH Deploy admin
-        uses: easingthemes/ssh-deploy@v2.2.11
+        uses: easingthemes/ssh-deploy@v4.1.10
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: '-avzr --delete'
           SOURCE: 'apps/admin/dist'
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
@@ -39,19 +44,11 @@ jobs:
           TARGET: '/www/wwwroot/admin.kuizuo.cn'
 
       - name: SSH Deploy api
-        uses: easingthemes/ssh-deploy@v2.2.11
+        uses: easingthemes/ssh-deploy@v4.1.10
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: '-avzr --delete'
           SOURCE: 'apps/api/dist'
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: '/www/wwwroot/NodeProject/kz-admin'
-
-      - name: SSH Commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          script: pm2 restart kz-admin
+          TARGET: '/www/wwwroot/NodeProject/nest-admin'
