@@ -3,6 +3,7 @@ import { InjectQueue } from '@nestjs/bull';
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
@@ -14,12 +15,11 @@ import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 import { Like, Repository } from 'typeorm';
 
+import { BusinessException } from '@/common/exceptions/biz.exception';
 import { ErrorEnum } from '@/constants/error-code.constant';
 
-import { ApiException } from '@/exceptions/api.exception';
 import { paginate } from '@/helper/paginate';
 import { Pagination } from '@/helper/paginate/pagination';
-import { AppLoggerService } from '@/modules/shared/services/app-logger.service';
 
 import { TaskEntity } from '@/modules/system/task/task.entity';
 import { MISSION_DECORATOR_KEY } from '@/modules/tasks/mission.decorator';
@@ -34,6 +34,8 @@ import { TaskDto, TaskQueryDto } from './task.dto';
 
 @Injectable()
 export class TaskService implements OnModuleInit {
+  private logger = new Logger(TaskService.name);
+
   constructor(
     @InjectRepository(TaskEntity)
     private taskRepository: Repository<TaskEntity>,
@@ -41,8 +43,6 @@ export class TaskService implements OnModuleInit {
     private moduleRef: ModuleRef,
     private reflector: Reflector,
     @InjectRedis() private redis: Redis,
-
-    private logger: AppLoggerService,
   ) {}
 
   /**
@@ -313,7 +313,7 @@ export class TaskService implements OnModuleInit {
       );
       // 如果没有，则抛出错误
       if (!hasMission) {
-        throw new ApiException(ErrorEnum.INSECURE_MISSION);
+        throw new BusinessException(ErrorEnum.INSECURE_MISSION);
       }
     } catch (e) {
       if (e instanceof UnknownElementException) {

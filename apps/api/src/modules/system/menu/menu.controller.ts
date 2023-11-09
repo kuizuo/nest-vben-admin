@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,50 +8,50 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { flattenDeep } from 'lodash';
 
-import { IAppConfig } from '@/config';
-import { ErrorEnum } from '@/constants/error-code.constant';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { IdParam } from '@/decorators/id-param.decorator';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { ApiException } from '@/exceptions/api.exception';
-import { Permission } from '@/modules/rbac/decorators';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { IdParam } from '@/common/decorators/id-param.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
+import { Permission } from '@/modules/auth/decorators/permission.decorator';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
 import { MenuDto, MenuQueryDto } from './menu.dto';
 import { MenuService } from './menu.service';
-import { PermissionMenu } from './permission';
+
+export const Permissions = {
+  LIST: 'system:menu:list',
+  CREATE: 'system:menu:create',
+  READ: 'system:menu:read',
+  UPDATE: 'system:menu:update',
+  DELETE: 'system:menu:delete',
+} as const;
 
 @ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
 @Controller('menus')
 export class MenuController {
-  constructor(
-    private menuService: MenuService,
-    private configService: ConfigService,
-  ) {}
+  constructor(private menuService: MenuService) {}
 
   @Get()
   @ApiOperation({ summary: '获取所有菜单列表' })
   @ApiResult({ type: [MenuEntity] })
-  @Permission(PermissionMenu.LIST)
+  @Permission(Permissions.LIST)
   async list(@Query() dto: MenuQueryDto) {
     return this.menuService.list(dto);
   }
 
   @Get(':id')
   @ApiOperation({ summary: '获取菜单或权限信息' })
-  @Permission(PermissionMenu.READ)
+  @Permission(Permissions.READ)
   async info(@IdParam() id: number) {
     return this.menuService.getMenuItemAndParentInfo(id);
   }
 
   @Post()
   @ApiOperation({ summary: '新增菜单或权限' })
-  @Permission(PermissionMenu.CREATE)
+  @Permission(Permissions.CREATE)
   async create(@Body() dto: MenuDto): Promise<void> {
     // check
     await this.menuService.check(dto);
@@ -70,14 +71,11 @@ export class MenuController {
 
   @Put(':id')
   @ApiOperation({ summary: '更新菜单或权限' })
-  @Permission(PermissionMenu.UPDATE)
+  @Permission(Permissions.UPDATE)
   async update(
     @IdParam() id: number,
     @Body() dto: Partial<MenuDto>,
   ): Promise<void> {
-    if (id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId)
-      throw new ApiException(ErrorEnum.SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED);
-
     // check
     await this.menuService.check(dto);
     if (dto.parent === -1 || !dto.parent) {
@@ -93,15 +91,12 @@ export class MenuController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除菜单或权限' })
-  @Permission(PermissionMenu.DELETE)
+  @Permission(Permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
-    // 68为内置init.sql中插入最后的索引编号
-    if (
-      id <= this.configService.get<IAppConfig>('app').protectSysPermMenuMaxId
-    ) {
-      // 系统内置功能不提供删除
-      throw new ApiException(ErrorEnum.SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED);
+    if (await this.menuService.checkRoleByMenuId(id)) {
+      throw new BadRequestException('该菜单存在关联角色，无法删除');
     }
+
     // 如果有子目录，一并删除
     const childMenus = await this.menuService.findChildMenus(id);
     await this.menuService.deleteMenuItem(flattenDeep([id, childMenus]));

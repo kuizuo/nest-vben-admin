@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { RouterModule } from '@nestjs/core';
 
+import { UserModule } from '../user/user.module';
+
 import { DeptModule } from './dept/dept.module';
 import { DictModule } from './dict/dict.module';
 import { LogModule } from './log/log.module';
@@ -10,7 +12,6 @@ import { OnlineModule } from './online/online.module';
 import { RoleModule } from './role/role.module';
 import { ServeModule } from './serve/serve.module';
 import { TaskModule } from './task/task.module';
-import { UserModule } from './user/user.module';
 
 const modules = [
   UserModule,
@@ -26,8 +27,6 @@ const modules = [
 
 @Module({
   imports: [
-    // forwardRef(() => WSModule),
-    // forwardRef(() => AuthModule),
     ...modules,
     RouterModule.register([
       {

@@ -1,14 +1,14 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
+import { BusinessException } from '@/common/exceptions/biz.exception';
 import { ErrorEnum } from '@/constants/error-code.constant';
-import { ApiResult } from '@/decorators/api-result.decorator';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { ApiException } from '@/exceptions/api.exception';
 
-import { AuthUser } from '@/modules/auth/decorators';
+import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator';
 
-import { Permission } from '@/modules/rbac/decorators';
+import { Permission } from '@/modules/auth/decorators/permission.decorator';
 
 import { KickDto } from './online.dto';
 import { OnlineUserInfo } from './online.model';
@@ -34,7 +34,7 @@ export class OnlineController {
   @Permission('system:online:kick')
   async kick(@Body() dto: KickDto, @AuthUser() user: IAuthUser): Promise<void> {
     if (dto.id === user.uid) {
-      throw new ApiException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
+      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
     }
     await this.onlineService.kickUser(dto.id, user.uid);
   }

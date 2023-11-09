@@ -4,10 +4,10 @@ import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 
+import { BusinessException } from '@/common/exceptions/biz.exception';
 import { ErrorEnum } from '@/constants/error-code.constant';
-import { ApiException } from '@/exceptions/api.exception';
 
-import { UserService } from '@/modules/system/user/user.service';
+import { UserService } from '@/modules/user/user.service';
 
 import { MD5 } from '@/utils';
 
@@ -32,12 +32,12 @@ export class AuthService {
     const user = await this.userService.findUserByUserName(credential);
 
     if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.USER_NOT_FOUND);
+      throw new BusinessException(ErrorEnum.USER_NOT_FOUND);
     }
 
     const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
+      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD);
     }
 
     if (user) {
@@ -60,12 +60,12 @@ export class AuthService {
   ): Promise<string> {
     const user = await this.userService.findUserByUserName(username);
     if (isEmpty(user)) {
-      throw new ApiException(ErrorEnum.USER_NOT_FOUND);
+      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD);
     }
 
     const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
+      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD);
     }
 
     const roleIds = await this.roleService.getRoleIdsByUser(user.id);
@@ -82,7 +82,7 @@ export class AuthService {
 
     // 设置菜单权限
     const permissions = await this.menuService.getPermissions(user.id);
-    await this.setPermissions(user.id, permissions);
+    await this.setPermissionsCache(user.id, permissions);
 
     await this.loginLogService.create(user.id, ip, ua);
 
@@ -97,7 +97,7 @@ export class AuthService {
 
     const comparePassword = MD5(`${password}${user.psalt}`);
     if (user.password !== comparePassword) {
-      throw new ApiException(ErrorEnum.PASSWORD_MISMATCH);
+      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD);
     }
   }
 
@@ -140,7 +140,12 @@ export class AuthService {
     return this.menuService.getPermissions(uid);
   }
 
-  async setPermissions(uid: number, permissions: string[]): Promise<void> {
+  async getPermissionsCache(uid: number): Promise<string[]> {
+    const permissionString = await this.redis.get(`auth:permission:${uid}`);
+    return permissionString ? JSON.parse(permissionString) : [];
+  }
+
+  async setPermissionsCache(uid: number, permissions: string[]): Promise<void> {
     await this.redis.set(`auth:permission:${uid}`, JSON.stringify(permissions));
   }
 
@@ -150,10 +155,5 @@ export class AuthService {
 
   async getTokenByUid(uid: number): Promise<string> {
     return this.redis.get(`auth:token:${uid}`);
-  }
-
-  async getPermissionsByUid(uid: number): Promise<string[]> {
-    const permissionString = await this.redis.get(`auth:permission:${uid}`);
-    return permissionString ? JSON.parse(permissionString) : [];
   }
 }

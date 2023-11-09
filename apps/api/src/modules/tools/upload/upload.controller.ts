@@ -2,10 +2,10 @@ import { MultipartFile } from '@fastify/multipart';
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator';
 
-import { Permission } from '@/modules/rbac/decorators';
+import { Permission } from '@/modules/auth/decorators/permission.decorator';
 
 import { UploadService } from './upload.service';
 

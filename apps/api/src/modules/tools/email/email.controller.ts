@@ -2,8 +2,8 @@ import { Body, Controller, Post } from '@nestjs/common';
 
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { MailerService } from '@/modules/shared/mailer/mailer.service';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
+import { MailerService } from '@/shared/mailer/mailer.service';
 
 import { EmailSendDto } from './email.dto';
 

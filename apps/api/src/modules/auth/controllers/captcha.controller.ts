@@ -8,11 +8,11 @@ import Redis from 'ioredis';
 import { isEmpty } from 'lodash';
 import * as svgCaptcha from 'svg-captcha';
 
-import { ApiResult } from '@/decorators';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
 
 import { generateUUID } from '@/utils';
 
-import { Public } from '../decorators';
+import { Public } from '../decorators/public.decorator';
 
 import { ImageCaptchaDto } from '../dto/captcha.dto';
 import { ImageCaptcha } from '../models/auth.model';
@@ -27,7 +27,7 @@ export class CaptchaController {
   @ApiOperation({ summary: '获取登录图片验证码' })
   @ApiResult({ type: ImageCaptcha })
   @Public()
-  @Throttle({ default: { limit: 2, ttl: 60000 } })
+  @Throttle({ default: { limit: 2, ttl: 600000 } })
   async captchaByImg(@Query() dto: ImageCaptchaDto): Promise<ImageCaptcha> {
     const { width, height } = dto;
 

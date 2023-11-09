@@ -5,8 +5,8 @@ import { Between, Like, Repository } from 'typeorm';
 import { paginateRaw } from '@/helper/paginate';
 import { PaginationTypeEnum } from '@/helper/paginate/interface';
 import { Pagination } from '@/helper/paginate/pagination';
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
 import { Storage } from '@/modules/tools/storage/storage.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 
 import { deleteFile } from '@/utils/file';
 

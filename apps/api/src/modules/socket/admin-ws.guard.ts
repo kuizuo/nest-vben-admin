@@ -2,8 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
 
+import { SocketException } from '@/common/exceptions/socket.exception';
 import { ErrorEnum } from '@/constants/error-code.constant';
-import { SocketException } from '@/exceptions/socket.exception';
 
 import { AuthService } from './auth.service';
 

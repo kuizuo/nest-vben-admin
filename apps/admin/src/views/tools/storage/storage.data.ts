@@ -48,10 +48,8 @@ export const columns: BasicColumn[] = [
   {
     title: '创建时间',
     dataIndex: 'createdAt',
-    width: 150,
-    format: (text) => {
-      return formatToDateTime(text);
-    },
+    width: 160,
+    format: (text) => formatToDateTime(text),
   },
 ];
 

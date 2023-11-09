@@ -3,7 +3,7 @@ import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
-@Entity({ name: 'tool-storage' })
+@Entity({ name: 'tool_storage' })
 export class Storage extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()

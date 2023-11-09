@@ -1,11 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiResult } from '@/decorators';
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
 import { Pagination } from '@/helper/paginate/pagination';
 
-import { Permission } from '@/modules/rbac/decorators';
+import { Permission } from '@/modules/auth/decorators/permission.decorator';
 
 import {
   CaptchaLogQueryDto,
@@ -14,10 +14,16 @@ import {
 } from './dto/log.dto';
 import { CaptchaLogEntity } from './entities/captcha-log.entity';
 import { TaskLogEntity } from './entities/task-log.entity';
-import { LoginLogInfo } from './log.modal';
+import { LoginLogInfo } from './models/log.model';
 import { CaptchaLogService } from './services/captcha-log.service';
 import { LoginLogService } from './services/login-log.service';
 import { TaskLogService } from './services/task-log.service';
+
+export const Permissions = {
+  TaskList: 'system:log:task:list',
+  LogList: 'system:log:login:list',
+  CaptchaList: 'system:log:captcha:list',
+};
 
 @ApiSecurityAuth()
 @ApiTags('System - 日志模块')
@@ -32,7 +38,7 @@ export class LogController {
   @Get('login/list')
   @ApiOperation({ summary: '查询登录日志列表' })
   @ApiResult({ type: [LoginLogInfo], isPage: true })
-  @Permission('system:log:task:list')
+  @Permission(Permissions.TaskList)
   async loginLogPage(
     @Query() dto: LoginLogQueryDto,
   ): Promise<Pagination<LoginLogInfo>> {
@@ -42,7 +48,7 @@ export class LogController {
   @Get('task/list')
   @ApiOperation({ summary: '查询任务日志列表' })
   @ApiResult({ type: [TaskLogEntity], isPage: true })
-  @Permission('system:log:task:list')
+  @Permission(Permissions.LogList)
   async taskList(@Query() dto: TaskLogQueryDto) {
     return this.taskService.list(dto);
   }
@@ -50,7 +56,7 @@ export class LogController {
   @Get('captcha/list')
   @ApiOperation({ summary: '查询验证码日志列表' })
   @ApiResult({ type: [CaptchaLogEntity], isPage: true })
-  @Permission('system:log:captcha:list')
+  @Permission(Permissions.CaptchaList)
   async captchaList(
     @Query() dto: CaptchaLogQueryDto,
   ): Promise<Pagination<CaptchaLogEntity>> {

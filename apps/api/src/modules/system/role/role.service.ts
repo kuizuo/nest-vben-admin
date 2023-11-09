@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { difference, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { EntityManager, In, Repository } from 'typeorm';
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto';
@@ -38,21 +38,21 @@ export class RoleService {
   /**
    * 根据角色获取角色信息
    */
-  async info(rid: number): Promise<RoleInfo> {
+  async info(id: number): Promise<RoleInfo> {
     const info = await this.roleRepository
       .createQueryBuilder('role')
       .where({
-        id: rid,
+        id,
       })
       .getOne();
 
-    if (rid === this.configService.get<IAppConfig>('app').adminRoleId) {
-      const menus = await this.menuRepository.find({ select: ['id'] });
-      return { ...info, menuIds: menus.map((m) => m.id) };
-    }
+    // if (id === this.configService.get<IAppConfig>('app').adminRoleId) {
+    //   const menus = await this.menuRepository.find({ select: ['id'] });
+    //   return { ...info, menuIds: menus.map((m) => m.id) };
+    // }
 
     const menus = await this.menuRepository.find({
-      where: { roles: { id: rid } },
+      where: { roles: { id } },
       select: ['id'],
     });
 
@@ -87,24 +87,18 @@ export class RoleService {
   async update(id, { menuIds, ...data }: Partial<RoleDto>): Promise<void> {
     await this.roleRepository.update(id, data);
 
-    // 对比 menu 差异
-    const originMenus = await this.menuRepository.find({
-      where: { roles: { id } },
-    });
-    const originMenuIds = originMenus.map((m) => m.id);
-    const insertMenusRowIds = difference(menuIds, originMenuIds);
-    const deleteMenusRowIds = difference(originMenuIds, menuIds);
+    if (!isEmpty(menuIds)) {
+      // using transaction
+      await this.entityManager.transaction(async (manager) => {
+        const menus = await this.menuRepository.find({
+          where: { id: In(menuIds) },
+        });
 
-    // using transaction
-    await this.entityManager.transaction(async (manager) => {
-      if (!isEmpty(menuIds)) {
-        await manager
-          .createQueryBuilder()
-          .relation(RoleEntity, 'menus')
-          .of(id)
-          .addAndRemove(insertMenusRowIds, deleteMenusRowIds);
-      }
-    });
+        const role = await this.roleRepository.findOne({ where: { id } });
+        role.menus = menus;
+        await manager.save(role);
+      });
+    }
   }
 
   /**
@@ -150,5 +144,18 @@ export class RoleService {
     return rids.some(
       (r) => r === this.configService.get<IAppConfig>('app').adminRoleId,
     );
+  }
+
+  /**
+   * 根据角色ID查找是否有关联用户
+   */
+  async checkUserByRoleId(id: number): Promise<boolean> {
+    return !!(await this.roleRepository.findOne({
+      where: {
+        users: {
+          id,
+        },
+      },
+    }));
   }
 }

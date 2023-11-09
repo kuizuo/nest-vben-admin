@@ -3,10 +3,11 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
-import { Ip } from '@/decorators/http.decorator';
-import { MailerService } from '@/modules/shared/mailer/mailer.service';
+import { Ip } from '@/common/decorators/http.decorator';
+import { MailerService } from '@/shared/mailer/mailer.service';
 
-import { AuthUser, Public } from '../decorators';
+import { AuthUser } from '../decorators/auth-user.decorator';
+import { Public } from '../decorators/public.decorator';
 
 import { SendEmailCodeDto } from '../dto/captcha.dto';
 
@@ -19,7 +20,7 @@ export class EmailController {
   @Post('send')
   @ApiOperation({ summary: '发送邮箱验证码' })
   @Public()
-  @Throttle({ default: { limit: 2, ttl: 60000 } })
+  @Throttle({ default: { limit: 2, ttl: 600000 } })
   async sendEmailCode(
     @Body() dto: SendEmailCodeDto,
     @Ip() ip: string,

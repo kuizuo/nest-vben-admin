@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 
 import { RefreshTokenEntity } from './refresh-token.entity';
 

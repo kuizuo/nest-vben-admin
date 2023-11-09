@@ -38,7 +38,6 @@
     "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap"
   },
   "devDependencies": {
-    "@kuizuo/eslint-config-ts": "^1.0.1",
     "cross-env": "7.0.3",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.4.6",

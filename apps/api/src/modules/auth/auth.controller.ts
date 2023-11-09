@@ -1,13 +1,13 @@
 import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { Ip } from '@/decorators';
-import { ApiResult } from '@/decorators/api-result.decorator';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { Ip } from '@/common/decorators/http.decorator';
 
-import { UserService } from '../system/user/user.service';
+import { UserService } from '../user/user.service';
 
 import { AuthService } from './auth.service';
-import { Public } from './decorators';
+import { Public } from './decorators/public.decorator';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { LocalGuard } from './guards/local.guard';
 import { LoginToken } from './models/auth.model';

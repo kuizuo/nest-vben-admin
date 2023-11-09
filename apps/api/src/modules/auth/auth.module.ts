@@ -5,13 +5,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { IJwtConfig } from '@/config';
+import { ISecurityConfig } from '@/config';
 import { isDev } from '@/global/env';
 
 import { LogModule } from '../system/log/log.module';
 import { MenuModule } from '../system/menu/menu.module';
 import { RoleModule } from '../system/role/role.module';
-import { UserModule } from '../system/user/user.module';
+import { UserModule } from '../user/user.module';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -41,11 +41,12 @@ const strategies = [LocalStrategy, JwtStrategy];
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const { secret, expires } = configService.get<IJwtConfig>('jwt');
+        const { jwtSecret, jwtExprire } =
+          configService.get<ISecurityConfig>('security');
 
         return {
-          secret,
-          expires,
+          secret: jwtSecret,
+          expires: jwtExprire,
           ignoreExpiration: isDev,
         };
       },

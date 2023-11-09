@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
 
+import { ISecurityConfig, SecurityConfig } from '@/config';
 import { RoleService } from '@/modules/system/role/role.service';
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 
-import { generateUUID } from '@/utils';
+import { generateUUID } from '@/utils/uuid';
 
 import { AccessTokenEntity } from '../entities/access-token.entity';
 import { RefreshTokenEntity } from '../entities/refresh-token.entity';
@@ -18,8 +18,8 @@ import { RefreshTokenEntity } from '../entities/refresh-token.entity';
 export class TokenService {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService,
     private roleService: RoleService,
+    @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
   ) {}
 
   /**
@@ -47,6 +47,12 @@ export class TokenService {
     return null;
   }
 
+  generateJwtSign(payload: any) {
+    const jwtSign = this.jwtService.sign(payload);
+
+    return jwtSign;
+  }
+
   async generateAccessToken(uid: number, roles: string[] = []) {
     const payload: IAuthUser = {
       uid,
@@ -61,7 +67,7 @@ export class TokenService {
     accessToken.value = jwtSign;
     accessToken.user = { id: uid } as UserEntity;
     accessToken.expired_at = dayjs()
-      .add(this.configService.get<number>('jwt.expires'), 'second')
+      .add(this.securityConfig.jwtExprire, 'second')
       .toDate();
 
     await accessToken.save();
@@ -89,13 +95,13 @@ export class TokenService {
     };
 
     const refreshTokenSign = this.jwtService.sign(refreshTokenPayload, {
-      secret: this.configService.get<string>('jwt.refreshSecret'),
+      secret: this.securityConfig.refreshSecret,
     });
 
     const refreshToken = new RefreshTokenEntity();
     refreshToken.value = refreshTokenSign;
     refreshToken.expired_at = now
-      .add(this.configService.get<number>('jwt.refreshExpires'), 'second')
+      .add(this.securityConfig.refreshExpire, 'second')
       .toDate();
     refreshToken.accessToken = accessToken;
 

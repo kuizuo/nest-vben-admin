@@ -8,7 +8,7 @@ import {
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
 
-import { Permission } from '../rbac/decorators';
+import { Permission } from '../auth/decorators/permission.decorator';
 
 export const PermissionHealth = {
   NETWORK: 'app:health:network',

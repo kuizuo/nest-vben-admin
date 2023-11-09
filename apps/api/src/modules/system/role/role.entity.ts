@@ -9,8 +9,8 @@ import {
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
+import { UserEntity } from '../../user/entities/user.entity';
 import { MenuEntity } from '../menu/menu.entity';
-import { UserEntity } from '../user/entities/user.entity';
 
 @Entity({ name: 'sys_role' })
 export class RoleEntity extends AbstractEntity {

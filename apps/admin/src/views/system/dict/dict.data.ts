@@ -27,7 +27,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '更新时间',
-    width: 150,
+    width: 160,
     sorter: true,
     dataIndex: 'updatedAt',
     format: (text: string) => {

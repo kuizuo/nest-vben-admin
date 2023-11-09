@@ -7,7 +7,7 @@ import { In, Repository } from 'typeorm';
 import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway';
 
 import { RoleEntity } from '../system/role/role.entity';
-import { UserEntity } from '../system/user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
 
 import { EVENT_UPDATE_MENU } from './socket.event';
 

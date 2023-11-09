@@ -1,18 +1,18 @@
 import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiResult } from '@/decorators/api-result.decorator';
+import { ApiResult } from '@/common/decorators/api-result.decorator';
 
-import { ApiSecurityAuth } from '@/decorators/swagger.decorator';
-import { AuthUser } from '@/modules/auth/decorators';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
+import { AllowAnon } from '@/modules/auth/decorators/allow-anon.decorator';
+import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator';
 
-import { AllowAnon } from '@/modules/rbac/decorators';
 import { MenuEntity } from '@/modules/system/menu/menu.entity';
 
-import { PasswordUpdateDto } from '@/modules/system/user/dto/password.dto';
+import { PasswordUpdateDto } from '@/modules/user/dto/password.dto';
 
-import { AccountInfo } from '../../system/user/user.model';
-import { UserService } from '../../system/user/user.service';
+import { AccountInfo } from '../../user/user.model';
+import { UserService } from '../../user/user.service';
 import { AuthService } from '../auth.service';
 import { AccountUpdateDto } from '../dto/account.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';

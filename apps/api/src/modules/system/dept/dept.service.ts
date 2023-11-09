@@ -3,10 +3,10 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { isEmpty } from 'lodash';
 import { EntityManager, Repository, TreeRepository } from 'typeorm';
 
+import { BusinessException } from '@/common/exceptions/biz.exception';
 import { ErrorEnum } from '@/constants/error-code.constant';
-import { ApiException } from '@/exceptions/api.exception';
 import { DeptEntity } from '@/modules/system/dept/dept.entity';
-import { UserEntity } from '@/modules/system/user/entities/user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 
 import { deleteEmptyChildren } from '@/utils/list2tree';
 
@@ -37,7 +37,7 @@ export class DeptService {
       .getOne();
 
     if (isEmpty(dept)) {
-      throw new ApiException(ErrorEnum.DEPARTMENT_NOT_FOUND);
+      throw new BusinessException(ErrorEnum.DEPARTMENT_NOT_FOUND);
     }
     return dept;
   }

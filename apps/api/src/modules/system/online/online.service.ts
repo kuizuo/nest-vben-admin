@@ -6,13 +6,13 @@ import { EntityManager } from 'typeorm';
 
 import { UAParser } from 'ua-parser-js';
 
+import { BusinessException } from '@/common/exceptions/biz.exception';
 import { ErrorEnum } from '@/constants/error-code.constant';
-import { ApiException } from '@/exceptions/api.exception';
 import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway';
 import { AdminWSService } from '@/modules/socket/admin-ws.service';
 import { EVENT_KICK } from '@/modules/socket/socket.event';
 
-import { UserService } from '../user/user.service';
+import { UserService } from '../../user/user.service';
 
 import { OnlineUserInfo } from './online.model';
 
@@ -48,7 +48,7 @@ export class OnlineService {
     const rootUserId = await this.userService.findRootUserId();
     const currentUserInfo = await this.userService.getAccountInfo(currentUid);
     if (uid === rootUserId) {
-      throw new ApiException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
+      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
     }
     // reset redis keys
     await this.userService.forbidden(uid);

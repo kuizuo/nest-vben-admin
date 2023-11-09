@@ -10,7 +10,7 @@ import {
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
-import { UserEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')

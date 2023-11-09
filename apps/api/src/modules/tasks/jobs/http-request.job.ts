@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 
-import { AppLoggerService } from '../../shared/services/app-logger.service';
 import { Mission } from '../mission.decorator';
 
 /**
@@ -12,7 +11,7 @@ import { Mission } from '../mission.decorator';
 export class HttpRequestJob {
   constructor(
     private readonly httpService: HttpService,
-    private readonly logger: AppLoggerService,
+    private readonly logger: Logger,
   ) {}
 
   /**

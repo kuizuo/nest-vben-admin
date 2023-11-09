@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 
-import { IS_PUBLIC_KEY } from '../constants';
+import { IS_PUBLIC_KEY } from '../constant';
 
 /**
  * 当接口不需要检测用户登录时添加该装饰器

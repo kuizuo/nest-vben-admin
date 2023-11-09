@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { AbstractEntity } from '@/common/entity/abstract.entity';
 
-import { UserEntity } from '../../user/entities/user.entity';
+import { UserEntity } from '../../../user/entities/user.entity';
 
 @Entity({ name: 'sys_login_log' })
 export class LoginLogEntity extends AbstractEntity {

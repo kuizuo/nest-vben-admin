@@ -17,35 +17,6 @@
     "test:gzip": "npx http-server dist --cors --gzip -c-1",
     "type:check": "vue-tsc --noEmit --skipLibCheck"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "{!(package)*.json,*.code-snippets,.!(browserslist)*rc}": [
-      "prettier --write--parser json"
-    ],
-    "package.json": [
-      "prettier --write"
-    ],
-    "*.vue": [
-      "prettier --write",
-      "eslint --fix",
-      "stylelint --fix"
-    ],
-    "*.{scss,less,styl,html}": [
-      "prettier --write",
-      "stylelint --fix"
-    ],
-    "*.md": [
-      "prettier --write"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-git"
-    }
-  },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "@iconify/iconify": "^3.1.1",

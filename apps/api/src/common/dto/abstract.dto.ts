@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsInt, IsOptional, Min } from 'class-validator';
 
-export abstract class AbstractDTO {
+export abstract class AbstractDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)

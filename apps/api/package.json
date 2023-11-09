@@ -31,6 +31,7 @@
     "migration:revert": "typeorm -- migration:revert"
   },
   "dependencies": {
+    "@fastify/cookie": "^9.1.0",
     "@fastify/multipart": "^8.0.0",
     "@fastify/static": "^6.12.0",
     "@liaoliaots/nestjs-redis": "^9.0.5",
@@ -68,7 +69,6 @@
     "helmet": "^7.1.0",
     "ioredis": "^5.3.2",
     "lodash": "^4.17.21",
-    "log4js": "^6.9.1",
     "mysql": "^2.18.1",
     "nanoid": "^3.3.6",
     "nodemailer": "^6.9.7",
@@ -83,7 +83,9 @@
     "svg-captcha": "^1.4.0",
     "systeminformation": "^5.21.16",
     "typeorm": "^0.3.17",
-    "ua-parser-js": "^1.0.37"
+    "ua-parser-js": "^1.0.37",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@compodoc/compodoc": "^1.1.22",
@@ -135,5 +137,9 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8.1.0"
   }
 }
