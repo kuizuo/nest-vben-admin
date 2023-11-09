@@ -48,11 +48,6 @@ async function createPlugins({ isBuild, enableMock, compress, enableAnalyze }: O
     vitePlugins.push(configVisualizerConfig());
   }
 
-  // vite-plugin-mock
-  if (enableMock) {
-    vitePlugins.push(configMockPlugin({ isBuild }));
-  }
-
   return vitePlugins;
 }
 
