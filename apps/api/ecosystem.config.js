@@ -1,12 +1,12 @@
-const { cpus } = require('os');
+const { cpus } = require('os')
 
-const cpuLen = cpus().length;
+const cpuLen = cpus().length
 
 module.exports = {
   apps: [
     {
       name: 'nest-admin',
-      script: 'index.js',
+      script: './dist/main.js',
       autorestart: true,
       exec_mode: 'cluster',
       watch: false,
@@ -19,4 +19,4 @@ module.exports = {
       },
     },
   ],
-};
+}

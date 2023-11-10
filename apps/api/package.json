@@ -1,27 +1,24 @@
 {
   "name": "api",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "基于NestJs + TypeScript + TypeORM + Redis + MySql + Vben Admin编写的一款前后端分离的权限管理系统",
   "packageManager": "pnpm@8.10.2",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "pnpm prebuild && nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "NODE_ENV=development nest start",
-    "start:prod": "NODE_ENV=production node dist/main",
-    "dev": "NODE_ENV=development nest start --watch",
-    "dev:debug": "NODE_ENV=development nest start --debug --watch",
-    "pm2:prod": "pm2 start ecosystem.config.js --env production",
-    "pm2:dev": "pm2 start ecosystem.config.js --env development",
-    "pm2:test": "pm2 start ecosystem.config.js --env test",
+    "build": "nest build",
+    "dev": "npm run start",
+    "dev:debug": "npm run start:debug",
+    "start": "cross-env NODE_ENV=development nest start -w --path tsconfig.json -- ",
+    "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
+    "start:prod": "cross-env NODE_ENV=production node dist/src/main",
+    "prod": "cross-env NODE_ENV=production pm2-runtime start ecosystem.config.js",
+    "prod:pm2": "cross-env NODE_ENV=production pm2 restart ecosystem.config.js",
+    "prod:stop": "pm2 stop ecosystem.config.js",
+    "prod:debug": "cross-env NODE_ENV=production nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
     "doc": "compodoc -p tsconfig.json -s",
     "typeorm": "NODE_ENV=development typeorm -d ./dist/config/modules/database.config.js",
     "migration:create": "typeorm migration:create",
@@ -123,6 +120,9 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
