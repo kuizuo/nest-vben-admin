@@ -1,14 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger'
+import { IsInt, IsString, Matches, MaxLength, MinLength } from 'class-validator'
 
-import { UserEntity } from '@/modules/user/entities/user.entity';
-import { IsEntityExist } from '@/shared/database/constraints/entity-exist.constraint';
+import { UserEntity } from '@/modules/user/entities/user.entity'
+import { IsEntityExist } from '@/shared/database/constraints/entity-exist.constraint'
 
 export class PasswordUpdateDto {
   @ApiProperty({ description: '旧密码' })
@@ -16,26 +10,26 @@ export class PasswordUpdateDto {
   @Matches(/^[a-z0-9A-Z\W_]+$/)
   @MinLength(6)
   @MaxLength(20)
-  oldPassword: string;
+  oldPassword: string
 
   @ApiProperty({ description: '新密码' })
   @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
     message: '密码必须包含数字、字母，长度为6-16',
   })
-  newPassword: string;
+  newPassword: string
 }
 
 export class UserPasswordDto {
   @ApiProperty({ description: '管理员/用户ID' })
   @IsEntityExist(UserEntity, { message: '用户不存在' })
   @IsInt()
-  id: number;
+  id: number
 
   @ApiProperty({ description: '更改后的密码' })
   @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
     message: '密码格式不正确',
   })
-  password: string;
+  password: string
 }
 
 export class UserExistDto {
@@ -44,5 +38,5 @@ export class UserExistDto {
   @Matches(/^[a-zA-Z0-9_-]{4,16}$/)
   @MinLength(6)
   @MaxLength(20)
-  username: string;
+  username: string
 }

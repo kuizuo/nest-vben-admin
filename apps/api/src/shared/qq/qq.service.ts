@@ -1,5 +1,5 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios'
+import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class QQService {
@@ -8,11 +8,11 @@ export class QQService {
   async getNickname(qq: string | number) {
     const { data } = await this.http.axiosRef.get(
       `https://api.kuizuo.cn/api/qqnick?qq=${qq}`,
-    );
-    return data;
+    )
+    return data
   }
 
   async getAvater(qq: string | number) {
-    return `https://q1.qlogo.cn/g?b=qq&s=100&nk=${qq}`;
+    return `https://q1.qlogo.cn/g?b=qq&s=100&nk=${qq}`
   }
 }

@@ -1,15 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import dayjs from 'dayjs';
+import { Inject, Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import dayjs from 'dayjs'
 
-import { ISecurityConfig, SecurityConfig } from '@/config';
-import { RoleService } from '@/modules/system/role/role.service';
-import { UserEntity } from '@/modules/user/entities/user.entity';
+import { ISecurityConfig, SecurityConfig } from '@/config'
+import { RoleService } from '@/modules/system/role/role.service'
+import { UserEntity } from '@/modules/user/entities/user.entity'
 
-import { generateUUID } from '@/utils/uuid';
+import { generateUUID } from '@/utils/uuid'
 
-import { AccessTokenEntity } from '../entities/access-token.entity';
-import { RefreshTokenEntity } from '../entities/refresh-token.entity';
+import { AccessTokenEntity } from '../entities/access-token.entity'
+import { RefreshTokenEntity } from '../entities/refresh-token.entity'
 
 /**
  * 令牌服务
@@ -28,29 +28,29 @@ export class TokenService {
    * @param response
    */
   async refreshToken(accessToken: AccessTokenEntity) {
-    const { user, refreshToken } = accessToken;
+    const { user, refreshToken } = accessToken
 
     if (refreshToken) {
-      const now = dayjs();
+      const now = dayjs()
       // 判断refreshToken是否过期
-      if (now.isAfter(refreshToken.expired_at)) return null;
+      if (now.isAfter(refreshToken.expired_at)) return null
 
-      const roleIds = await this.roleService.getRoleIdsByUser(user.id);
-      const roleValues = await this.roleService.getRoleValues(roleIds);
+      const roleIds = await this.roleService.getRoleIdsByUser(user.id)
+      const roleValues = await this.roleService.getRoleValues(roleIds)
 
       // 如果没过期则生成新的access_token和refresh_token
-      const token = await this.generateAccessToken(user.id, roleValues);
+      const token = await this.generateAccessToken(user.id, roleValues)
 
-      await accessToken.remove();
-      return token;
+      await accessToken.remove()
+      return token
     }
-    return null;
+    return null
   }
 
   generateJwtSign(payload: any) {
-    const jwtSign = this.jwtService.sign(payload);
+    const jwtSign = this.jwtService.sign(payload)
 
-    return jwtSign;
+    return jwtSign
   }
 
   async generateAccessToken(uid: number, roles: string[] = []) {
@@ -58,27 +58,27 @@ export class TokenService {
       uid,
       pv: 1,
       roles,
-    };
+    }
 
-    const jwtSign = this.jwtService.sign(payload);
+    const jwtSign = this.jwtService.sign(payload)
 
     // 生成accessToken
-    const accessToken = new AccessTokenEntity();
-    accessToken.value = jwtSign;
-    accessToken.user = { id: uid } as UserEntity;
+    const accessToken = new AccessTokenEntity()
+    accessToken.value = jwtSign
+    accessToken.user = { id: uid } as UserEntity
     accessToken.expired_at = dayjs()
       .add(this.securityConfig.jwtExprire, 'second')
-      .toDate();
+      .toDate()
 
-    await accessToken.save();
+    await accessToken.save()
 
     // 生成refreshToken
-    const refreshToken = await this.generateRefreshToken(accessToken, dayjs());
+    const refreshToken = await this.generateRefreshToken(accessToken, dayjs())
 
     return {
       accessToken: jwtSign,
       refreshToken,
-    };
+    }
   }
 
   /**
@@ -92,22 +92,22 @@ export class TokenService {
   ): Promise<string> {
     const refreshTokenPayload = {
       uuid: generateUUID(),
-    };
+    }
 
     const refreshTokenSign = this.jwtService.sign(refreshTokenPayload, {
       secret: this.securityConfig.refreshSecret,
-    });
+    })
 
-    const refreshToken = new RefreshTokenEntity();
-    refreshToken.value = refreshTokenSign;
+    const refreshToken = new RefreshTokenEntity()
+    refreshToken.value = refreshTokenSign
     refreshToken.expired_at = now
       .add(this.securityConfig.refreshExpire, 'second')
-      .toDate();
-    refreshToken.accessToken = accessToken;
+      .toDate()
+    refreshToken.accessToken = accessToken
 
-    await refreshToken.save();
+    await refreshToken.save()
 
-    return refreshTokenSign;
+    return refreshTokenSign
   }
 
   /**
@@ -119,7 +119,7 @@ export class TokenService {
       where: { value },
       relations: ['user', 'refreshToken'],
       cache: true,
-    });
+    })
   }
 
   /**
@@ -129,8 +129,8 @@ export class TokenService {
   async removeAccessToken(value: string) {
     const accessToken = await AccessTokenEntity.findOne({
       where: { value },
-    });
-    if (accessToken) await accessToken.remove();
+    })
+    if (accessToken) await accessToken.remove()
   }
 
   /**
@@ -141,10 +141,10 @@ export class TokenService {
     const refreshToken = await RefreshTokenEntity.findOne({
       where: { value },
       relations: ['accessToken'],
-    });
+    })
     if (refreshToken) {
-      if (refreshToken.accessToken) await refreshToken.accessToken.remove();
-      await refreshToken.remove();
+      if (refreshToken.accessToken) await refreshToken.accessToken.remove()
+      await refreshToken.remove()
     }
   }
 
@@ -153,9 +153,9 @@ export class TokenService {
    * @param token
    */
   async verifyAccessToken(token: string) {
-    const result = this.jwtService.verify(token);
-    if (!result) return false;
+    const result = this.jwtService.verify(token)
+    if (!result) return false
 
-    return true;
+    return true
   }
 }

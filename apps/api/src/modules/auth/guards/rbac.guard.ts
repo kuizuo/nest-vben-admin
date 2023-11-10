@@ -3,15 +3,15 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { FastifyRequest } from 'fastify';
+} from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
+import { FastifyRequest } from 'fastify'
 
-import { BusinessException } from '@/common/exceptions/biz.exception';
-import { ErrorEnum } from '@/constants/error-code.constant';
-import { AuthService } from '@/modules/auth/auth.service';
+import { BusinessException } from '@/common/exceptions/biz.exception'
+import { ErrorEnum } from '@/constants/error-code.constant'
+import { AuthService } from '@/modules/auth/auth.service'
 
-import { ALLOW_ANON_KEY, PERMISSION_KEY, IS_PUBLIC_KEY } from '../constant';
+import { ALLOW_ANON_KEY, PERMISSION_KEY, IS_PUBLIC_KEY } from '../constant'
 
 @Injectable()
 export class RbacGuard implements CanActivate {
@@ -24,57 +24,57 @@ export class RbacGuard implements CanActivate {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
-    ]);
+    ])
 
-    if (isPublic) return true;
+    if (isPublic) return true
 
-    const request = context.switchToHttp().getRequest<FastifyRequest>();
+    const request = context.switchToHttp().getRequest<FastifyRequest>()
 
-    const { user } = request;
-    if (!user) throw new UnauthorizedException('登录无效');
+    const { user } = request
+    if (!user) throw new UnauthorizedException('登录无效')
 
     // allowAnon 是需要登录后可访问(无需权限), Public 则是无需登录也可访问.
     const allowAnon = this.reflector.get<boolean>(
       ALLOW_ANON_KEY,
       context.getHandler(),
-    );
-    if (allowAnon) return true;
+    )
+    if (allowAnon) return true
 
     const payloadPermission = this.reflector.getAllAndOverride<
       string | string[]
-    >(PERMISSION_KEY, [context.getHandler(), context.getClass()]);
+    >(PERMISSION_KEY, [context.getHandler(), context.getClass()])
 
     // 控制器没有设置接口权限，则默认通过
-    if (!payloadPermission) return true;
+    if (!payloadPermission) return true
 
-    let allPermissions = await this.authService.getPermissionsCache(user.uid);
+    let allPermissions = await this.authService.getPermissionsCache(user.uid)
 
     // 缓存失效, 则获取新的 Permission
     if (!allPermissions) {
-      const res = await this.authService.getPermissions(user.uid);
+      const res = await this.authService.getPermissions(user.uid)
 
-      allPermissions = res;
+      allPermissions = res
 
       // set permissions into cache
-      await this.authService.setPermissionsCache(user.uid, allPermissions);
+      await this.authService.setPermissionsCache(user.uid, allPermissions)
     }
 
-    let canNext = false;
+    let canNext = false
 
     // handle permission strings
     if (Array.isArray(payloadPermission)) {
       // 只要有一个权限满足即可
-      canNext = payloadPermission.every((i) => allPermissions.includes(i));
+      canNext = payloadPermission.every((i) => allPermissions.includes(i))
     }
 
     if (typeof payloadPermission === 'string') {
-      canNext = allPermissions.includes(payloadPermission);
+      canNext = allPermissions.includes(payloadPermission)
     }
 
     if (!canNext) {
-      throw new BusinessException(ErrorEnum.NO_PERMISSION);
+      throw new BusinessException(ErrorEnum.NO_PERMISSION)
     }
 
-    return true;
+    return true
   }
 }

@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 
-import { Repository } from 'typeorm';
+import { Repository } from 'typeorm'
 
-import { BusinessException } from '@/common/exceptions/biz.exception';
-import { ErrorEnum } from '@/constants/error-code.constant';
-import { paginate } from '@/helper/paginate';
-import { Pagination } from '@/helper/paginate/pagination';
-import { DictEntity } from '@/modules/system/dict/dict.entity';
+import { BusinessException } from '@/common/exceptions/biz.exception'
+import { ErrorEnum } from '@/constants/error-code.constant'
+import { paginate } from '@/helper/paginate'
+import { Pagination } from '@/helper/paginate/pagination'
+import { DictEntity } from '@/modules/system/dict/dict.entity'
 
-import { DictDto, DictQueryDto } from './dict.dto';
+import { DictDto, DictQueryDto } from './dict.dto'
 
 @Injectable()
 export class DictService {
@@ -26,56 +26,56 @@ export class DictService {
     pageSize,
     name,
   }: DictQueryDto): Promise<Pagination<DictEntity>> {
-    const queryBuilder = this.dictRepository.createQueryBuilder('dict');
+    const queryBuilder = this.dictRepository.createQueryBuilder('dict')
 
     if (name) {
       queryBuilder.where('dict.name LIKE :name', {
         name: `%${name}%`,
-      });
+      })
     }
 
-    return paginate(queryBuilder, { page, pageSize });
+    return paginate(queryBuilder, { page, pageSize })
   }
 
   /**
    * 获取参数总数
    */
   async countConfigList(): Promise<number> {
-    return this.dictRepository.count();
+    return this.dictRepository.count()
   }
 
   /**
    * 新增
    */
   async create(dto: DictDto): Promise<void> {
-    await this.dictRepository.insert(dto);
+    await this.dictRepository.insert(dto)
   }
 
   /**
    * 更新
    */
   async update(id: number, dto: Partial<DictDto>): Promise<void> {
-    await this.dictRepository.update(id, dto);
+    await this.dictRepository.update(id, dto)
   }
 
   /**
    * 删除
    */
   async delete(id: number): Promise<void> {
-    await this.dictRepository.delete(id);
+    await this.dictRepository.delete(id)
   }
 
   /**
    * 查询单个
    */
   async findOne(id: number): Promise<DictEntity> {
-    return this.dictRepository.findOneBy({ id });
+    return this.dictRepository.findOneBy({ id })
   }
 
   async isExistKey(key: string): Promise<void | never> {
-    const result = await this.dictRepository.findOneBy({ key });
+    const result = await this.dictRepository.findOneBy({ key })
     if (result) {
-      throw new BusinessException(ErrorEnum.PARAMETER_CONFIG_KEY_EXISTS);
+      throw new BusinessException(ErrorEnum.PARAMETER_CONFIG_KEY_EXISTS)
     }
   }
 
@@ -83,10 +83,10 @@ export class DictService {
     const result = await this.dictRepository.findOne({
       where: { key },
       select: ['value'],
-    });
+    })
     if (result) {
-      return result.value;
+      return result.value
     }
-    return null;
+    return null
   }
 }

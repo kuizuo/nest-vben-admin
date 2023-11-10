@@ -1,17 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger'
+import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity';
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'tool_storage' })
 export class Storage extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
-  id: number;
+  id: number
 
   @Column({ type: 'varchar', length: 200, comment: '文件名' })
   @ApiProperty({ description: '文件名' })
-  name: string;
+  name: string
 
   @Column({
     type: 'varchar',
@@ -20,25 +20,25 @@ export class Storage extends AbstractEntity {
     comment: '真实文件名',
   })
   @ApiProperty({ description: '真实文件名' })
-  fileName: string;
+  fileName: string
 
   @Column({ name: 'ext_name', type: 'varchar', nullable: true })
   @ApiProperty({ description: '扩展名' })
-  extName: string;
+  extName: string
 
   @Column({ type: 'varchar' })
   @ApiProperty({ description: '文件类型' })
-  path: string;
+  path: string
 
   @Column({ type: 'varchar', nullable: true })
   @ApiProperty({ description: '文件类型' })
-  type: string;
+  type: string
 
   @Column({ type: 'varchar', nullable: true })
   @ApiProperty({ description: '文件大小' })
-  size: string;
+  size: string
 
   @Column({ nullable: true, name: 'user_id' })
   @ApiProperty({ description: '用户ID' })
-  userId: number;
+  userId: number
 }

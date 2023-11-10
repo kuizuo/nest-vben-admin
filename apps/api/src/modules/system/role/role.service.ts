@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { isEmpty } from 'lodash';
-import { EntityManager, In, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
+import { isEmpty } from 'lodash'
+import { EntityManager, In, Repository } from 'typeorm'
 
-import { PageOptionsDto } from '@/common/dto/page-options.dto';
-import { IAppConfig } from '@/config';
-import { paginate } from '@/helper/paginate';
-import { Pagination } from '@/helper/paginate/pagination';
-import { MenuEntity } from '@/modules/system/menu/menu.entity';
-import { RoleEntity } from '@/modules/system/role/role.entity';
+import { PageOptionsDto } from '@/common/dto/page-options.dto'
+import { IAppConfig } from '@/config'
+import { paginate } from '@/helper/paginate'
+import { Pagination } from '@/helper/paginate/pagination'
+import { MenuEntity } from '@/modules/system/menu/menu.entity'
+import { RoleEntity } from '@/modules/system/role/role.entity'
 
-import { RoleDto } from './role.dto';
-import { RoleInfo } from './role.model';
+import { RoleDto } from './role.dto'
+import { RoleInfo } from './role.model'
 
 @Injectable()
 export class RoleService {
@@ -32,7 +32,7 @@ export class RoleService {
     page,
     pageSize,
   }: PageOptionsDto): Promise<Pagination<RoleEntity>> {
-    return paginate(this.roleRepository, { page, pageSize });
+    return paginate(this.roleRepository, { page, pageSize })
   }
 
   /**
@@ -44,7 +44,7 @@ export class RoleService {
       .where({
         id,
       })
-      .getOne();
+      .getOne()
 
     // if (id === this.configService.get<IAppConfig>('app').adminRoleId) {
     //   const menus = await this.menuRepository.find({ select: ['id'] });
@@ -54,17 +54,17 @@ export class RoleService {
     const menus = await this.menuRepository.find({
       where: { roles: { id } },
       select: ['id'],
-    });
+    })
 
-    return { ...info, menuIds: menus.map((m) => m.id) };
+    return { ...info, menuIds: menus.map((m) => m.id) }
   }
 
   async delete(id: number): Promise<void> {
     if (id === this.configService.get<IAppConfig>('app').adminRoleId) {
-      throw new Error('不能删除超级管理员');
+      throw new Error('不能删除超级管理员')
     }
 
-    await this.roleRepository.delete(id);
+    await this.roleRepository.delete(id)
   }
 
   /**
@@ -76,28 +76,28 @@ export class RoleService {
       menus: menuIds
         ? await this.menuRepository.findBy({ id: In(menuIds) })
         : [],
-    });
+    })
 
-    return { roleId: role.id };
+    return { roleId: role.id }
   }
 
   /**
    * 更新角色信息
    */
   async update(id, { menuIds, ...data }: Partial<RoleDto>): Promise<void> {
-    await this.roleRepository.update(id, data);
+    await this.roleRepository.update(id, data)
 
     if (!isEmpty(menuIds)) {
       // using transaction
       await this.entityManager.transaction(async (manager) => {
         const menus = await this.menuRepository.find({
           where: { id: In(menuIds) },
-        });
+        })
 
-        const role = await this.roleRepository.findOne({ where: { id } });
-        role.menus = menus;
-        await manager.save(role);
-      });
+        const role = await this.roleRepository.findOne({ where: { id } })
+        role.menus = menus
+        await manager.save(role)
+      })
     }
   }
 
@@ -109,12 +109,12 @@ export class RoleService {
       where: {
         users: { id },
       },
-    });
+    })
 
     if (!isEmpty(roles)) {
-      return roles.map((r) => r.id);
+      return roles.map((r) => r.id)
     }
-    return [];
+    return []
   }
 
   async getRoleValues(ids: number[]): Promise<string[]> {
@@ -122,7 +122,7 @@ export class RoleService {
       await this.roleRepository.findBy({
         id: In(ids),
       })
-    ).map((r) => r.value);
+    ).map((r) => r.value)
   }
 
   async isAdminRoleByUser(uid: number): Promise<boolean> {
@@ -130,20 +130,20 @@ export class RoleService {
       where: {
         users: { id: uid },
       },
-    });
+    })
 
     if (!isEmpty(roles)) {
       return roles.some(
         (r) => r.id === this.configService.get('app').adminRoleId,
-      );
+      )
     }
-    return false;
+    return false
   }
 
   hasAdminRole(rids: number[]): boolean {
     return rids.some(
       (r) => r === this.configService.get<IAppConfig>('app').adminRoleId,
-    );
+    )
   }
 
   /**
@@ -156,6 +156,6 @@ export class RoleService {
           id,
         },
       },
-    }));
+    }))
   }
 }

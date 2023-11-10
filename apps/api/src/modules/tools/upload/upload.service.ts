@@ -1,10 +1,10 @@
-import { MultipartFile } from '@fastify/multipart';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { isNil } from 'lodash';
-import { Repository } from 'typeorm';
+import { MultipartFile } from '@fastify/multipart'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { isNil } from 'lodash'
+import { Repository } from 'typeorm'
 
-import { Storage } from '@/modules/tools/storage/storage.entity';
+import { Storage } from '@/modules/tools/storage/storage.entity'
 
 import {
   fileRename,
@@ -13,7 +13,7 @@ import {
   getFileType,
   getSize,
   saveLocalFile,
-} from '@/utils/file';
+} from '@/utils/file'
 
 @Injectable()
 export class UploadService {
@@ -26,17 +26,16 @@ export class UploadService {
    * 保存文件上传记录
    */
   async saveFile(file: MultipartFile, userId: number): Promise<string> {
-    if (isNil(file))
-      throw new NotFoundException('Have not any file to upload!');
+    if (isNil(file)) throw new NotFoundException('Have not any file to upload!')
 
-    const fileName = file.filename;
-    const size = getSize(file.file.bytesRead);
-    const extName = getExtname(fileName);
-    const type = getFileType(extName);
-    const name = fileRename(fileName);
-    const path = getFilePath(name);
+    const fileName = file.filename
+    const size = getSize(file.file.bytesRead)
+    const extName = getExtname(fileName)
+    const type = getFileType(extName)
+    const name = fileRename(fileName)
+    const path = getFilePath(name)
 
-    saveLocalFile(await file.toBuffer(), name);
+    saveLocalFile(await file.toBuffer(), name)
 
     await this.storageRepository.save({
       name,
@@ -46,8 +45,8 @@ export class UploadService {
       type,
       size,
       userId,
-    });
+    })
 
-    return path;
+    return path
   }
 }

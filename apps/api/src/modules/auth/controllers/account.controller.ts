@@ -1,21 +1,21 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common'
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { ApiResult } from '@/common/decorators/api-result.decorator';
+import { ApiResult } from '@/common/decorators/api-result.decorator'
 
-import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator';
-import { AllowAnon } from '@/modules/auth/decorators/allow-anon.decorator';
-import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator';
+import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
+import { AllowAnon } from '@/modules/auth/decorators/allow-anon.decorator'
+import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator'
 
-import { MenuEntity } from '@/modules/system/menu/menu.entity';
+import { MenuEntity } from '@/modules/system/menu/menu.entity'
 
-import { PasswordUpdateDto } from '@/modules/user/dto/password.dto';
+import { PasswordUpdateDto } from '@/modules/user/dto/password.dto'
 
-import { AccountInfo } from '../../user/user.model';
-import { UserService } from '../../user/user.service';
-import { AuthService } from '../auth.service';
-import { AccountUpdateDto } from '../dto/account.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { AccountInfo } from '../../user/user.model'
+import { UserService } from '../../user/user.service'
+import { AuthService } from '../auth.service'
+import { AccountUpdateDto } from '../dto/account.dto'
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 
 @ApiTags('Account - 账户模块')
 @ApiSecurityAuth()
@@ -33,14 +33,14 @@ export class AccountController {
   @ApiResult({ type: AccountInfo })
   @AllowAnon()
   async profile(@AuthUser() user: IAuthUser): Promise<AccountInfo> {
-    return this.userService.getAccountInfo(user.uid);
+    return this.userService.getAccountInfo(user.uid)
   }
 
   @Get('logout')
   @ApiOperation({ summary: '账户登出' })
   @AllowAnon()
   async logout(@AuthUser() user: IAuthUser): Promise<void> {
-    await this.authService.clearLoginStatus(user.uid);
+    await this.authService.clearLoginStatus(user.uid)
   }
 
   @Get('menus')
@@ -48,7 +48,7 @@ export class AccountController {
   @ApiResult({ type: [MenuEntity] })
   @AllowAnon()
   async menu(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return this.authService.getMenus(user.uid);
+    return this.authService.getMenus(user.uid)
   }
 
   @Get('permissions')
@@ -56,7 +56,7 @@ export class AccountController {
   @ApiResult({ type: [String] })
   @AllowAnon()
   async permissions(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return this.authService.getPermissions(user.uid);
+    return this.authService.getPermissions(user.uid)
   }
 
   @Put('update')
@@ -66,7 +66,7 @@ export class AccountController {
     @AuthUser() user: IAuthUser,
     @Body() dto: AccountUpdateDto,
   ): Promise<void> {
-    await this.userService.updateAccountInfo(user.uid, dto);
+    await this.userService.updateAccountInfo(user.uid, dto)
   }
 
   @Post('password')
@@ -76,6 +76,6 @@ export class AccountController {
     @AuthUser() user: IAuthUser,
     @Body() dto: PasswordUpdateDto,
   ): Promise<void> {
-    await this.userService.updatePassword(user.uid, dto);
+    await this.userService.updatePassword(user.uid, dto)
   }
 }

@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { DictController } from './dict.controller';
-import { DictEntity } from './dict.entity';
-import { DictService } from './dict.service';
+import { DictController } from './dict.controller'
+import { DictEntity } from './dict.entity'
+import { DictService } from './dict.service'
 
-const services = [DictService];
+const services = [DictService]
 
 @Module({
   imports: [TypeOrmModule.forFeature([DictEntity])],

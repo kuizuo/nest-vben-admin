@@ -1,3 +1,3 @@
-import { IoAdapter } from '@nestjs/platform-socket.io';
+import { IoAdapter } from '@nestjs/platform-socket.io'
 
-export { IoAdapter };
+export { IoAdapter }

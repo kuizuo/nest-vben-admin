@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 import {
   registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-} from 'class-validator';
-import { DataSource, ObjectType, Repository } from 'typeorm';
+} from 'class-validator'
+import { DataSource, ObjectType, Repository } from 'typeorm'
 
 type Condition = {
-  entity: ObjectType<any>;
+  entity: ObjectType<any>
   // 如果没有指定字段则使用当前验证的属性作为查询依据
-  field?: string;
-};
+  field?: string
+}
 
 /**
  * 查询某个字段的值是否在数据表中存在
@@ -23,30 +23,30 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
   constructor(private dataSource: DataSource) {}
 
   async validate(value: string, args: ValidationArguments) {
-    let repo: Repository<any>;
+    let repo: Repository<any>
 
-    if (!value) return true;
+    if (!value) return true
     // 默认对比字段是id
-    let field = 'id';
+    let field = 'id'
     // 通过传入的 entity 获取其 repository
     if ('entity' in args.constraints[0]) {
       // 传入的是对象 可以指定对比字段
-      field = args.constraints[0].field ?? 'id';
-      repo = this.dataSource.getRepository(args.constraints[0].entity);
+      field = args.constraints[0].field ?? 'id'
+      repo = this.dataSource.getRepository(args.constraints[0].entity)
     } else {
       // 传入的是实体类
-      repo = this.dataSource.getRepository(args.constraints[0]);
+      repo = this.dataSource.getRepository(args.constraints[0])
     }
     // 通过查询记录是否存在进行验证
-    const item = await repo.findOne({ where: { [field]: value } });
-    return !!item;
+    const item = await repo.findOne({ where: { [field]: value } })
+    return !!item
   }
 
   defaultMessage(args: ValidationArguments) {
     if (!args.constraints[0]) {
-      return 'Model not been specified!';
+      return 'Model not been specified!'
     }
-    return `All instance of ${args.constraints[0].name} must been exists in databse!`;
+    return `All instance of ${args.constraints[0].name} must been exists in databse!`
   }
 }
 
@@ -58,12 +58,12 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
 function IsEntityExist(
   entity: ObjectType<any>,
   validationOptions?: ValidationOptions,
-): (object: Record<string, any>, propertyName: string) => void;
+): (object: Record<string, any>, propertyName: string) => void
 
 function IsEntityExist(
   condition: { entity: ObjectType<any>; field?: string },
   validationOptions?: ValidationOptions,
-): (object: Record<string, any>, propertyName: string) => void;
+): (object: Record<string, any>, propertyName: string) => void
 
 function IsEntityExist(
   condition: ObjectType<any> | { entity: ObjectType<any>; field?: string },
@@ -76,8 +76,8 @@ function IsEntityExist(
       options: validationOptions,
       constraints: [condition],
       validator: EntityExistConstraint,
-    });
-  };
+    })
+  }
 }
 
-export { IsEntityExist };
+export { IsEntityExist }

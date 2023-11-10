@@ -1,16 +1,16 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common'
 
-import { AuthModule } from '@/modules/auth/auth.module';
-import { SocketModule } from '@/modules/socket/socket.module';
+import { AuthModule } from '@/modules/auth/auth.module'
+import { SocketModule } from '@/modules/socket/socket.module'
 
-import { UserModule } from '../../user/user.module';
-import { RoleModule } from '../role/role.module';
-import { SystemModule } from '../system.module';
+import { UserModule } from '../../user/user.module'
+import { RoleModule } from '../role/role.module'
+import { SystemModule } from '../system.module'
 
-import { OnlineController } from './online.controller';
-import { OnlineService } from './online.service';
+import { OnlineController } from './online.controller'
+import { OnlineService } from './online.service'
 
-const providers = [OnlineService];
+const providers = [OnlineService]
 
 @Module({
   imports: [

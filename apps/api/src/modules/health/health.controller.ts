@@ -1,14 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import {
   HttpHealthIndicator,
   HealthCheck,
   MemoryHealthIndicator,
   DiskHealthIndicator,
   TypeOrmHealthIndicator,
-} from '@nestjs/terminus';
+} from '@nestjs/terminus'
 
-import { Permission } from '../auth/decorators/permission.decorator';
+import { Permission } from '../auth/decorators/permission.decorator'
 
 export const PermissionHealth = {
   NETWORK: 'app:health:network',
@@ -16,7 +16,7 @@ export const PermissionHealth = {
   MH: 'app:health:memory-heap',
   MR: 'app:health:memory-rss',
   DISK: 'app:health:disk',
-} as const;
+} as const
 
 @ApiTags('Health - 健康检查')
 @Controller('health')
@@ -32,14 +32,14 @@ export class HealthController {
   @HealthCheck()
   @Permission(PermissionHealth.NETWORK)
   async checkNetwork() {
-    return this.http.pingCheck('kuizuo', 'https://kuizuo.cn');
+    return this.http.pingCheck('kuizuo', 'https://kuizuo.cn')
   }
 
   @Get('database')
   @HealthCheck()
   @Permission(PermissionHealth.DB)
   async checkDatabase() {
-    return this.db.pingCheck('database');
+    return this.db.pingCheck('database')
   }
 
   @Get('memory-heap')
@@ -47,7 +47,7 @@ export class HealthController {
   @Permission(PermissionHealth.MH)
   async checkMemoryHeap() {
     // the process should not use more than 200MB memory
-    return this.memory.checkHeap('memory-heap', 200 * 1024 * 1024);
+    return this.memory.checkHeap('memory-heap', 200 * 1024 * 1024)
   }
 
   @Get('memory-rss')
@@ -55,7 +55,7 @@ export class HealthController {
   @Permission(PermissionHealth.MR)
   async checkMemoryRSS() {
     // the process should not have more than 200MB RSS memory allocated
-    return this.memory.checkRSS('memory-rss', 200 * 1024 * 1024);
+    return this.memory.checkRSS('memory-rss', 200 * 1024 * 1024)
   }
 
   @Get('disk')
@@ -66,6 +66,6 @@ export class HealthController {
       // The used disk storage should not exceed 75% of the full disk size
       thresholdPercent: 0.75,
       path: '/',
-    });
+    })
   }
 }

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 import {
   Column,
   Entity,
@@ -6,29 +6,29 @@ import {
   Tree,
   TreeChildren,
   TreeParent,
-} from 'typeorm';
+} from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity';
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
-import { UserEntity } from '../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity'
 
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')
 export class DeptEntity extends AbstractEntity {
   @Column()
   @ApiProperty({ description: '部门名称' })
-  name: string;
+  name: string
 
   @Column({ nullable: true, default: 0 })
   @ApiProperty({ description: '排序' })
-  orderNo: number;
+  orderNo: number
 
   @TreeChildren({ cascade: true })
-  children!: DeptEntity[];
+  children!: DeptEntity[]
 
   @TreeParent({ onDelete: 'SET NULL' })
-  parent?: DeptEntity | null;
+  parent?: DeptEntity | null
 
   @OneToMany(() => UserEntity, (user) => user.dept)
-  users: UserEntity[];
+  users: UserEntity[]
 }

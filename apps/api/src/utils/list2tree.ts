@@ -1,13 +1,13 @@
 export type TreeNode<T = any> = T & {
-  id: number;
-  parentId: number;
-  children?: TreeNode<T>[];
-};
+  id: number
+  parentId: number
+  children?: TreeNode<T>[]
+}
 
 export type ListNode<T extends object = any> = T & {
-  id: number;
-  parentId: number;
-};
+  id: number
+  parentId: number
+}
 
 export function list2Tree<T extends ListNode[]>(
   items: T,
@@ -16,12 +16,12 @@ export function list2Tree<T extends ListNode[]>(
   return items
     .filter((item) => item.parentId === parentId)
     .map((item) => {
-      const children = list2Tree(items, item.id);
+      const children = list2Tree(items, item.id)
       return {
         ...item,
         ...(children.length ? { children } : null),
-      };
-    });
+      }
+    })
 }
 
 /**
@@ -34,21 +34,21 @@ export function list2Tree<T extends ListNode[]>(
 export function filterTree2List(treeData, key, value) {
   const filterChildrenTree = (resTree, treeItem) => {
     if (treeItem[key].includes(value)) {
-      resTree.push(treeItem);
-      return resTree;
+      resTree.push(treeItem)
+      return resTree
     }
     if (Array.isArray(treeItem.children)) {
-      const children = treeItem.children.reduce(filterChildrenTree, []);
+      const children = treeItem.children.reduce(filterChildrenTree, [])
 
-      const data = { ...treeItem, children };
+      const data = { ...treeItem, children }
 
       if (children.length) {
-        resTree.push({ ...data });
+        resTree.push({ ...data })
       }
     }
-    return resTree;
-  };
-  return treeData.reduce(filterChildrenTree, []);
+    return resTree
+  }
+  return treeData.reduce(filterChildrenTree, [])
 }
 
 /**
@@ -62,25 +62,25 @@ export function filterTree<T extends TreeNode>(
   predicate: (data: T) => boolean,
 ): TreeNode<T>[] {
   function filter(treeData: TreeNode<T>[]): TreeNode<T>[] {
-    if (!treeData?.length) return treeData;
+    if (!treeData?.length) return treeData
 
     return treeData.filter((data) => {
-      if (!predicate(data)) return false;
+      if (!predicate(data)) return false
 
-      data.children = filter(data.children);
-      return true;
-    });
+      data.children = filter(data.children)
+      return true
+    })
   }
 
-  return filter(treeData) || [];
+  return filter(treeData) || []
 }
 
 export const deleteEmptyChildren = (arr: any) => {
   arr?.forEach((node) => {
     if (node.children?.length === 0) {
-      delete node.children;
+      delete node.children
     } else {
-      deleteEmptyChildren(node.children);
+      deleteEmptyChildren(node.children)
     }
-  });
-};
+  })
+}

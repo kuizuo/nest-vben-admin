@@ -1,5 +1,5 @@
-import { Param, ParseIntPipe } from '@nestjs/common';
+import { Param, ParseIntPipe } from '@nestjs/common'
 
 export const IdParam = () => {
-  return Param('id', new ParseIntPipe());
-};
+  return Param('id', new ParseIntPipe())
+}

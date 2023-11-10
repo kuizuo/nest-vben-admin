@@ -1,20 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { InjectEntityManager } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { InjectEntityManager } from '@nestjs/typeorm'
 
-import { EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm'
 
-import { UAParser } from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js'
 
-import { BusinessException } from '@/common/exceptions/biz.exception';
-import { ErrorEnum } from '@/constants/error-code.constant';
-import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway';
-import { AdminWSService } from '@/modules/socket/admin-ws.service';
-import { EVENT_KICK } from '@/modules/socket/socket.event';
+import { BusinessException } from '@/common/exceptions/biz.exception'
+import { ErrorEnum } from '@/constants/error-code.constant'
+import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway'
+import { AdminWSService } from '@/modules/socket/admin-ws.service'
+import { EVENT_KICK } from '@/modules/socket/socket.event'
 
-import { UserService } from '../../user/user.service';
+import { UserService } from '../../user/user.service'
 
-import { OnlineUserInfo } from './online.model';
+import { OnlineUserInfo } from './online.model'
 
 @Injectable()
 export class OnlineService {
@@ -30,37 +30,37 @@ export class OnlineService {
    * 罗列在线用户列表
    */
   async listOnlineUser(currentUid: number): Promise<OnlineUserInfo[]> {
-    const onlineSockets = await this.adminWSService.getOnlineSockets();
+    const onlineSockets = await this.adminWSService.getOnlineSockets()
     if (!onlineSockets || onlineSockets.length <= 0) {
-      return [];
+      return []
     }
     const onlineIds = onlineSockets.map((socket) => {
-      const token = socket.handshake.query?.token as string;
-      return this.jwtService.verify(token).uid;
-    });
-    return this.findLastLoginInfoList(onlineIds, currentUid);
+      const token = socket.handshake.query?.token as string
+      return this.jwtService.verify(token).uid
+    })
+    return this.findLastLoginInfoList(onlineIds, currentUid)
   }
 
   /**
    * 下线当前用户
    */
   async kickUser(uid: number, currentUid: number): Promise<void> {
-    const rootUserId = await this.userService.findRootUserId();
-    const currentUserInfo = await this.userService.getAccountInfo(currentUid);
+    const rootUserId = await this.userService.findRootUserId()
+    const currentUserInfo = await this.userService.getAccountInfo(currentUid)
     if (uid === rootUserId) {
-      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
+      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER)
     }
     // reset redis keys
-    await this.userService.forbidden(uid);
+    await this.userService.forbidden(uid)
     // socket emit
-    const socket = await this.adminWSService.findSocketIdByUid(uid);
+    const socket = await this.adminWSService.findSocketIdByUid(uid)
     if (socket) {
       // socket emit event
       this.adminWsGateWay.socketServer
         .to(socket.id)
-        .emit(EVENT_KICK, { operater: currentUserInfo.username });
+        .emit(EVENT_KICK, { operater: currentUserInfo.username })
       // close socket
-      socket.disconnect();
+      socket.disconnect()
     }
   }
 
@@ -71,7 +71,7 @@ export class OnlineService {
     ids: number[],
     currentUid: number,
   ): Promise<OnlineUserInfo[]> {
-    const rootUserId = await this.userService.findRootUserId();
+    const rootUserId = await this.userService.findRootUserId()
     const result = await this.entityManager.query(
       `
       SELECT sys_login_log.created_at, sys_login_log.ip, sys_login_log.address, sys_login_log.ua, sys_user.id, sys_user.username, sys_user.nick_name
@@ -81,11 +81,11 @@ export class OnlineService {
           AND sys_user.id IN (?)
       `,
       [ids],
-    );
+    )
     if (result) {
-      const parser = new UAParser();
+      const parser = new UAParser()
       return result.map((e) => {
-        const u = parser.setUA(e.ua).getResult();
+        const u = parser.setUA(e.ua).getResult()
         return {
           id: e.id,
           ip: e.ip,
@@ -96,9 +96,9 @@ export class OnlineService {
           os: `${u.os.name} ${u.os.version}`,
           browser: `${u.browser.name} ${u.browser.version}`,
           disable: currentUid === e.id || e.id === rootUserId,
-        };
-      });
+        }
+      })
     }
-    return [];
+    return []
   }
 }

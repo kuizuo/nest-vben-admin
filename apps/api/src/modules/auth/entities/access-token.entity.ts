@@ -6,11 +6,11 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from 'typeorm'
 
-import { UserEntity } from '@/modules/user/entities/user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity'
 
-import { RefreshTokenEntity } from './refresh-token.entity';
+import { RefreshTokenEntity } from './refresh-token.entity'
 
 /**
  * 用户认证token模型
@@ -18,24 +18,24 @@ import { RefreshTokenEntity } from './refresh-token.entity';
 @Entity('user_access_tokens')
 export class AccessTokenEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  id!: string
 
   /**
    * @description 令牌字符串
    * @type {string}
    */
   @Column({ length: 500 })
-  value!: string;
+  value!: string
 
   @Column({
     comment: '令牌过期时间',
   })
-  expired_at!: Date;
+  expired_at!: Date
 
   @CreateDateColumn({
     comment: '令牌创建时间',
   })
-  createdAt!: Date;
+  createdAt!: Date
 
   /**
    * @description 关联的刷新令牌
@@ -48,7 +48,7 @@ export class AccessTokenEntity extends BaseEntity {
       cascade: true,
     },
   )
-  refreshToken!: RefreshTokenEntity;
+  refreshToken!: RefreshTokenEntity
 
   /**
    * @description 所属用户
@@ -57,5 +57,5 @@ export class AccessTokenEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, (user) => user.accessTokens, {
     onDelete: 'CASCADE',
   })
-  user!: UserEntity;
+  user!: UserEntity
 }

@@ -1,19 +1,19 @@
-import { RedisModule } from '@liaoliaots/nestjs-redis';
-import { HttpModule } from '@nestjs/axios';
-import { CacheModule } from '@nestjs/cache-manager';
-import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { MailerModule } from '@nestjs-modules/mailer';
+import { RedisModule } from '@liaoliaots/nestjs-redis'
+import { HttpModule } from '@nestjs/axios'
+import { CacheModule } from '@nestjs/cache-manager'
+import { Global, Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { MailerModule } from '@nestjs-modules/mailer'
 
-import { IMailerConfig, IRedisConfig } from '@/config';
+import { IMailerConfig, IRedisConfig } from '@/config'
 
-import { IpService } from './ip/ip.service';
-import { LoggerModule } from './logger/logger.module';
-import { MailerService } from './mailer/mailer.service';
-import { QQService } from './qq/qq.service';
+import { IpService } from './ip/ip.service'
+import { LoggerModule } from './logger/logger.module'
+import { MailerService } from './mailer/mailer.service'
+import { QQService } from './qq/qq.service'
 
-const providers = [MailerService, IpService, QQService];
+const providers = [MailerService, IpService, QQService]
 
 @Global()
 @Module({

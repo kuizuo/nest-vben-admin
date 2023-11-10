@@ -1,5 +1,5 @@
-import cluster from 'cluster';
-import path from 'path';
+import cluster from 'cluster'
+import path from 'path'
 
 import {
   ClassSerializerInterceptor,
@@ -7,26 +7,26 @@ import {
   Logger,
   UnprocessableEntityException,
   ValidationPipe,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { NestFactory, Reflector } from '@nestjs/core';
-import { NestFastifyApplication } from '@nestjs/platform-fastify';
+} from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { NestFactory, Reflector } from '@nestjs/core'
+import { NestFastifyApplication } from '@nestjs/platform-fastify'
 
 import { useContainer } from 'class-validator';
 
-import { AppModule } from './app.module';
+import { AppModule } from './app.module'
 
-import { fastifyApp } from './common/adapters/fastify.adapter';
-import { IoAdapter } from './common/adapters/socket.adapter';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
-import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
-import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { IAppConfig } from './config';
-import { isDev, isMainProcess } from './global/env';
-import { setupSwagger } from './setup-swagger';
-import { MyLogger } from './shared/logger/logger.service';
+import { fastifyApp } from './common/adapters/fastify.adapter'
+import { IoAdapter } from './common/adapters/socket.adapter'
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
+import { TransformInterceptor } from './common/interceptors/transform.interceptor'
+import { IAppConfig } from './config'
+import { isDev, isMainProcess } from './global/env'
+import { setupSwagger } from './setup-swagger'
+import { MyLogger } from './shared/logger/logger.service'
 
-declare const module: any;
+declare const module: any
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -36,27 +36,27 @@ async function bootstrap() {
       bufferLogs: true,
       snapshot: true,
     },
-  );
+  )
 
-  const configService = app.get(ConfigService);
+  const configService = app.get(ConfigService)
 
-  const reflector = app.get(Reflector);
+  const reflector = app.get(Reflector)
 
   // class-validator 的 DTO 类中注入 nest 容器的依赖
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
-  app.enableCors({ origin: '*', credentials: true });
-  app.setGlobalPrefix('api');
-  app.useStaticAssets({ root: path.join(__dirname, '..', 'public') });
+  app.enableCors({ origin: '*', credentials: true })
+  app.setGlobalPrefix('api')
+  app.useStaticAssets({ root: path.join(__dirname, '..', 'public') })
 
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(reflector),
     new TransformInterceptor(reflector),
     new TimeoutInterceptor(),
-  );
+  )
 
   if (isDev) {
-    app.useGlobalInterceptors(new LoggingInterceptor());
+    app.useGlobalInterceptors(new LoggingInterceptor())
   }
 
   app.useGlobalPipes(
@@ -70,44 +70,44 @@ async function bootstrap() {
       exceptionFactory: (errors) =>
         new UnprocessableEntityException(
           errors.map((e) => {
-            const rule = Object.keys(e.constraints!)[0];
-            const msg = e.constraints![rule];
-            return msg;
+            const rule = Object.keys(e.constraints!)[0]
+            const msg = e.constraints![rule]
+            return msg
           })[0],
         ),
     }),
-  );
+  )
 
   // websocket
-  app.useWebSocketAdapter(new IoAdapter());
+  app.useWebSocketAdapter(new IoAdapter())
 
-  const { port } = configService.get<IAppConfig>('app')!;
+  const { port } = configService.get<IAppConfig>('app')!
 
-  setupSwagger(app, configService);
+  setupSwagger(app, configService)
 
   await app.listen(port, '0.0.0.0', async () => {
-    app.useLogger(app.get(MyLogger));
-    const url = await app.getUrl();
-    const { pid } = process;
-    const env = cluster.isPrimary;
-    const prefix = env ? 'P' : 'W';
+    app.useLogger(app.get(MyLogger))
+    const url = await app.getUrl()
+    const { pid } = process
+    const env = cluster.isPrimary
+    const prefix = env ? 'P' : 'W'
 
     if (!isMainProcess) {
-      return;
+      return
     }
 
-    const logger = new Logger('NestApplication');
-    logger.log(`[${prefix + pid}] Server running on ${url}`);
+    const logger = new Logger('NestApplication')
+    logger.log(`[${prefix + pid}] Server running on ${url}`)
 
     if (isDev) {
-      logger.log(`[${prefix + pid}] OpenAPI: ${url}/api-docs`);
+      logger.log(`[${prefix + pid}] OpenAPI: ${url}/api-docs`)
     }
-  });
+  })
 
   if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
+    module.hot.accept()
+    module.hot.dispose(() => app.close())
   }
 }
 
-bootstrap();
+bootstrap()

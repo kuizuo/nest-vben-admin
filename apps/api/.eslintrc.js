@@ -1,25 +1,58 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
-    tsconfigRootDir: __dirname,
     sourceType: 'module',
-    extraFileExtensions: ['.json']
+    tsconfigRootDir: __dirname,
   },
   root: true,
   env: {
     node: true,
     jest: true,
   },
-  plugins: ['@typescript-eslint', 'import', 'unused-imports'],
+  plugins: ['@typescript-eslint', 'unused-imports'],
   extends: [
-    'airbnb-base',
-    'airbnb-typescript/base',
-
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
+    'prettier',
+    'plugin:import/recommended',
   ],
   rules: {
+    // import
+    'import/named': 'off',
+    'import/first': 'error',
+    'import/no-mutable-exports': 'error',
+    'import/no-unresolved': 'off',
+    'import/no-absolute-path': 'off',
+    'import/no-default-export': 'off',
+    'import/no-cycle': 'off',
+    'import/no-import-module-exports': 'off',
+    'import/order': [
+      'error',
+      {
+        'pathGroups': [
+          {
+            pattern: '@/**',
+            group: 'external',
+            position: 'after',
+          },
+        ],
+        'alphabetize': { order: 'asc', caseInsensitive: false },
+        'newlines-between': 'always-and-inside-groups',
+        'warnOnUnassignedImports': true,
+      },
+    ],
+
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
+
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -29,45 +62,6 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'off',
     '@typescript-eslint/naming-convention': 'off',
 
-    "max-classes-per-file": "off",
-    "class-methods-use-this": "off",
-    "no-param-reassign": "off",
-
-    'unused-imports/no-unused-imports': 1,
-    'unused-imports/no-unused-vars': [
-      'error',
-      {
-        vars: 'all',
-        args: 'none',
-        ignoreRestSiblings: true,
-      },
-    ],
-
-    'import/extensions': 0,
-    'import/prefer-default-export': 0,
-    'import/no-cycle': 0,
-    'import/no-import-module-exports': 0,
-
-    'import/order': [
-      'error',
-      {
-        pathGroups: [
-          {
-            pattern: '@/**',
-            group: 'external',
-            position: 'after',
-          },
-        ],
-        alphabetize: { order: 'asc', caseInsensitive: false },
-        'newlines-between': 'always-and-inside-groups',
-        warnOnUnassignedImports: true,
-      },
-    ],
-
-    'no-restricted-syntax': 'off',
-    'no-await-in-loop': 'off',
-
-    'radix': 'off',
-    'no-bitwise': 'off'
+    '@typescript-eslint/no-unused-vars': 'off',
   },
-};
+}

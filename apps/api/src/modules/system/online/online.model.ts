@@ -1,30 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 
 export class OnlineUserInfo {
   @ApiProperty({ description: '最近的一条登录日志ID' })
-  id: number;
+  id: number
 
   @ApiProperty({ description: '登录IP' })
-  ip: string;
+  ip: string
 
   @ApiProperty({ description: '登录地点' })
-  address: string;
+  address: string
 
   @ApiProperty({ description: '用户名' })
-  username: string;
+  username: string
 
   @ApiProperty({ description: '是否当前' })
-  isCurrent: boolean;
+  isCurrent: boolean
 
   @ApiProperty({ description: '登陆时间' })
-  time: string;
+  time: string
 
   @ApiProperty({ description: '系统' })
-  os: string;
+  os: string
 
   @ApiProperty({ description: '浏览器' })
-  browser: string;
+  browser: string
 
   @ApiProperty({ description: '是否禁用' })
-  disable: boolean;
+  disable: boolean
 }

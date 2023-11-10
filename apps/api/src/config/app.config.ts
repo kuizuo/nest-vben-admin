@@ -1,6 +1,6 @@
-import { ConfigType, registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config'
 
-import { env, envNumber } from '@/global/env';
+import { env, envNumber } from '@/global/env'
 
 export const AppConfig = registerAs('app', () => ({
   name: env('APP_NAME'),
@@ -15,6 +15,6 @@ export const AppConfig = registerAs('app', () => ({
     level: env('LOGGER_LEVEL'),
     maxFiles: envNumber('LOGGER_MAX_FILES'),
   },
-}));
+}))
 
-export type IAppConfig = ConfigType<typeof AppConfig>;
+export type IAppConfig = ConfigType<typeof AppConfig>

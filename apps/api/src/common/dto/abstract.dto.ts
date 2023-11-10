@@ -1,23 +1,23 @@
-import { Type } from 'class-transformer';
-import { IsDate, IsInt, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer'
+import { IsDate, IsInt, IsOptional, Min } from 'class-validator'
 
 export abstract class AbstractDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @IsOptional()
-  id!: number;
+  id!: number
 
   @Type(() => Date)
   @IsDate()
   @IsOptional()
-  createdAt?: Date;
+  createdAt?: Date
 
   @Type(() => Date)
   @IsDate()
   @IsOptional()
-  updatedAt?: Date;
+  updatedAt?: Date
 
   @IsOptional()
-  deleted?: boolean;
+  deleted?: boolean
 }

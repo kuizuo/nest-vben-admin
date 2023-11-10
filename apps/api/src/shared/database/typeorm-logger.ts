@@ -1,21 +1,21 @@
-import { Logger } from '@nestjs/common';
-import { Logger as ITypeORMLogger, LoggerOptions, QueryRunner } from 'typeorm';
+import { Logger } from '@nestjs/common'
+import { Logger as ITypeORMLogger, LoggerOptions, QueryRunner } from 'typeorm'
 
 export class TypeORMLogger implements ITypeORMLogger {
-  private logger = new Logger(TypeORMLogger.name);
+  private logger = new Logger(TypeORMLogger.name)
 
   constructor(private options: LoggerOptions) {}
 
   logQuery(query: string, parameters?: any[], _queryRunner?: QueryRunner) {
-    if (!this.isEnable('query')) return;
+    if (!this.isEnable('query')) return
 
     const sql =
       query +
       (parameters && parameters.length
         ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
-        : '');
+        : '')
 
-    this.logger.log(`[QUERY]: ${sql}`);
+    this.logger.log(`[QUERY]: ${sql}`)
   }
 
   logQueryError(
@@ -24,15 +24,15 @@ export class TypeORMLogger implements ITypeORMLogger {
     parameters?: any[],
     _queryRunner?: QueryRunner,
   ) {
-    if (!this.isEnable('error')) return;
+    if (!this.isEnable('error')) return
 
     const sql =
       query +
       (parameters && parameters.length
         ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
-        : '');
+        : '')
 
-    this.logger.error([`[FAILED QUERY]: ${sql}`, `[QUERY ERROR]: ${error}`]);
+    this.logger.error([`[FAILED QUERY]: ${sql}`, `[QUERY ERROR]: ${error}`])
   }
 
   logQuerySlow(
@@ -45,21 +45,21 @@ export class TypeORMLogger implements ITypeORMLogger {
       query +
       (parameters && parameters.length
         ? ` -- PARAMETERS: ${this.stringifyParams(parameters)}`
-        : '');
+        : '')
 
-    this.logger.warn(`[SLOW QUERY: ${time} ms]: ${sql}`);
+    this.logger.warn(`[SLOW QUERY: ${time} ms]: ${sql}`)
   }
 
   logSchemaBuild(message: string, _queryRunner?: QueryRunner) {
-    if (!this.isEnable('schema')) return;
+    if (!this.isEnable('schema')) return
 
-    this.logger.log(message);
+    this.logger.log(message)
   }
 
   logMigration(message: string, _queryRunner?: QueryRunner) {
-    if (!this.isEnable('migration')) return;
+    if (!this.isEnable('migration')) return
 
-    this.logger.log(message);
+    this.logger.log(message)
   }
 
   log(
@@ -67,20 +67,20 @@ export class TypeORMLogger implements ITypeORMLogger {
     message: any,
     _queryRunner?: QueryRunner,
   ) {
-    if (!this.isEnable(level)) return;
+    if (!this.isEnable(level)) return
 
     switch (level) {
       case 'log':
-        this.logger.debug(message);
-        break;
+        this.logger.debug(message)
+        break
       case 'info':
-        this.logger.log(message);
-        break;
+        this.logger.log(message)
+        break
       case 'warn':
-        this.logger.warn(message);
-        break;
+        this.logger.warn(message)
+        break
       default:
-        break;
+        break
     }
   }
 
@@ -90,10 +90,10 @@ export class TypeORMLogger implements ITypeORMLogger {
    */
   private stringifyParams(parameters: any[]) {
     try {
-      return JSON.stringify(parameters);
+      return JSON.stringify(parameters)
     } catch (error) {
       // most probably circular objects in parameters
-      return parameters;
+      return parameters
     }
   }
 
@@ -107,6 +107,6 @@ export class TypeORMLogger implements ITypeORMLogger {
       this.options === 'all' ||
       this.options === true ||
       (Array.isArray(this.options) && this.options.indexOf(level) !== -1)
-    );
+    )
   }
 }

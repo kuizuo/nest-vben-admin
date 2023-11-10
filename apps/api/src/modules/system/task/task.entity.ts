@@ -1,59 +1,59 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger'
+import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity';
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_task' })
 export class TaskEntity extends AbstractEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty()
-  id: number;
+  id: number
 
   @Column({ type: 'varchar', length: 50, unique: true })
   @ApiProperty({ description: '任务名' })
-  name: string;
+  name: string
 
   @Column()
   @ApiProperty({ description: '任务标识' })
-  service: string;
+  service: string
 
   @Column({ type: 'tinyint', default: 0 })
   @ApiProperty({ description: '任务类型 0cron 1间隔' })
-  type: number;
+  type: number
 
   @Column({ type: 'tinyint', default: 1 })
   @ApiProperty({ description: '任务状态 0禁用 1启用' })
-  status: number;
+  status: number
 
   @Column({ name: 'start_time', type: 'datetime', nullable: true })
   @ApiProperty({ description: '开始时间' })
-  startTime: Date;
+  startTime: Date
 
   @Column({ name: 'end_time', type: 'datetime', nullable: true })
   @ApiProperty({ description: '结束时间' })
-  endTime: Date;
+  endTime: Date
 
   @Column({ type: 'int', nullable: true, default: 0 })
   @ApiProperty({ description: '间隔时间' })
-  limit: number;
+  limit: number
 
   @Column({ nullable: true })
   @ApiProperty({ description: 'cron表达式' })
-  cron: string;
+  cron: string
 
   @Column({ type: 'int', nullable: true })
   @ApiProperty({ description: '执行次数' })
-  every: number;
+  every: number
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({ description: '任务参数' })
-  data: string;
+  data: string
 
   @Column({ name: 'job_opts', type: 'text', nullable: true })
   @ApiProperty({ description: '任务配置' })
-  jobOpts: string;
+  jobOpts: string
 
   @Column({ nullable: true })
   @ApiProperty({ description: '任务描述' })
-  remark: string;
+  remark: string
 }

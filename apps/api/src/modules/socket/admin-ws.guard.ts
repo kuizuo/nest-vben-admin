@@ -1,11 +1,11 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { Socket } from 'socket.io';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { Observable } from 'rxjs'
+import { Socket } from 'socket.io'
 
-import { SocketException } from '@/common/exceptions/socket.exception';
-import { ErrorEnum } from '@/constants/error-code.constant';
+import { SocketException } from '@/common/exceptions/socket.exception'
+import { ErrorEnum } from '@/constants/error-code.constant'
 
-import { AuthService } from './auth.service';
+import { AuthService } from './auth.service'
 
 @Injectable()
 export class AdminWsGuard implements CanActivate {
@@ -14,17 +14,17 @@ export class AdminWsGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const client = context.switchToWs().getClient<Socket>();
-    const token = client?.handshake?.query?.token;
+    const client = context.switchToWs().getClient<Socket>()
+    const token = client?.handshake?.query?.token
     try {
       // 挂载对象到当前请求上
-      this.authService.checkAdminAuthToken(token);
-      return true;
+      this.authService.checkAdminAuthToken(token)
+      return true
     } catch (e) {
       // close
-      client.disconnect();
+      client.disconnect()
       // 无法通过token校验
-      throw new SocketException(ErrorEnum.INVALID_LOGIN);
+      throw new SocketException(ErrorEnum.INVALID_LOGIN)
     }
   }
 }

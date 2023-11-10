@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger'
+import { Transform, Type } from 'class-transformer'
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator'
 
 // allow custom order
 export enum Order {
@@ -17,7 +17,7 @@ export class PageOptionsDto<T = any> {
   @IsInt()
   @Min(1)
   @IsOptional({ always: true })
-  page?: number = 1;
+  page?: number = 1
 
   @ApiProperty({
     minimum: 1,
@@ -29,12 +29,12 @@ export class PageOptionsDto<T = any> {
   @Min(1)
   @Max(100)
   @IsOptional({ always: true })
-  pageSize?: number = 10;
+  pageSize?: number = 10
 
   @ApiProperty({})
   @IsString()
   @IsOptional()
-  field?: keyof T;
+  field?: keyof T
 
   @ApiProperty({
     enum: Order,
@@ -43,11 +43,11 @@ export class PageOptionsDto<T = any> {
   @IsEnum(Order)
   @IsOptional()
   @Transform(({ value }) => (value === 'ascend' ? Order.ASC : Order.DESC))
-  order?: Order = Order.ASC;
+  order?: Order = Order.ASC
 
   @ApiProperty({})
   @Type(() => Number)
   @IsInt()
   @IsOptional({ always: true })
-  _t?: number;
+  _t?: number
 }

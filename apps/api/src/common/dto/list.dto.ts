@@ -1,7 +1,7 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger'
+import { IsOptional } from 'class-validator'
 
-import { PageOptionsDto } from './page-options.dto';
+import { PageOptionsDto } from './page-options.dto'
 
 export class ListDTO<T = Record<string, any>> extends PageOptionsDto<T> {
   @ApiPropertyOptional({
@@ -12,5 +12,5 @@ export class ListDTO<T = Record<string, any>> extends PageOptionsDto<T> {
     },
   })
   @IsOptional()
-  query?: Partial<T> = {};
+  query?: Partial<T> = {}
 }

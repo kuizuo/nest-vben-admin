@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 import {
   IsEmail,
   IsOptional,
@@ -6,17 +6,17 @@ import {
   Matches,
   MaxLength,
   MinLength,
-} from 'class-validator';
+} from 'class-validator'
 
 export class AccountUpdateDto {
   @ApiProperty({ description: '用户呢称' })
   @IsString()
   @IsOptional()
-  nickname: string;
+  nickname: string
 
   @ApiProperty({ description: '用户邮箱' })
   @IsEmail()
-  email: string;
+  email: string
 
   @ApiProperty({ description: '用户QQ' })
   @IsOptional()
@@ -24,32 +24,32 @@ export class AccountUpdateDto {
   @Matches(/^[0-9]+$/)
   @MinLength(5)
   @MaxLength(11)
-  qq: string;
+  qq: string
 
   @ApiProperty({ description: '用户手机号' })
   @IsOptional()
   @IsString()
-  phone: string;
+  phone: string
 
   @ApiProperty({ description: '用户头像' })
   @IsOptional()
   @IsString()
-  avatar: string;
+  avatar: string
 
   @ApiProperty({ description: '用户备注' })
   @IsOptional()
   @IsString()
-  remark: string;
+  remark: string
 }
 
 export class ResetPasswordDto {
   @ApiProperty({ description: '临时token', example: 'uuid' })
   @IsString()
-  accessToken: string;
+  accessToken: string
 
   @ApiProperty({ description: '密码', example: 'a123456' })
   @IsString()
   @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/)
   @MinLength(6)
-  password: string;
+  password: string
 }

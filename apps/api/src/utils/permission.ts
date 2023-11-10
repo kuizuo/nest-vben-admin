@@ -1,6 +1,6 @@
-import { isExternal } from '@/utils/is';
+import { isExternal } from '@/utils/is'
 
-function createRoute(menu, isRoot) {
+function createRoute(menu, _isRoot) {
   if (isExternal(menu.path)) {
     return {
       id: menu.id,
@@ -8,7 +8,7 @@ function createRoute(menu, isRoot) {
       component: 'IFrame',
       name: menu.name,
       meta: { title: menu.name, icon: menu.icon },
-    };
+    }
   }
 
   // 目录
@@ -20,7 +20,7 @@ function createRoute(menu, isRoot) {
       show: true,
       name: menu.name,
       meta: { title: menu.name, icon: menu.icon },
-    };
+    }
   }
 
   return {
@@ -34,29 +34,29 @@ function createRoute(menu, isRoot) {
       ...(!menu.show ? { hideMenu: !menu.show } : null),
       ignoreKeepAlive: !menu.keepalive,
     },
-  };
+  }
 }
 
 function filterAsyncRoutes(menus, parentRoute) {
-  const res = [];
+  const res = []
 
   menus.forEach((menu) => {
     if (menu.type === 2 || !menu.status) {
       // 如果是权限或禁用直接跳过
-      return;
+      return
     }
     // 根级别菜单渲染
-    let realRoute;
+    let realRoute
     if (!parentRoute && !menu.parent && menu.type === 1) {
       // 根菜单
-      realRoute = createRoute(menu, true);
+      realRoute = createRoute(menu, true)
     } else if (!parentRoute && !menu.parent && menu.type === 0) {
       // 目录
-      const childRoutes = filterAsyncRoutes(menus, menu);
-      realRoute = createRoute(menu, true);
+      const childRoutes = filterAsyncRoutes(menus, menu)
+      realRoute = createRoute(menu, true)
       if (childRoutes && childRoutes.length > 0) {
-        realRoute.redirect = childRoutes[0].path;
-        realRoute.children = childRoutes;
+        realRoute.redirect = childRoutes[0].path
+        realRoute.children = childRoutes
       }
     } else if (
       parentRoute &&
@@ -64,106 +64,70 @@ function filterAsyncRoutes(menus, parentRoute) {
       menu.type === 1
     ) {
       // 子菜单
-      realRoute = createRoute(menu, false);
+      realRoute = createRoute(menu, false)
     } else if (
       parentRoute &&
       parentRoute.id === menu.parent &&
       menu.type === 0
     ) {
       // 如果还是目录，继续递归
-      const childRoute = filterAsyncRoutes(menus, menu);
-      realRoute = createRoute(menu, false);
+      const childRoute = filterAsyncRoutes(menus, menu)
+      realRoute = createRoute(menu, false)
       if (childRoute && childRoute.length > 0) {
-        realRoute.redirect = childRoute[0].path;
-        realRoute.children = childRoute;
+        realRoute.redirect = childRoute[0].path
+        realRoute.children = childRoute
       }
     }
     // add curent route
     if (realRoute) {
-      res.push(realRoute);
+      res.push(realRoute)
     }
-  });
-  return res;
+  })
+  return res
 }
 
 export function generatorRouters(menu) {
-  return filterAsyncRoutes(menu, null);
+  return filterAsyncRoutes(menu, null)
 }
 
 // 获取所有菜单以及权限
 function filterMenuToTable(menus, parentMenu) {
-  const res = [];
+  const res = []
   menus.forEach((menu) => {
     // 根级别菜单渲染
-    let realMenu;
+    let realMenu
     if (!parentMenu && !menu.parent && menu.type === 1) {
       // 根菜单，查找该跟菜单下子菜单，因为可能会包含权限
-      const childMenu = filterMenuToTable(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
+      const childMenu = filterMenuToTable(menus, menu)
+      realMenu = { ...menu }
+      realMenu.children = childMenu
     } else if (!parentMenu && !menu.parent && menu.type === 0) {
       // 根目录
-      const childMenu = filterMenuToTable(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
+      const childMenu = filterMenuToTable(menus, menu)
+      realMenu = { ...menu }
+      realMenu.children = childMenu
     } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 1) {
       // 子菜单下继续找是否有子菜单
-      const childMenu = filterMenuToTable(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
+      const childMenu = filterMenuToTable(menus, menu)
+      realMenu = { ...menu }
+      realMenu.children = childMenu
     } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 0) {
       // 如果还是目录，继续递归
-      const childMenu = filterMenuToTable(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
+      const childMenu = filterMenuToTable(menus, menu)
+      realMenu = { ...menu }
+      realMenu.children = childMenu
     } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 2) {
-      realMenu = { ...menu };
+      realMenu = { ...menu }
     }
     // add curent route
     if (realMenu) {
-      realMenu.pid = menu.id;
-      res.push(realMenu);
+      realMenu.pid = menu.id
+      res.push(realMenu)
     }
-  });
-  return res;
+  })
+  return res
 }
 
 export function generatorMenu(menu) {
-  return filterMenuToTable(menu, null);
-}
-
-// 仅获取所有菜单不包括权限
-function filterMenuToTree(menus, parentMenu) {
-  const res = [];
-  menus.forEach((menu) => {
-    // 根级别菜单渲染
-    let realMenu;
-    if (!parentMenu && !menu.parent && menu.type === 1) {
-      // 根菜单，查找该跟菜单下子菜单，因为可能会包含权限
-      const childMenu = filterMenuToTree(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
-    } else if (!parentMenu && !menu.parent && menu.type === 0) {
-      // 根目录
-      const childMenu = filterMenuToTree(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
-    } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 1) {
-      // 子菜单下继续找是否有子菜单
-      const childMenu = filterMenuToTree(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
-    } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 0) {
-      // 如果还是目录，继续递归
-      const childMenu = filterMenuToTree(menus, menu);
-      realMenu = { ...menu };
-      realMenu.children = childMenu;
-    }
-    // add curent route
-    if (realMenu) {
-      realMenu.pid = menu.id;
-      res.push(realMenu);
-    }
-  });
-  return res;
+  return filterMenuToTable(menu, null)
 }

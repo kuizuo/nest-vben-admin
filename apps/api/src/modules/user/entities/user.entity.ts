@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude } from 'class-transformer'
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -8,61 +8,61 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
-} from 'typeorm';
+} from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity';
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
-import { AccessTokenEntity } from '@/modules/auth/entities/access-token.entity';
+import { AccessTokenEntity } from '@/modules/auth/entities/access-token.entity'
 
-import { DeptEntity } from '@/modules/system/dept/dept.entity';
-import { RoleEntity } from '@/modules/system/role/role.entity';
+import { DeptEntity } from '@/modules/system/dept/dept.entity'
+import { RoleEntity } from '@/modules/system/role/role.entity'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends AbstractEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column({ unique: true })
-  username: string;
+  username: string
 
   @Exclude()
   @Column()
-  password: string;
+  password: string
 
   @Column({ length: 32 })
-  psalt: string;
+  psalt: string
 
   @Column({ name: 'nick_name', nullable: true })
-  nickname: string;
+  nickname: string
 
   @Column({ name: 'avatar', nullable: true })
-  avatar: string;
+  avatar: string
 
   @Column({ nullable: true })
-  qq: string;
+  qq: string
 
   @Column({ nullable: true })
-  email: string;
+  email: string
 
   @Column({ nullable: true })
-  phone: string;
+  phone: string
 
   @Column({ nullable: true })
-  remark: string;
+  remark: string
 
   @Column({ type: 'tinyint', nullable: true, default: 1 })
-  status: number;
+  status: number
 
   @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable()
-  roles: RoleEntity[];
+  roles: RoleEntity[]
 
   @ManyToOne(() => DeptEntity, (dept) => dept.users)
   @JoinColumn()
-  dept: DeptEntity;
+  dept: DeptEntity
 
   @OneToMany(() => AccessTokenEntity, (accessToken) => accessToken.user, {
     cascade: true,
   })
-  accessTokens: AccessTokenEntity[];
+  accessTokens: AccessTokenEntity[]
 }

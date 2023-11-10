@@ -1,50 +1,50 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToMany } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToMany } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity';
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
-import { RoleEntity } from '../role/role.entity';
+import { RoleEntity } from '../role/role.entity'
 
 @Entity({ name: 'sys_menu' })
 export class MenuEntity extends AbstractEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column({ nullable: true })
-  parent: number;
+  parent: number
 
   @Column()
-  name: string;
+  name: string
 
   @Column({ nullable: true })
-  path: string;
+  path: string
 
   @Column({ nullable: true })
-  permission: string;
+  permission: string
 
   @Column({ type: 'tinyint', default: 0 })
-  type: number;
+  type: number
 
   @Column({ nullable: true, default: '' })
-  icon: string;
+  icon: string
 
   @Column({ name: 'order_no', type: 'int', nullable: true, default: 0 })
-  orderNo: number;
+  orderNo: number
 
   @Column({ name: 'component', nullable: true })
-  component: string;
+  component: string
 
   @Column({ type: 'tinyint', default: 0 })
-  external: number;
+  external: number
 
   @Column({ type: 'tinyint', default: 1 })
-  keepalive: number;
+  keepalive: number
 
   @Column({ type: 'tinyint', default: 1 })
-  show: number;
+  show: number
 
   @Column({ type: 'tinyint', default: 1 })
-  status: number;
+  status: number
 
   @ManyToMany(() => RoleEntity, (role) => role.menus)
-  roles: RoleEntity[];
+  roles: RoleEntity[]
 }

@@ -1,33 +1,33 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity';
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
-import { UserEntity } from '../../../user/entities/user.entity';
+import { UserEntity } from '../../../user/entities/user.entity'
 
 @Entity({ name: 'sys_login_log' })
 export class LoginLogEntity extends AbstractEntity {
   @Column({ nullable: true })
   @ApiProperty({ description: 'IP' })
-  ip: string;
+  ip: string
 
   @Column({ nullable: true })
   @ApiProperty({ description: '地址' })
-  address: string;
+  address: string
 
   @Column({ nullable: true })
   @ApiProperty({ description: '登录方式' })
-  provider: string;
+  provider: string
 
   @Column({ type: 'datetime', nullable: true })
   @ApiProperty({ description: '登录时间' })
-  time: Date;
+  time: Date
 
   @Column({ length: 500, nullable: true })
   @ApiProperty({ description: '浏览器ua' })
-  ua: string;
+  ua: string
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  user: UserEntity;
+  user: UserEntity
 }
