@@ -9,7 +9,9 @@ dist
 .local
 
 # local env files
-.env.*
+.env.development
+.env.production
+
 .eslintcache
 
 # Log files
