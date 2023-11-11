@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import {
-  PrimaryGeneratedColumn,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-} from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 
 import { AbstractEntity } from '@/common/entity/abstract.entity'
 
@@ -14,10 +8,6 @@ import { MenuEntity } from '../menu/menu.entity'
 
 @Entity({ name: 'sys_role' })
 export class RoleEntity extends AbstractEntity {
-  @PrimaryGeneratedColumn()
-  @ApiProperty()
-  id: number
-
   @Column({ length: 50, unique: true })
   @ApiProperty({ description: '角色名' })
   name: string

@@ -1,14 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 
 import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'tool_storage' })
 export class Storage extends AbstractEntity {
-  @PrimaryGeneratedColumn()
-  @ApiProperty()
-  id: number
-
   @Column({ type: 'varchar', length: 200, comment: '文件名' })
   @ApiProperty({ description: '文件名' })
   name: string

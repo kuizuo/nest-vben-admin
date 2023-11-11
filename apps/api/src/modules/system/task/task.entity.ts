@@ -1,14 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 
 import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_task' })
 export class TaskEntity extends AbstractEntity {
-  @PrimaryGeneratedColumn()
-  @ApiProperty()
-  id: number
-
   @Column({ type: 'varchar', length: 50, unique: true })
   @ApiProperty({ description: '任务名' })
   name: string

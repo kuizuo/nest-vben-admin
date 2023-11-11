@@ -1,6 +1,5 @@
 import { Exclude } from 'class-transformer'
 import {
-  PrimaryGeneratedColumn,
   Column,
   Entity,
   ManyToMany,
@@ -19,9 +18,6 @@ import { RoleEntity } from '@/modules/system/role/role.entity'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends AbstractEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
   @Column({ unique: true })
   username: string
 

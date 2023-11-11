@@ -1,14 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 
 import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_config' })
 export class DictEntity extends AbstractEntity {
-  @PrimaryGeneratedColumn()
-  @ApiProperty()
-  id: number
-
   @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ description: '配置名' })
   name: string
