@@ -66,3 +66,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .nestjs_repl_history
+out

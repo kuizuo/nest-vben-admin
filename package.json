@@ -30,6 +30,7 @@
     "bootstrap": "pnpm install",
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "bundle": "pnpm -C \"apps/api\" run bundle",
     "test": "turbo run test",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
