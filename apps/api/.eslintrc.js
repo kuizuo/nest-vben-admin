@@ -4,18 +4,19 @@ module.exports = {
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
+  plugins: ['@typescript-eslint/eslint-plugin', 'unused-imports'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    'plugin:import/recommended',
+  ],
   root: true,
   env: {
     node: true,
     jest: true,
   },
-  plugins: ['@typescript-eslint', 'unused-imports'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-    'plugin:import/recommended',
-  ],
+  ignorePatterns: ['.eslintrc.js'],
   rules: {
     // import
     'import/named': 'off',
