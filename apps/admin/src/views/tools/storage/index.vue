@@ -1,9 +1,6 @@
 <template>
   <div>
-    <BasicTable
-      @register="registerTable"
-      :rowSelection="{ type: 'checkbox', selectedRowKeys: checkedKeys, onChange: onSelectChange }"
-    >
+    <BasicTable @register="registerTable">
       <template #toolbar>
         <BasicUpload :maxNumber="10" emptyHidePreview :api="uploadApi" />
         <Popconfirm
@@ -15,15 +12,18 @@
           <a-button color="error"> 删除 </a-button>
         </Popconfirm>
       </template>
-      <template #name="{ record }">
-        <Tooltip>
-          <template #title>{{ record.path }}</template>
-          <a :href="record.path" target="_blank"> {{ record.name }}</a>
-        </Tooltip>
-      </template>
 
-      <template #preview="{ record }">
-        <Image :src="record.path" />
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'name'">
+          <Tooltip>
+            <template #title>{{ record.path }}</template>
+            <a :href="record.path" target="_blank"> {{ record.name }}</a>
+          </Tooltip>
+        </template>
+
+        <template v-else-if="column.key === 'path'">
+          <Image :src="record.path" />
+        </template>
       </template>
     </BasicTable>
   </div>
@@ -36,8 +36,10 @@
   import { getStorageList, deleteStorage } from '/@/api/tools/storage';
   import { uploadApi } from '/@/api/sys/upload';
   import { columns, searchFormSchema } from './storage.data';
+  import { Key } from '/@/components/Menu/src/types';
 
   const checkedKeys = ref<Array<number>>([]);
+
   const [registerTable, { deleteTableDataRecord }] = useTable({
     title: '存储列表',
     api: getStorageList,
@@ -53,11 +55,28 @@
     showTableSetting: true,
     showIndexColumn: false,
     rowKey: 'id',
+    rowSelection: {
+      type: 'checkbox',
+      selectedRowKeys: checkedKeys as unknown as Key[],
+      onSelect: (record, selected) => {
+        if (selected) {
+          checkedKeys.value = [...checkedKeys.value, record.id];
+        } else {
+          checkedKeys.value = checkedKeys.value.filter((id) => id !== record.id);
+        }
+      },
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        const changeIds = changeRows.map((item) => item.id);
+        if (selected) {
+          checkedKeys.value = [...checkedKeys.value, ...changeIds];
+        } else {
+          checkedKeys.value = checkedKeys.value.filter((id) => {
+            return !changeIds.includes(id);
+          });
+        }
+      },
+    },
   });
-
-  function onSelectChange(selectedRowKeys: number[]) {
-    checkedKeys.value = selectedRowKeys;
-  }
 
   function handleDelete() {
     if (!(checkedKeys.value.length > 0)) return;

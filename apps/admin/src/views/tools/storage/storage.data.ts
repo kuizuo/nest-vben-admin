@@ -14,13 +14,11 @@ export const columns: BasicColumn[] = [
     title: '文件名',
     dataIndex: 'name',
     width: 150,
-    slots: { customRender: 'name' },
   },
   {
     title: '预览图',
     dataIndex: 'path',
     width: 150,
-    slots: { customRender: 'preview' },
   },
   {
     title: '文件后缀',
