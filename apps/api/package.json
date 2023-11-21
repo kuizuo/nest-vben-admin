@@ -13,7 +13,7 @@
     "bundle": "rimraf out && npm run build && ncc build dist/main.js -o out -m -t && chmod +x out/index.js",
     "start": "cross-env NODE_ENV=development nest start -w --path tsconfig.json",
     "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
-    "start:prod": "cross-env NODE_ENV=production node dist/src/main",
+    "start:prod": "cross-env NODE_ENV=production node dist/main",
     "prod": "cross-env NODE_ENV=production pm2-runtime start ecosystem.config.js",
     "prod:pm2": "cross-env NODE_ENV=production pm2 restart ecosystem.config.js",
     "prod:stop": "pm2 stop ecosystem.config.js",
