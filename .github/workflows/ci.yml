@@ -41,7 +41,7 @@ jobs:
           SOURCE: 'apps/admin/dist'
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: '/www/wwwroot/admin.kuizuo.cn'
+          TARGET: '/opt/1panel/apps/openresty/openresty/www/sites/admin.kuizuo.cn/index'
 
       - name: SSH Deploy api
         uses: easingthemes/ssh-deploy@v4.1.10
@@ -51,4 +51,4 @@ jobs:
           SOURCE: 'apps/api/dist'
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: '/www/wwwroot/NodeProject/nest-admin'
+          TARGET: '/opt/1panel/apps/openresty/openresty/www/sites/admin.kuizuo.cn/server'
