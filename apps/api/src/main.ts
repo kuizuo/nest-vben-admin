@@ -1,5 +1,5 @@
-import cluster from 'cluster'
-import path from 'path'
+import cluster from 'node:cluster'
+import path from 'node:path'
 
 import {
   ClassSerializerInterceptor,
@@ -55,9 +55,8 @@ async function bootstrap() {
     new TimeoutInterceptor(),
   )
 
-  if (isDev) {
+  if (isDev)
     app.useGlobalInterceptors(new LoggingInterceptor())
-  }
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -67,7 +66,7 @@ async function bootstrap() {
       // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       stopAtFirstError: true,
-      exceptionFactory: (errors) =>
+      exceptionFactory: errors =>
         new UnprocessableEntityException(
           errors.map((e) => {
             const rule = Object.keys(e.constraints!)[0]
@@ -92,16 +91,14 @@ async function bootstrap() {
     const env = cluster.isPrimary
     const prefix = env ? 'P' : 'W'
 
-    if (!isMainProcess) {
+    if (!isMainProcess)
       return
-    }
 
     const logger = new Logger('NestApplication')
     logger.log(`[${prefix + pid}] Server running on ${url}`)
 
-    if (isDev) {
+    if (isDev)
       logger.log(`[${prefix + pid}] OpenAPI: ${url}/api-docs`)
-    }
   })
 
   if (module.hot) {

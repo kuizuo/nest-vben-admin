@@ -1,14 +1,16 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Put,
-  Delete,
   UseGuards,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { TodoDto } from './todo.dto'
+import { TodoService } from './todo.service'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 import { IdParam } from '@/common/decorators/id-param.decorator'
 
@@ -17,9 +19,6 @@ import { Resource } from '@/modules/auth/decorators/resource.decorator'
 
 import { ResourceGuard } from '@/modules/auth/guards/resource.guard'
 import { TodoEntity } from '@/modules/todo/todo.entity'
-
-import { TodoDto } from './todo.dto'
-import { TodoService } from './todo.service'
 
 export const Permissions = {
   LIST: 'todo:list',

@@ -5,13 +5,11 @@ import { Between, LessThan, Like, Repository } from 'typeorm'
 
 import UAParser from 'ua-parser-js'
 
-import { paginateRaw } from '@/helper/paginate'
-
-import { IpService } from '@/shared/ip/ip.service'
-
 import { LoginLogQueryDto } from '../dto/log.dto'
 import { LoginLogEntity } from '../entities/login-log.entity'
 import { LoginLogInfo } from '../models/log.model'
+import { IpService } from '@/shared/ip/ip.service'
+import { paginateRaw } from '@/helper/paginate'
 
 async function parseLoginLog(e: any, parser: UAParser): Promise<LoginLogInfo> {
   const uaResult = parser.setUA(e.login_log_ua).getResult()
@@ -46,7 +44,8 @@ export class LoginLogService {
         address,
         user: { id: uid },
       })
-    } catch (e) {
+    }
+    catch (e) {
       console.error(e)
     }
   }
@@ -81,7 +80,7 @@ export class LoginLogService {
 
     const parser = new UAParser()
     const loginLogInfos = await Promise.all(
-      items.map((item) => parseLoginLog(item, parser)),
+      items.map(item => parseLoginLog(item, parser)),
     )
 
     return {

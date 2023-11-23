@@ -1,6 +1,11 @@
 import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { AccountInfo } from '../../user/user.model'
+import { UserService } from '../../user/user.service'
+import { AuthService } from '../auth.service'
+import { AccountUpdateDto } from '../dto/account.dto'
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
@@ -10,12 +15,6 @@ import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
 
 import { PasswordUpdateDto } from '@/modules/user/dto/password.dto'
-
-import { AccountInfo } from '../../user/user.model'
-import { UserService } from '../../user/user.service'
-import { AuthService } from '../auth.service'
-import { AccountUpdateDto } from '../dto/account.dto'
-import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 
 @ApiTags('Account - 账户模块')
 @ApiSecurityAuth()

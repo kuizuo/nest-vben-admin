@@ -52,31 +52,25 @@ export function NumberField(
 
   const decorators = [ToNumber()]
 
-  if (each) {
+  if (each)
     decorators.push(ToArray())
-  }
 
-  if (int) {
+  if (int)
     decorators.push(IsInt({ each }))
-  } else {
+  else
     decorators.push(IsNumber({}, { each }))
-  }
 
-  if (isNumber(min)) {
+  if (isNumber(min))
     decorators.push(Min(min, { each }))
-  }
 
-  if (isNumber(max)) {
+  if (isNumber(max))
     decorators.push(Max(max, { each }))
-  }
 
-  if (positive) {
+  if (positive)
     decorators.push(IsPositive({ each }))
-  }
 
-  if (!required) {
+  if (!required)
     decorators.push(IsOptional())
-  }
 
   return applyDecorators(...decorators)
 }
@@ -95,31 +89,25 @@ export function StringField(
 
   const decorators = [IsString({ each }), ToTrim()]
 
-  if (each) {
+  if (each)
     decorators.push(ToArray())
-  }
 
-  if (isNumber(minLength)) {
+  if (isNumber(minLength))
     decorators.push(MinLength(minLength, { each }))
-  }
 
-  if (isNumber(maxLength)) {
+  if (isNumber(maxLength))
     decorators.push(MaxLength(maxLength, { each }))
-  }
 
-  if (lowerCase) {
+  if (lowerCase)
     decorators.push(ToLowerCase())
-  }
 
-  if (upperCase) {
+  if (upperCase)
     decorators.push(ToUpperCase())
-  }
 
-  if (!required) {
+  if (!required)
     decorators.push(IsOptional())
-  } else {
+  else
     decorators.push(IsNotEmpty({ each }))
-  }
 
   return applyDecorators(...decorators)
 }
@@ -131,9 +119,8 @@ export function BooleanField(
 
   const { required = true } = options
 
-  if (!required) {
+  if (!required)
     decorators.push(IsOptional())
-  }
 
   return applyDecorators(...decorators)
 }
@@ -143,9 +130,8 @@ export function DateField(options: IOptionalOptions = {}): PropertyDecorator {
 
   const { required = true } = options
 
-  if (!required) {
+  if (!required)
     decorators.push(IsOptional())
-  }
 
   return applyDecorators(...decorators)
 }

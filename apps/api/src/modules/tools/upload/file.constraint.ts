@@ -1,11 +1,10 @@
-/* eslint-disable no-underscore-dangle */
 import { FastifyMultipartBaseOptions, MultipartFile } from '@fastify/multipart'
 import {
-  registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
+  registerDecorator,
 } from 'class-validator'
 import { has, isArray } from 'lodash'
 
@@ -15,13 +14,14 @@ type FileLimit = Pick<
 > & {
   mimetypes?: string[]
 }
-const checkFileAndLimit = (file: MultipartFile, limits: FileLimit = {}) => {
-  if (!('mimetype' in file)) return false
+function checkFileAndLimit(file: MultipartFile, limits: FileLimit = {}) {
+  if (!('mimetype' in file))
+    return false
   if (limits.mimetypes && !limits.mimetypes.includes(file.mimetype))
     return false
   if (
-    has(file, '_buf') &&
-    Buffer.byteLength((file as any)._buf) > limits.fileSize
+    has(file, '_buf')
+    && Buffer.byteLength((file as any)._buf) > limits.fileSize
   )
     return false
   return true

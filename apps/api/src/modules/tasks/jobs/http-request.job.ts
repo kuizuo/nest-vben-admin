@@ -22,7 +22,8 @@ export class HttpRequestJob {
     if (config) {
       const result = await this.httpService.request(config)
       this.logger.log(result, HttpRequestJob.name)
-    } else {
+    }
+    else {
       throw new BadRequestException('Http request job param is empty')
     }
   }

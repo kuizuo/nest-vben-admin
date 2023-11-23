@@ -6,15 +6,13 @@ import { EntityManager } from 'typeorm'
 
 import { UAParser } from 'ua-parser-js'
 
+import { UserService } from '../../user/user.service'
+import { OnlineUserInfo } from './online.model'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway'
 import { AdminWSService } from '@/modules/socket/admin-ws.service'
 import { EVENT_KICK } from '@/modules/socket/socket.event'
-
-import { UserService } from '../../user/user.service'
-
-import { OnlineUserInfo } from './online.model'
 
 @Injectable()
 export class OnlineService {
@@ -31,9 +29,9 @@ export class OnlineService {
    */
   async listOnlineUser(currentUid: number): Promise<OnlineUserInfo[]> {
     const onlineSockets = await this.adminWSService.getOnlineSockets()
-    if (!onlineSockets || onlineSockets.length <= 0) {
+    if (!onlineSockets || onlineSockets.length <= 0)
       return []
-    }
+
     const onlineIds = onlineSockets.map((socket) => {
       const token = socket.handshake.query?.token as string
       return this.jwtService.verify(token).uid
@@ -47,9 +45,9 @@ export class OnlineService {
   async kickUser(uid: number, currentUid: number): Promise<void> {
     const rootUserId = await this.userService.findRootUserId()
     const currentUserInfo = await this.userService.getAccountInfo(currentUid)
-    if (uid === rootUserId) {
+    if (uid === rootUserId)
       throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER)
-    }
+
     // reset redis keys
     await this.userService.forbidden(uid)
     // socket emit

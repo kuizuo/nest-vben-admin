@@ -18,8 +18,7 @@ import { EVENT_OFFLINE, EVENT_ONLINE } from './socket.event'
   namespace: '/admin',
 })
 export class AdminWSGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private wss: Server
 
@@ -43,7 +42,8 @@ export class AdminWSGateway
   async handleConnection(client: Socket): Promise<void> {
     try {
       this.authService.checkAdminAuthToken(client.handshake?.query?.token)
-    } catch (e) {
+    }
+    catch (e) {
       // no auth
       client.disconnect()
       return

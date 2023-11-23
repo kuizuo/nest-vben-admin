@@ -9,6 +9,7 @@ import {
 } from 'typeorm'
 
 import { AccessTokenEntity } from './access-token.entity'
+
 /**
  * 刷新Token的Token模型
  */
@@ -40,7 +41,7 @@ export class RefreshTokenEntity extends BaseEntity {
    */
   @OneToOne(
     () => AccessTokenEntity,
-    (accessToken) => accessToken.refreshToken,
+    accessToken => accessToken.refreshToken,
     {
       onDelete: 'CASCADE',
     },

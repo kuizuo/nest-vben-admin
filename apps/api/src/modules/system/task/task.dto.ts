@@ -25,12 +25,13 @@ import { PageOptionsDto } from '@/common/dto/page-options.dto'
 export class IsCronExpression implements ValidatorConstraintInterface {
   validate(value: string, _args: ValidationArguments) {
     try {
-      if (isEmpty(value)) {
+      if (isEmpty(value))
         throw new BadRequestException('cron expression is empty')
-      }
+
       parser.parseExpression(value)
       return true
-    } catch (e) {
+    }
+    catch (e) {
       return false
     }
   }
@@ -62,12 +63,12 @@ export class TaskDto {
 
   @ApiPropertyOptional({ description: '开始时间', type: Date })
   @IsDateString()
-  @ValidateIf((o) => !isEmpty(o.startTime))
+  @ValidateIf(o => !isEmpty(o.startTime))
   startTime: string
 
   @ApiPropertyOptional({ description: '结束时间', type: Date })
   @IsDateString()
-  @ValidateIf((o) => !isEmpty(o.endTime))
+  @ValidateIf(o => !isEmpty(o.endTime))
   endTime: string
 
   @ApiPropertyOptional({
@@ -79,13 +80,13 @@ export class TaskDto {
 
   @ApiProperty({ description: 'cron表达式' })
   @Validate(IsCronExpression)
-  @ValidateIf((o) => o.type === 0)
+  @ValidateIf(o => o.type === 0)
   cron: string
 
   @ApiProperty({ description: '执行间隔，毫秒单位' })
   @IsInt()
   @Min(100)
-  @ValidateIf((o) => o.type === 1)
+  @ValidateIf(o => o.type === 1)
   every?: number
 
   @ApiPropertyOptional({ description: '执行参数' })

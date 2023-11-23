@@ -15,7 +15,8 @@ export function setupSwagger(
   const { name, port } = configService.get<IAppConfig>('app')!
   const { enable, path } = configService.get<ISwaggerConfig>('swagger')!
 
-  if (!enable) return
+  if (!enable)
+    return
 
   const documentBuilder = new DocumentBuilder()
     .setTitle(name)

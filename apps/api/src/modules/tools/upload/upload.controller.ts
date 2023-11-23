@@ -2,12 +2,11 @@ import { MultipartFile } from '@fastify/multipart'
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { UploadService } from './upload.service'
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
 import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator'
 
 import { Permission } from '@/modules/auth/decorators/permission.decorator'
-
-import { UploadService } from './upload.service'
 
 @ApiSecurityAuth()
 @ApiTags('Tools - 上传模块')
@@ -31,7 +30,8 @@ export class UploadController {
       return {
         filename: path,
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error)
       throw new BadRequestException('上传失败')
     }

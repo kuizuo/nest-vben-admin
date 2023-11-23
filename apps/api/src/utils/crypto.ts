@@ -4,7 +4,8 @@ const key = CryptoJS.enc.Utf8.parse('kuizuoabcdefe9bc')
 const iv = CryptoJS.enc.Utf8.parse('0123456789kuizuo')
 
 export function AES_enc(data) {
-  if (!data) return data
+  if (!data)
+    return data
   const enc = CryptoJS.AES.encrypt(data, key, {
     iv,
     mode: CryptoJS.mode.CBC,
@@ -14,7 +15,8 @@ export function AES_enc(data) {
 }
 
 export function AES_dec(data) {
-  if (!data) return data
+  if (!data)
+    return data
   const dec = CryptoJS.AES.decrypt(data, key, {
     iv,
     mode: CryptoJS.mode.CBC,

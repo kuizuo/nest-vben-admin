@@ -3,7 +3,7 @@ import { ConsoleLogger, ConsoleLoggerOptions, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import type { Logger as WinstonLogger } from 'winston'
 
-import { createLogger, format, transports, config } from 'winston'
+import { config, createLogger, format, transports } from 'winston'
 
 import 'winston-daily-rotate-file'
 

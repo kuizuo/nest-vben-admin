@@ -3,16 +3,14 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { isEmpty } from 'lodash'
 import { EntityManager, Repository, TreeRepository } from 'typeorm'
 
+import { RoleService } from '../role/role.service'
+import { DeptDto, DeptQueryDto, MoveDept } from './dept.dto'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { DeptEntity } from '@/modules/system/dept/dept.entity'
 import { UserEntity } from '@/modules/user/entities/user.entity'
 
 import { deleteEmptyChildren } from '@/utils/list2tree'
-
-import { RoleService } from '../role/role.service'
-
-import { MoveDept, DeptDto, DeptQueryDto } from './dept.dto'
 
 @Injectable()
 export class DeptService {
@@ -36,9 +34,9 @@ export class DeptService {
       .where({ id })
       .getOne()
 
-    if (isEmpty(dept)) {
+    if (isEmpty(dept))
       throw new BusinessException(ErrorEnum.DEPARTMENT_NOT_FOUND)
-    }
+
     return dept
   }
 

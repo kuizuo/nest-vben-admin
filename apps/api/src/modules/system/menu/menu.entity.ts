@@ -1,8 +1,7 @@
 import { Column, Entity, ManyToMany } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity'
-
 import { RoleEntity } from '../role/role.entity'
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_menu' })
 export class MenuEntity extends AbstractEntity {
@@ -42,6 +41,6 @@ export class MenuEntity extends AbstractEntity {
   @Column({ type: 'tinyint', default: 1 })
   status: number
 
-  @ManyToMany(() => RoleEntity, (role) => role.menus)
+  @ManyToMany(() => RoleEntity, role => role.menus)
   roles: RoleEntity[]
 }

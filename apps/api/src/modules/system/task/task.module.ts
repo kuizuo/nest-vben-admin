@@ -4,8 +4,6 @@ import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { IRedisConfig } from '@/config'
-
 import { LogModule } from '../log/log.module'
 
 import { SYS_TASK_QUEUE_NAME, SYS_TASK_QUEUE_PREFIX } from './constant'
@@ -14,6 +12,7 @@ import { TaskController } from './task.controller'
 import { TaskEntity } from './task.entity'
 import { TaskConsumer } from './task.processor'
 import { TaskService } from './task.service'
+import { IRedisConfig } from '@/config'
 
 const providers = [TaskService, TaskConsumer]
 

@@ -12,9 +12,9 @@ export const Ip = createParamDecorator((_, context: ExecutionContext) => {
   return (
     // 判断是否有反向代理 IP
     (
-      (request.headers['x-forwarded-for'] as string) ||
+      (request.headers['x-forwarded-for'] as string)
       // 判断后端的 socket 的 IP
-      request.socket.remoteAddress
+      || request.socket.remoteAddress
     ).replace('::ffff:', '')
   )
 })

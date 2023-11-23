@@ -4,12 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { RemoteSocket } from 'socket.io'
 import { In, Repository } from 'typeorm'
 
-import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway'
-
 import { RoleEntity } from '../system/role/role.entity'
 import { UserEntity } from '../user/entities/user.entity'
 
 import { EVENT_UPDATE_MENU } from './socket.event'
+import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway'
 
 @Injectable()
 export class AdminWSService {
@@ -69,7 +68,7 @@ export class AdminWSService {
     if (sockets) {
       // socket emit event
       this.adminWsGateWay.socketServer
-        .to(sockets.map((n) => n.id))
+        .to(sockets.map(n => n.id))
         .emit(EVENT_UPDATE_MENU)
     }
   }
@@ -81,7 +80,7 @@ export class AdminWSService {
     const roles = await this.roleRepo.findBy({
       menus: { id: In(menuIds) },
     })
-    const roleIds = roles.map((r) => r.id)
+    const roleIds = roles.map(r => r.id)
     await this.noticeUserToUpdateMenusByRoleIds(roleIds)
   }
 
@@ -95,7 +94,7 @@ export class AdminWSService {
       },
     })
     if (users) {
-      const userIds = users.map((n) => n.id)
+      const userIds = users.map(n => n.id)
       await this.noticeUserToUpdateMenusByUserIds(userIds)
     }
   }

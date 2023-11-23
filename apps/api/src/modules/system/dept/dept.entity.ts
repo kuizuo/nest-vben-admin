@@ -8,9 +8,8 @@ import {
   TreeParent,
 } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity'
-
 import { UserEntity } from '../../user/entities/user.entity'
+import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')
@@ -29,6 +28,6 @@ export class DeptEntity extends AbstractEntity {
   @TreeParent({ onDelete: 'SET NULL' })
   parent?: DeptEntity | null
 
-  @OneToMany(() => UserEntity, (user) => user.dept)
+  @OneToMany(() => UserEntity, user => user.dept)
   users: UserEntity[]
 }

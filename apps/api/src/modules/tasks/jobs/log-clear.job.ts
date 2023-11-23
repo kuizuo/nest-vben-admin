@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
 
+import { Mission } from '../mission.decorator'
 import { LoginLogService } from '@/modules/system/log/services/login-log.service'
 import { TaskLogService } from '@/modules/system/log/services/task-log.service'
-
-import { Mission } from '../mission.decorator'
 
 /**
  * 管理后台日志清理任务

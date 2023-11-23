@@ -8,12 +8,11 @@ import { AuthGuard } from '@nestjs/passport'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { isEmpty, isNil } from 'lodash'
 
+import { AuthStrategy, IS_PUBLIC_KEY } from '../constant'
+import { TokenService } from '../services/token.service'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { AuthService } from '@/modules/auth/auth.service'
-
-import { AuthStrategy, IS_PUBLIC_KEY } from '../constant'
-import { TokenService } from '../services/token.service'
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
@@ -39,20 +38,22 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     let result: any = false
     try {
       result = await super.canActivate(context)
-    } catch (e) {
+    }
+    catch (e) {
       // 需要后置判断 这样携带了 token 的用户就能够解析到 request.user
-      if (isPublic) return true
+      if (isPublic)
+        return true
 
-      if (isEmpty(Authorization)) {
+      if (isEmpty(Authorization))
         throw new UnauthorizedException('未登录')
-      }
 
       // 判断 token 是否存在, 如果不存在则认证失败
       const accessToken = isNil(Authorization)
         ? undefined
         : await this.tokenService.checkAccessToken(Authorization!)
 
-      if (!accessToken) throw new UnauthorizedException('令牌无效')
+      if (!accessToken)
+        throw new UnauthorizedException('令牌无效')
     }
 
     const pv = await this.authService.getPasswordVersionByUid(request.user.uid)
@@ -73,9 +74,9 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
   handleRequest(err, user, info) {
     // You can throw an exception based on either "info" or "err" arguments
-    if (err || !user) {
+    if (err || !user)
       throw err || new UnauthorizedException()
-    }
+
     return user
   }
 }

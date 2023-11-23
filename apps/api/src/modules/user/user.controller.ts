@@ -1,14 +1,13 @@
 import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { UserPasswordDto } from './dto/password.dto'
+import { UserDto, UserListDto } from './dto/user.dto'
+import { UserService } from './user.service'
 import { IdParam } from '@/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
 import { Permission } from '@/modules/auth/decorators/permission.decorator'
 import { MenuService } from '@/modules/system/menu/menu.service'
-
-import { UserPasswordDto } from './dto/password.dto'
-import { UserDto, UserListDto } from './dto/user.dto'
-import { UserService } from './user.service'
 
 export const Permissions = {
   LIST: 'system:user:list',

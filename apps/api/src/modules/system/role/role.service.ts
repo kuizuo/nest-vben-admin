@@ -4,15 +4,14 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { isEmpty } from 'lodash'
 import { EntityManager, In, Repository } from 'typeorm'
 
+import { RoleDto } from './role.dto'
+import { RoleInfo } from './role.model'
 import { PageOptionsDto } from '@/common/dto/page-options.dto'
 import { IAppConfig } from '@/config'
 import { paginate } from '@/helper/paginate'
 import { Pagination } from '@/helper/paginate/pagination'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
 import { RoleEntity } from '@/modules/system/role/role.entity'
-
-import { RoleDto } from './role.dto'
-import { RoleInfo } from './role.model'
 
 @Injectable()
 export class RoleService {
@@ -56,13 +55,12 @@ export class RoleService {
       select: ['id'],
     })
 
-    return { ...info, menuIds: menus.map((m) => m.id) }
+    return { ...info, menuIds: menus.map(m => m.id) }
   }
 
   async delete(id: number): Promise<void> {
-    if (id === this.configService.get<IAppConfig>('app').adminRoleId) {
+    if (id === this.configService.get<IAppConfig>('app').adminRoleId)
       throw new Error('不能删除超级管理员')
-    }
 
     await this.roleRepository.delete(id)
   }
@@ -111,9 +109,9 @@ export class RoleService {
       },
     })
 
-    if (!isEmpty(roles)) {
-      return roles.map((r) => r.id)
-    }
+    if (!isEmpty(roles))
+      return roles.map(r => r.id)
+
     return []
   }
 
@@ -122,7 +120,7 @@ export class RoleService {
       await this.roleRepository.findBy({
         id: In(ids),
       })
-    ).map((r) => r.value)
+    ).map(r => r.value)
   }
 
   async isAdminRoleByUser(uid: number): Promise<boolean> {
@@ -134,7 +132,7 @@ export class RoleService {
 
     if (!isEmpty(roles)) {
       return roles.some(
-        (r) => r.id === this.configService.get('app').adminRoleId,
+        r => r.id === this.configService.get('app').adminRoleId,
       )
     }
     return false
@@ -142,7 +140,7 @@ export class RoleService {
 
   hasAdminRole(rids: number[]): boolean {
     return rids.some(
-      (r) => r === this.configService.get<IAppConfig>('app').adminRoleId,
+      r => r === this.configService.get<IAppConfig>('app').adminRoleId,
     )
   }
 

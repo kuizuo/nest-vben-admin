@@ -15,6 +15,12 @@ import Redis from 'ioredis'
 import { isEmpty } from 'lodash'
 import { Like, Repository } from 'typeorm'
 
+import {
+  SYS_TASK_QUEUE_NAME,
+  SYS_TASK_QUEUE_PREFIX,
+  TaskStatus,
+} from './constant'
+import { TaskDto, TaskQueryDto } from './task.dto'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 
@@ -23,14 +29,6 @@ import { Pagination } from '@/helper/paginate/pagination'
 
 import { TaskEntity } from '@/modules/system/task/task.entity'
 import { MISSION_DECORATOR_KEY } from '@/modules/tasks/mission.decorator'
-
-import {
-  SYS_TASK_QUEUE_NAME,
-  SYS_TASK_QUEUE_PREFIX,
-  TaskStatus,
-} from './constant'
-
-import { TaskDto, TaskQueryDto } from './task.dto'
 
 @Injectable()
 export class TaskService implements OnModuleInit {
@@ -83,9 +81,8 @@ export class TaskService implements OnModuleInit {
     // 查找所有需要运行的任务
     const tasks = await this.taskRepository.findBy({ status: 1 })
     if (tasks && tasks.length > 0) {
-      for (const t of tasks) {
+      for (const t of tasks)
         await this.start(t)
-      }
     }
     // 启动后释放锁
     await this.redis.del(initKey)
@@ -121,9 +118,9 @@ export class TaskService implements OnModuleInit {
       .where({ id })
       .getOne()
 
-    if (!task) {
+    if (!task)
       throw new NotFoundException('Task Not Found')
-    }
+
     return task
   }
 
@@ -131,9 +128,9 @@ export class TaskService implements OnModuleInit {
    * delete task
    */
   async delete(task: TaskEntity): Promise<void> {
-    if (!task) {
+    if (!task)
       throw new BadRequestException('Task is Empty')
-    }
+
     await this.stop(task)
     await this.taskRepository.delete(task.id)
   }
@@ -147,7 +144,8 @@ export class TaskService implements OnModuleInit {
         { id: task.id, service: task.service, args: task.data },
         { jobId: task.id, removeOnComplete: true, removeOnFail: true },
       )
-    } else {
+    }
+    else {
       throw new BadRequestException('Task is Empty')
     }
   }
@@ -155,30 +153,28 @@ export class TaskService implements OnModuleInit {
   async create(dto: TaskDto): Promise<void> {
     const result = await this.taskRepository.save(dto)
     const task = await this.info(result.id)
-    if (result.status === 0) {
+    if (result.status === 0)
       await this.stop(task)
-    } else if (result.status === TaskStatus.Activited) {
+    else if (result.status === TaskStatus.Activited)
       await this.start(task)
-    }
   }
 
   async update(id: number, dto: Partial<TaskDto>): Promise<void> {
     await this.taskRepository.update(id, dto)
     const task = await this.info(id)
-    if (task.status === 0) {
+    if (task.status === 0)
       await this.stop(task)
-    } else if (task.status === TaskStatus.Activited) {
+    else if (task.status === TaskStatus.Activited)
       await this.start(task)
-    }
   }
 
   /**
    * 启动任务
    */
   async start(task: TaskEntity): Promise<void> {
-    if (!task) {
+    if (!task)
       throw new BadRequestException('Task is Empty')
-    }
+
     // 先停掉之前存在的任务
     await this.stop(task)
     let repeat: any
@@ -187,22 +183,22 @@ export class TaskService implements OnModuleInit {
       repeat = {
         every: task.every,
       }
-    } else {
+    }
+    else {
       // cron
       repeat = {
         cron: task.cron,
       }
       // Start date when the repeat job should start repeating (only with cron).
-      if (task.startTime) {
+      if (task.startTime)
         repeat.startDate = task.startTime
-      }
-      if (task.endTime) {
+
+      if (task.endTime)
         repeat.endDate = task.endTime
-      }
     }
-    if (task.limit > 0) {
+    if (task.limit > 0)
       repeat.limit = task.limit
-    }
+
     const job = await this.taskQueue.add(
       { id: task.id, service: task.service, args: task.data },
       { jobId: task.id, removeOnComplete: true, removeOnFail: true, repeat },
@@ -212,7 +208,8 @@ export class TaskService implements OnModuleInit {
         jobOpts: JSON.stringify(job.opts.repeat),
         status: 1,
       })
-    } else {
+    }
+    else {
       // update status to 0，标识暂停任务，因为启动失败
       await job?.remove()
       await this.taskRepository.update(task.id, {
@@ -226,9 +223,9 @@ export class TaskService implements OnModuleInit {
    * 停止任务
    */
   async stop(task: TaskEntity): Promise<void> {
-    if (!task) {
+    if (!task)
       throw new BadRequestException('Task is Empty')
-    }
+
     const exist = await this.existJob(task.id.toString())
     if (!exist) {
       await this.taskRepository.update(task.id, {
@@ -245,7 +242,7 @@ export class TaskService implements OnModuleInit {
       'completed',
     ])
     jobs
-      .filter((j) => j.data.id === task.id)
+      .filter(j => j.data.id === task.id)
       .forEach(async (j) => {
         await j.remove()
       })
@@ -297,29 +294,30 @@ export class TaskService implements OnModuleInit {
   ): Promise<void | never> {
     try {
       let service: any
-      if (typeof nameOrInstance === 'string') {
+      if (typeof nameOrInstance === 'string')
         service = await this.moduleRef.get(nameOrInstance, { strict: false })
-      } else {
+      else
         service = nameOrInstance
-      }
+
       // 所执行的任务不存在
-      if (!service || !(exec in service)) {
+      if (!service || !(exec in service))
         throw new NotFoundException('任务不存在')
-      }
+
       // 检测是否有Mission注解
       const hasMission = this.reflector.get<boolean>(
         MISSION_DECORATOR_KEY,
         service.constructor,
       )
       // 如果没有，则抛出错误
-      if (!hasMission) {
+      if (!hasMission)
         throw new BusinessException(ErrorEnum.INSECURE_MISSION)
-      }
-    } catch (e) {
+    }
+    catch (e) {
       if (e instanceof UnknownElementException) {
         // 任务不存在
         throw new NotFoundException('任务不存在')
-      } else {
+      }
+      else {
         // 其余错误则不处理，继续抛出
         throw e
       }
@@ -332,9 +330,9 @@ export class TaskService implements OnModuleInit {
   async callService(name: string, args: string): Promise<void> {
     if (name) {
       const [serviceName, methodName] = name.split('.')
-      if (!methodName) {
+      if (!methodName)
         throw new BadRequestException('serviceName define BadRequestException')
-      }
+
       const service = await this.moduleRef.get(serviceName, {
         strict: false,
       })
@@ -343,14 +341,16 @@ export class TaskService implements OnModuleInit {
       await this.checkHasMissionMeta(service, methodName)
       if (isEmpty(args)) {
         await service[methodName]()
-      } else {
+      }
+      else {
         // 参数安全判断
         const parseArgs = this.safeParse(args)
 
         if (Array.isArray(parseArgs)) {
           // 数组形式则自动扩展成方法参数回掉
           await service[methodName](...parseArgs)
-        } else {
+        }
+        else {
           await service[methodName](parseArgs)
         }
       }
@@ -360,7 +360,8 @@ export class TaskService implements OnModuleInit {
   safeParse(args: string): unknown | string {
     try {
       return JSON.parse(args)
-    } catch (e) {
+    }
+    catch (e) {
       return args
     }
   }

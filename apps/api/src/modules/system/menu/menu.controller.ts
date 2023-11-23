@@ -11,14 +11,13 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { flattenDeep } from 'lodash'
 
+import { MenuDto, MenuQueryDto } from './menu.dto'
+import { MenuService } from './menu.service'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 import { IdParam } from '@/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
 import { Permission } from '@/modules/auth/decorators/permission.decorator'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
-
-import { MenuDto, MenuQueryDto } from './menu.dto'
-import { MenuService } from './menu.service'
 
 export const Permissions = {
   LIST: 'system:menu:list',
@@ -55,12 +54,11 @@ export class MenuController {
   async create(@Body() dto: MenuDto): Promise<void> {
     // check
     await this.menuService.check(dto)
-    if (!dto.parent) {
+    if (!dto.parent)
       dto.parent = null
-    }
-    if (dto.type === 0) {
+
+    if (dto.type === 0)
       dto.component = 'LAYOUT'
-    }
 
     await this.menuService.create(dto)
     if (dto.type === 2) {
@@ -78,9 +76,8 @@ export class MenuController {
   ): Promise<void> {
     // check
     await this.menuService.check(dto)
-    if (dto.parent === -1 || !dto.parent) {
+    if (dto.parent === -1 || !dto.parent)
       dto.parent = null
-    }
 
     await this.menuService.update(id, dto)
     if (dto.type === 2) {
@@ -93,9 +90,8 @@ export class MenuController {
   @ApiOperation({ summary: '删除菜单或权限' })
   @Permission(Permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
-    if (await this.menuService.checkRoleByMenuId(id)) {
+    if (await this.menuService.checkRoleByMenuId(id))
       throw new BadRequestException('该菜单存在关联角色，无法删除')
-    }
 
     // 如果有子目录，一并删除
     const childMenus = await this.menuService.findChildMenus(id)

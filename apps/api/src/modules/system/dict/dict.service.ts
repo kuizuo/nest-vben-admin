@@ -3,13 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Repository } from 'typeorm'
 
+import { DictDto, DictQueryDto } from './dict.dto'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { paginate } from '@/helper/paginate'
 import { Pagination } from '@/helper/paginate/pagination'
 import { DictEntity } from '@/modules/system/dict/dict.entity'
-
-import { DictDto, DictQueryDto } from './dict.dto'
 
 @Injectable()
 export class DictService {
@@ -74,9 +73,8 @@ export class DictService {
 
   async isExistKey(key: string): Promise<void | never> {
     const result = await this.dictRepository.findOneBy({ key })
-    if (result) {
+    if (result)
       throw new BusinessException(ErrorEnum.PARAMETER_CONFIG_KEY_EXISTS)
-    }
   }
 
   async findValueByKey(key: string): Promise<string | null> {
@@ -84,9 +82,9 @@ export class DictService {
       where: { key },
       select: ['value'],
     })
-    if (result) {
+    if (result)
       return result.value
-    }
+
     return null
   }
 }

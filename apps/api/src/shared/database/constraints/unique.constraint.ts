@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import {
-  registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
+  registerDecorator,
 } from 'class-validator'
 import { isNil, merge } from 'lodash'
 import { DataSource, ObjectType } from 'typeorm'
 
-type Condition = {
+interface Condition {
   entity: ObjectType<any>
   // 如果没有指定字段则使用当前验证的属性作为查询依据
   field?: string
@@ -34,7 +34,8 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
           ...config,
           entity: args.constraints[0],
         }) as unknown as Required<Condition>
-    if (!condition.entity) return false
+    if (!condition.entity)
+      return false
     try {
       // 查询是否存在数据,如果已经存在则验证失败
       const repo = this.dataSource.getRepository(condition.entity)
@@ -43,7 +44,8 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
           where: { [condition.field]: value },
         }),
       )
-    } catch (err) {
+    }
+    catch (err) {
       // 如果数据库操作异常则验证失败
       return false
     }
@@ -52,12 +54,12 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
   defaultMessage(args: ValidationArguments) {
     const { entity, property } = args.constraints[0]
     const queryProperty = property ?? args.property
-    if (!(args.object as any).getManager) {
+    if (!(args.object as any).getManager)
       return 'getManager function not been found!'
-    }
-    if (!entity) {
+
+    if (!entity)
       return 'Model not been specified!'
-    }
+
     return `${queryProperty} of ${entity.name} must been unique!`
   }
 }

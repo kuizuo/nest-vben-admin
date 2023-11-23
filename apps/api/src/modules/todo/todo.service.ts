@@ -2,11 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
+import { TodoDto, TodoQueryDto } from './todo.dto'
 import { paginate } from '@/helper/paginate'
 import { Pagination } from '@/helper/paginate/pagination'
 import { TodoEntity } from '@/modules/todo/todo.entity'
-
-import { TodoDto, TodoQueryDto } from './todo.dto'
 
 @Injectable()
 export class TodoService {
@@ -28,7 +27,8 @@ export class TodoService {
 
   async detail(id: number): Promise<TodoEntity> {
     const item = await this.todoRepository.findOneBy({ id })
-    if (!item) throw new NotFoundException('未找到该记录')
+    if (!item)
+      throw new NotFoundException('未找到该记录')
 
     return item
   }

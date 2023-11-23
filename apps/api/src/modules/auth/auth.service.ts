@@ -4,18 +4,16 @@ import { Injectable } from '@nestjs/common'
 import Redis from 'ioredis'
 import { isEmpty } from 'lodash'
 
+import { LoginLogService } from '../system/log/services/login-log.service'
+import { MenuService } from '../system/menu/menu.service'
+import { RoleService } from '../system/role/role.service'
+import { TokenService } from './services/token.service'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 
 import { UserService } from '@/modules/user/user.service'
 
 import { MD5 } from '@/utils'
-
-import { LoginLogService } from '../system/log/services/login-log.service'
-import { MenuService } from '../system/menu/menu.service'
-import { RoleService } from '../system/role/role.service'
-
-import { TokenService } from './services/token.service'
 
 @Injectable()
 export class AuthService {
@@ -31,14 +29,12 @@ export class AuthService {
   async validateUser(credential: string, password: string): Promise<any> {
     const user = await this.userService.findUserByUserName(credential)
 
-    if (isEmpty(user)) {
+    if (isEmpty(user))
       throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
-    }
 
     const comparePassword = MD5(`${password}${user.psalt}`)
-    if (user.password !== comparePassword) {
+    if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
-    }
 
     if (user) {
       const { password, ...result } = user
@@ -59,14 +55,12 @@ export class AuthService {
     ua: string,
   ): Promise<string> {
     const user = await this.userService.findUserByUserName(username)
-    if (isEmpty(user)) {
+    if (isEmpty(user))
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
-    }
 
     const comparePassword = MD5(`${password}${user.psalt}`)
-    if (user.password !== comparePassword) {
+    if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
-    }
 
     const roleIds = await this.roleService.getRoleIdsByUser(user.id)
 
@@ -96,9 +90,8 @@ export class AuthService {
     const user = await this.userService.findUserByUserName(username)
 
     const comparePassword = MD5(`${password}${user.psalt}`)
-    if (user.password !== comparePassword) {
+    if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
-    }
   }
 
   async loginLog(uid: number, ip: string, ua: string) {

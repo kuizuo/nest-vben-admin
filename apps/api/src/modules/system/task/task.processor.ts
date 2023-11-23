@@ -29,7 +29,8 @@ export class TaskConsumer {
       const timing = Date.now() - startTime
       // 任务执行成功
       await this.taskLogService.create(data.id, 1, timing)
-    } catch (e) {
+    }
+    catch (e) {
       const timing = Date.now() - startTime
       // 执行失败
       await this.taskLogService.create(data.id, 0, timing, `${e}`)

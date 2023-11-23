@@ -2,11 +2,11 @@ import { Exclude } from 'class-transformer'
 import {
   Column,
   Entity,
-  ManyToMany,
-  JoinTable,
-  OneToMany,
-  ManyToOne,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm'
 
 import { AbstractEntity } from '@/common/entity/abstract.entity'
@@ -49,15 +49,15 @@ export class UserEntity extends AbstractEntity {
   @Column({ type: 'tinyint', nullable: true, default: 1 })
   status: number
 
-  @ManyToMany(() => RoleEntity, (role) => role.users)
+  @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable()
   roles: RoleEntity[]
 
-  @ManyToOne(() => DeptEntity, (dept) => dept.users)
+  @ManyToOne(() => DeptEntity, dept => dept.users)
   @JoinColumn()
   dept: DeptEntity
 
-  @OneToMany(() => AccessTokenEntity, (accessToken) => accessToken.user, {
+  @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,
   })
   accessTokens: AccessTokenEntity[]

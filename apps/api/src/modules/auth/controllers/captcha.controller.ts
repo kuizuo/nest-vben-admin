@@ -8,14 +8,12 @@ import Redis from 'ioredis'
 import { isEmpty } from 'lodash'
 import * as svgCaptcha from 'svg-captcha'
 
-import { ApiResult } from '@/common/decorators/api-result.decorator'
-
-import { generateUUID } from '@/utils'
-
 import { Public } from '../decorators/public.decorator'
 
 import { ImageCaptchaDto } from '../dto/captcha.dto'
 import { ImageCaptcha } from '../models/auth.model'
+import { generateUUID } from '@/utils'
+import { ApiResult } from '@/common/decorators/api-result.decorator'
 
 @ApiTags('Captcha - 验证码模块')
 @UseGuards(ThrottlerGuard)

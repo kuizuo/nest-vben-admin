@@ -2,10 +2,9 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { Socket } from 'socket.io'
 
+import { AuthService } from './auth.service'
 import { SocketException } from '@/common/exceptions/socket.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
-
-import { AuthService } from './auth.service'
 
 @Injectable()
 export class AdminWsGuard implements CanActivate {
@@ -20,7 +19,8 @@ export class AdminWsGuard implements CanActivate {
       // 挂载对象到当前请求上
       this.authService.checkAdminAuthToken(token)
       return true
-    } catch (e) {
+    }
+    catch (e) {
       // close
       client.disconnect()
       // 无法通过token校验

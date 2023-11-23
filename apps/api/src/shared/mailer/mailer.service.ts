@@ -56,7 +56,8 @@ export class MailerService {
         `${this.configService.get<IAppConfig>('app').name}验证码通知`,
         content,
       )
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error)
       throw new BusinessException(ErrorEnum.VERIFICATION_CODE_SEND_FAILED)
     }
@@ -69,9 +70,9 @@ export class MailerService {
 
   async checkCode(to, code) {
     const ret = await this.redis.get(`captcha:${to}`)
-    if (ret !== code) {
+    if (ret !== code)
       throw new BusinessException(ErrorEnum.INVALID_VERIFICATION_CODE)
-    }
+
     await this.redis.del(`captcha:${to}`)
   }
 
@@ -80,31 +81,35 @@ export class MailerService {
 
     // ip限制
     const ipLimit = await this.redis.get(`ip:${ip}:send:limit`)
-    if (ipLimit) throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
+    if (ipLimit)
+      throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
 
     // 1分钟最多接收1条
     const limit = await this.redis.get(`captcha:${to}:limit`)
-    if (limit) throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
+    if (limit)
+      throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
 
     // 1天一个邮箱最多接收5条
     let limitCountOfDay: string | number = await this.redis.get(
       `captcha:${to}:limit-day`,
     )
     limitCountOfDay = limitCountOfDay ? Number(limitCountOfDay) : 0
-    if (limitCountOfDay > LIMIT_TIME)
+    if (limitCountOfDay > LIMIT_TIME) {
       throw new BusinessException(
         ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY,
       )
+    }
 
     // 1天一个ip最多发送5条
     let ipLimitCountOfDay: string | number = await this.redis.get(
       `ip:${ip}:send:limit-day`,
     )
     ipLimitCountOfDay = ipLimitCountOfDay ? Number(ipLimitCountOfDay) : 0
-    if (ipLimitCountOfDay > LIMIT_TIME)
+    if (ipLimitCountOfDay > LIMIT_TIME) {
       throw new BusinessException(
         ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY,
       )
+    }
   }
 
   async log(to: string, code: string, ip: string) {

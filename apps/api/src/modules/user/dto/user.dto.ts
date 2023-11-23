@@ -55,7 +55,7 @@ export class UserDto {
   @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
   @IsUnique(UserEntity, { message: '邮箱已被注册' })
   @IsEmail()
-  @ValidateIf((o) => !isEmpty(o.email))
+  @ValidateIf(o => !isEmpty(o.email))
   email: string
 
   @ApiProperty({ description: '手机号' })

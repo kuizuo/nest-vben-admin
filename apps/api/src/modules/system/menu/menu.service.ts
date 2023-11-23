@@ -6,16 +6,14 @@ import { concat, isEmpty, uniq } from 'lodash'
 
 import { In, IsNull, Like, Not, Repository } from 'typeorm'
 
+import { RoleService } from '../role/role.service'
+import { MenuDto, MenuQueryDto } from './menu.dto'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
 
 import { deleteEmptyChildren } from '@/utils'
 import { generatorMenu, generatorRouters } from '@/utils/permission'
-
-import { RoleService } from '../role/role.service'
-
-import { MenuDto, MenuQueryDto } from './menu.dto'
 
 @Injectable()
 export class MenuService {
@@ -73,7 +71,8 @@ export class MenuService {
 
     if (this.roleService.hasAdminRole(roleIds)) {
       menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } })
-    } else {
+    }
+    else {
       menus = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
@@ -96,9 +95,9 @@ export class MenuService {
     }
     if (dto.type === 1 && dto.parent) {
       const parent = await this.getMenuItemInfo(dto.parent)
-      if (isEmpty(parent)) {
+      if (isEmpty(parent))
         throw new BusinessException(ErrorEnum.PARENT_MENU_NOT_FOUND)
-      }
+
       if (parent && parent.type === 1) {
         // 当前新增为菜单但父节点也为菜单时为非法操作
         throw new BusinessException(
@@ -144,9 +143,9 @@ export class MenuService {
   async getMenuItemAndParentInfo(mid: number) {
     const menu = await this.menuRepository.findOneBy({ id: mid })
     let parentMenu: MenuEntity | undefined
-    if (menu && menu.parent) {
+    if (menu && menu.parent)
       parentMenu = await this.menuRepository.findOneBy({ id: menu.parent })
-    }
+
     return { menu, parentMenu }
   }
 
@@ -170,10 +169,11 @@ export class MenuService {
         permission: Not(IsNull()),
         type: In([1, 2]),
       })
-    } else {
-      if (isEmpty(roleIds)) {
+    }
+    else {
+      if (isEmpty(roleIds))
         return permission
-      }
+
       result = await this.menuRepository
         .createQueryBuilder('menu')
         .innerJoinAndSelect('menu.roles', 'role')
@@ -184,9 +184,8 @@ export class MenuService {
     }
     if (!isEmpty(result)) {
       result.forEach((e) => {
-        if (e.permission) {
+        if (e.permission)
           permission = concat(permission, e.permission.split(','))
-        }
       })
       permission = uniq(permission)
     }
@@ -219,10 +218,10 @@ export class MenuService {
     const onlineUserIds: string[] = await this.redis.keys('admin:token:*')
     if (onlineUserIds && onlineUserIds.length > 0) {
       onlineUserIds
-        .map((i) => i.split('admin:token:')[1])
-        .filter((i) => i)
+        .map(i => i.split('admin:token:')[1])
+        .filter(i => i)
         .forEach(async (uid) => {
-          const perms = await this.getPermissions(parseInt(uid))
+          const perms = await this.getPermissions(Number.parseInt(uid))
           await this.redis.set(`admin:perms:${uid}`, JSON.stringify(perms))
         })
     }

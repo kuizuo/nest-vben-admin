@@ -2,14 +2,13 @@ import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import dayjs from 'dayjs'
 
+import { AccessTokenEntity } from '../entities/access-token.entity'
+import { RefreshTokenEntity } from '../entities/refresh-token.entity'
 import { ISecurityConfig, SecurityConfig } from '@/config'
 import { RoleService } from '@/modules/system/role/role.service'
 import { UserEntity } from '@/modules/user/entities/user.entity'
 
 import { generateUUID } from '@/utils/uuid'
-
-import { AccessTokenEntity } from '../entities/access-token.entity'
-import { RefreshTokenEntity } from '../entities/refresh-token.entity'
 
 /**
  * 令牌服务
@@ -33,7 +32,8 @@ export class TokenService {
     if (refreshToken) {
       const now = dayjs()
       // 判断refreshToken是否过期
-      if (now.isAfter(refreshToken.expired_at)) return null
+      if (now.isAfter(refreshToken.expired_at))
+        return null
 
       const roleIds = await this.roleService.getRoleIdsByUser(user.id)
       const roleValues = await this.roleService.getRoleValues(roleIds)
@@ -130,7 +130,8 @@ export class TokenService {
     const accessToken = await AccessTokenEntity.findOne({
       where: { value },
     })
-    if (accessToken) await accessToken.remove()
+    if (accessToken)
+      await accessToken.remove()
   }
 
   /**
@@ -143,7 +144,8 @@ export class TokenService {
       relations: ['accessToken'],
     })
     if (refreshToken) {
-      if (refreshToken.accessToken) await refreshToken.accessToken.remove()
+      if (refreshToken.accessToken)
+        await refreshToken.accessToken.remove()
       await refreshToken.remove()
     }
   }
@@ -154,7 +156,8 @@ export class TokenService {
    */
   async verifyAccessToken(token: string) {
     const result = this.jwtService.verify(token)
-    if (!result) return false
+    if (!result)
+      return false
 
     return true
   }

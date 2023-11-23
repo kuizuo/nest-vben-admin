@@ -8,9 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
-import { UserEntity } from '@/modules/user/entities/user.entity'
-
 import { RefreshTokenEntity } from './refresh-token.entity'
+import { UserEntity } from '@/modules/user/entities/user.entity'
 
 /**
  * 用户认证token模型
@@ -43,7 +42,7 @@ export class AccessTokenEntity extends BaseEntity {
    */
   @OneToOne(
     () => RefreshTokenEntity,
-    (refreshToken) => refreshToken.accessToken,
+    refreshToken => refreshToken.accessToken,
     {
       cascade: true,
     },
@@ -54,7 +53,7 @@ export class AccessTokenEntity extends BaseEntity {
    * @description 所属用户
    * @type {UserEntity}
    */
-  @ManyToOne(() => UserEntity, (user) => user.accessTokens, {
+  @ManyToOne(() => UserEntity, user => user.accessTokens, {
     onDelete: 'CASCADE',
   })
   user!: UserEntity

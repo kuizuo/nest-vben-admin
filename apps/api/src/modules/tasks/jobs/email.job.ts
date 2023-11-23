@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 
-import { MailerService } from '@/shared/mailer/mailer.service'
-
 import { Mission } from '../mission.decorator'
+import { MailerService } from '@/shared/mailer/mailer.service'
 
 /**
  * Api接口请求类型任务
@@ -20,7 +19,8 @@ export class EmailJob {
       const { to, subject, content } = config
       const result = await this.emailService.send(to, subject, content)
       this.logger.log(result, EmailJob.name)
-    } else {
+    }
+    else {
       throw new BadRequestException('Email send job param is empty')
     }
   }

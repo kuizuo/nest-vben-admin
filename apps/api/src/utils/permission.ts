@@ -50,7 +50,8 @@ function filterAsyncRoutes(menus, parentRoute) {
     if (!parentRoute && !menu.parent && menu.type === 1) {
       // 根菜单
       realRoute = createRoute(menu, true)
-    } else if (!parentRoute && !menu.parent && menu.type === 0) {
+    }
+    else if (!parentRoute && !menu.parent && menu.type === 0) {
       // 目录
       const childRoutes = filterAsyncRoutes(menus, menu)
       realRoute = createRoute(menu, true)
@@ -58,17 +59,19 @@ function filterAsyncRoutes(menus, parentRoute) {
         realRoute.redirect = childRoutes[0].path
         realRoute.children = childRoutes
       }
-    } else if (
-      parentRoute &&
-      parentRoute.id === menu.parent &&
-      menu.type === 1
+    }
+    else if (
+      parentRoute
+      && parentRoute.id === menu.parent
+      && menu.type === 1
     ) {
       // 子菜单
       realRoute = createRoute(menu, false)
-    } else if (
-      parentRoute &&
-      parentRoute.id === menu.parent &&
-      menu.type === 0
+    }
+    else if (
+      parentRoute
+      && parentRoute.id === menu.parent
+      && menu.type === 0
     ) {
       // 如果还是目录，继续递归
       const childRoute = filterAsyncRoutes(menus, menu)
@@ -79,9 +82,8 @@ function filterAsyncRoutes(menus, parentRoute) {
       }
     }
     // add curent route
-    if (realRoute) {
+    if (realRoute)
       res.push(realRoute)
-    }
   })
   return res
 }
@@ -101,22 +103,26 @@ function filterMenuToTable(menus, parentMenu) {
       const childMenu = filterMenuToTable(menus, menu)
       realMenu = { ...menu }
       realMenu.children = childMenu
-    } else if (!parentMenu && !menu.parent && menu.type === 0) {
+    }
+    else if (!parentMenu && !menu.parent && menu.type === 0) {
       // 根目录
       const childMenu = filterMenuToTable(menus, menu)
       realMenu = { ...menu }
       realMenu.children = childMenu
-    } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 1) {
+    }
+    else if (parentMenu && parentMenu.id === menu.parent && menu.type === 1) {
       // 子菜单下继续找是否有子菜单
       const childMenu = filterMenuToTable(menus, menu)
       realMenu = { ...menu }
       realMenu.children = childMenu
-    } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 0) {
+    }
+    else if (parentMenu && parentMenu.id === menu.parent && menu.type === 0) {
       // 如果还是目录，继续递归
       const childMenu = filterMenuToTable(menus, menu)
       realMenu = { ...menu }
       realMenu.children = childMenu
-    } else if (parentMenu && parentMenu.id === menu.parent && menu.type === 2) {
+    }
+    else if (parentMenu && parentMenu.id === menu.parent && menu.type === 2) {
       realMenu = { ...menu }
     }
     // add curent route

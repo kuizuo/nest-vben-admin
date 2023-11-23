@@ -1,10 +1,10 @@
 import { Controller, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import {
-  HttpHealthIndicator,
-  HealthCheck,
-  MemoryHealthIndicator,
   DiskHealthIndicator,
+  HealthCheck,
+  HttpHealthIndicator,
+  MemoryHealthIndicator,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus'
 
