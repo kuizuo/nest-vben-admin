@@ -11,7 +11,7 @@ import { DictService } from '../system/dict/dict.service'
 import { RoleEntity } from '../system/role/role.entity'
 import { UserStatus } from './constant'
 import { PasswordUpdateDto } from './dto/password.dto'
-import { UserDto, UserListDto } from './dto/user.dto'
+import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
 import { UserEntity } from './entities/user.entity'
 import { AccountInfo } from './user.model'
 import { BusinessException } from '@/common/exceptions/biz.exception'
@@ -181,8 +181,8 @@ export class UserService {
    * 更新用户信息
    */
   async update(
-    id,
-    { password, deptId, roleIds, status, ...data }: Partial<UserDto>,
+    id: number,
+    { password, deptId, roleIds, status, ...data }: UserUpdateDto,
   ): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
       if (password)
@@ -262,7 +262,7 @@ export class UserService {
   /**
    * 查询用户列表
    */
-  async findAll({
+  async list({
     page,
     pageSize,
     username,
@@ -270,7 +270,7 @@ export class UserService {
     deptId,
     email,
     status,
-  }: UserListDto): Promise<Pagination<UserEntity>> {
+  }: UserQueryDto): Promise<Pagination<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.dept', 'dept')

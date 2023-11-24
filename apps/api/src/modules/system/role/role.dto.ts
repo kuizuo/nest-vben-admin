@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, PartialType } from '@nestjs/swagger'
 import {
   IsArray,
   IsIn,
@@ -34,3 +34,5 @@ export class RoleDto {
   @IsArray()
   menuIds?: number[]
 }
+
+export class RoleUpdateDto extends PartialType(RoleDto) {}

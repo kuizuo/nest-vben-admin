@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { flattenDeep } from 'lodash'
 
-import { MenuDto, MenuQueryDto } from './menu.dto'
+import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuService } from './menu.service'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 import { IdParam } from '@/common/decorators/id-param.decorator'
@@ -72,7 +72,7 @@ export class MenuController {
   @Permission(Permissions.UPDATE)
   async update(
     @IdParam() id: number,
-    @Body() dto: Partial<MenuDto>,
+    @Body() dto: MenuUpdateDto,
   ): Promise<void> {
     // check
     await this.menuService.check(dto)

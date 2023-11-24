@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, PartialType } from '@nestjs/swagger'
 import {
   IsIn,
   IsInt,
@@ -71,28 +71,6 @@ export class MenuDto {
   component?: string
 }
 
-export class MenuQueryDto {
-  @ApiProperty({ description: '菜单名称' })
-  @IsString()
-  @IsOptional()
-  name?: string
+export class MenuUpdateDto extends PartialType(MenuDto) {}
 
-  @ApiProperty({ description: '路由' })
-  @IsString()
-  @IsOptional()
-  path?: string
-
-  @ApiProperty({ description: '权限标识' })
-  @IsString()
-  @IsOptional()
-  permission?: string
-
-  @ApiProperty({ description: '组件' })
-  @IsString()
-  @IsOptional()
-  component?: string
-
-  @ApiProperty({ description: '状态' })
-  @IsOptional()
-  status?: number
-}
+export class MenuQueryDto extends PartialType(MenuDto) {}

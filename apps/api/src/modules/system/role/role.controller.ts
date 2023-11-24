@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { MenuService } from '../menu/menu.service'
-import { RoleDto } from './role.dto'
+import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleService } from './role.service'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 import { IdParam } from '@/common/decorators/id-param.decorator'
@@ -65,7 +65,7 @@ export class RoleController {
   @Permission(Permissions.UPDATE)
   async update(
     @IdParam() id: number,
-    @Body() dto: Partial<RoleDto>,
+    @Body() dto: RoleUpdateDto,
   ): Promise<void> {
     await this.roleService.update(id, dto)
     await this.menuService.refreshOnlineUserPerms()

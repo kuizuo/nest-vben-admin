@@ -7,7 +7,7 @@ import { concat, isEmpty, uniq } from 'lodash'
 import { In, IsNull, Like, Not, Repository } from 'typeorm'
 
 import { RoleService } from '../role/role.service'
-import { MenuDto, MenuQueryDto } from './menu.dto'
+import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
@@ -58,7 +58,7 @@ export class MenuService {
     await this.menuRepository.save(menu)
   }
 
-  async update(id: number, menu: Partial<MenuDto>): Promise<void> {
+  async update(id: number, menu: MenuUpdateDto): Promise<void> {
     await this.menuRepository.update(id, menu)
   }
 

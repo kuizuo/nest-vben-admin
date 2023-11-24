@@ -5,11 +5,12 @@ import {
   Get,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { TodoDto } from './todo.dto'
+import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 import { TodoService } from './todo.service'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 import { IdParam } from '@/common/decorators/id-param.decorator'
@@ -19,6 +20,7 @@ import { Resource } from '@/modules/auth/decorators/resource.decorator'
 
 import { ResourceGuard } from '@/modules/auth/guards/resource.guard'
 import { TodoEntity } from '@/modules/todo/todo.entity'
+import { Pagination } from '@/helper/paginate/pagination'
 
 export const Permissions = {
   LIST: 'todo:list',
@@ -30,7 +32,7 @@ export const Permissions = {
 
 @ApiTags('Business - Todo模块')
 @UseGuards(ResourceGuard)
-@Controller('todo')
+@Controller('todos')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
@@ -38,8 +40,8 @@ export class TodoController {
   @ApiOperation({ summary: '获取Todo列表' })
   @ApiResult({ type: [TodoEntity] })
   @Permission(Permissions.LIST)
-  async list(): Promise<TodoEntity[]> {
-    return this.todoService.list()
+  async list(@Query() dto: TodoQueryDto): Promise<Pagination<TodoEntity>> {
+    return this.todoService.list(dto)
   }
 
   @Get(':id')
@@ -63,7 +65,7 @@ export class TodoController {
   @Resource(TodoEntity)
   async update(
     @IdParam() id: number,
-    @Body() dto: Partial<TodoDto>,
+    @Body() dto: TodoUpdateDto,
   ): Promise<void> {
     await this.todoService.update(id, dto)
   }

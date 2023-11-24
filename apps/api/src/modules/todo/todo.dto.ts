@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
 import { IsString } from 'class-validator'
 
 import { PageOptionsDto } from '@/common/dto/page-options.dto'
@@ -9,4 +9,6 @@ export class TodoDto {
   value: string
 }
 
-export class TodoQueryDto extends PageOptionsDto<TodoDto> {}
+export class TodoUpdateDto extends PartialType(TodoDto) {}
+
+export class TodoQueryDto extends IntersectionType(PageOptionsDto, TodoDto) {}

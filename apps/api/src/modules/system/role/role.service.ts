@@ -4,7 +4,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { isEmpty } from 'lodash'
 import { EntityManager, In, Repository } from 'typeorm'
 
-import { RoleDto } from './role.dto'
+import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleInfo } from './role.model'
 import { PageOptionsDto } from '@/common/dto/page-options.dto'
 import { IAppConfig } from '@/config'
@@ -82,7 +82,7 @@ export class RoleService {
   /**
    * 更新角色信息
    */
-  async update(id, { menuIds, ...data }: Partial<RoleDto>): Promise<void> {
+  async update(id, { menuIds, ...data }: RoleUpdateDto): Promise<void> {
     await this.roleRepository.update(id, data)
 
     if (!isEmpty(menuIds)) {

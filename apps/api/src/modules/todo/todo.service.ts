@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { TodoDto, TodoQueryDto } from './todo.dto'
+import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 import { paginate } from '@/helper/paginate'
 import { Pagination } from '@/helper/paginate/pagination'
 import { TodoEntity } from '@/modules/todo/todo.entity'
@@ -14,11 +14,7 @@ export class TodoService {
     private todoRepository: Repository<TodoEntity>,
   ) {}
 
-  async list(): Promise<TodoEntity[]> {
-    return this.todoRepository.find()
-  }
-
-  async page({
+  async list({
     page,
     pageSize,
   }: TodoQueryDto): Promise<Pagination<TodoEntity>> {
@@ -34,13 +30,10 @@ export class TodoService {
   }
 
   async create(dto: TodoDto) {
-    let test = new TodoEntity()
-    test = Object.assign(dto)
-
-    await this.todoRepository.save(test)
+    await this.todoRepository.save(dto)
   }
 
-  async update(id: number, dto: Partial<TodoDto>) {
+  async update(id: number, dto: TodoUpdateDto) {
     await this.todoRepository.update(id, dto)
   }
 

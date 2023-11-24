@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common'
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional, IntersectionType, PartialType } from '@nestjs/swagger'
 import {
   IsDateString,
   IsIn,
@@ -100,25 +100,6 @@ export class TaskDto {
   remark?: string
 }
 
-export class TaskQueryDto extends PageOptionsDto {
-  @ApiProperty({ description: '任务名称' })
-  @IsOptional()
-  @IsString()
-  name?: string
+export class TaskUpdateDto extends PartialType(TaskDto) {}
 
-  @ApiProperty({ description: '调用的服务' })
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  service: string
-
-  @ApiProperty({ description: '任务类别：cron | interval' })
-  @IsOptional()
-  @IsIn([0, 1])
-  type?: number
-
-  @ApiProperty({ description: '任务状态' })
-  @IsOptional()
-  @IsIn([0, 1])
-  status?: number
-}
+export class TaskQueryDto extends IntersectionType(PageOptionsDto, PartialType(TaskDto)) {}

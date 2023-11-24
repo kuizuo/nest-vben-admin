@@ -20,7 +20,7 @@ import {
   SYS_TASK_QUEUE_PREFIX,
   TaskStatus,
 } from './constant'
-import { TaskDto, TaskQueryDto } from './task.dto'
+import { TaskDto, TaskQueryDto, TaskUpdateDto } from './task.dto'
 import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 
@@ -159,7 +159,7 @@ export class TaskService implements OnModuleInit {
       await this.start(task)
   }
 
-  async update(id: number, dto: Partial<TaskDto>): Promise<void> {
+  async update(id: number, dto: TaskUpdateDto): Promise<void> {
     await this.taskRepository.update(id, dto)
     const task = await this.info(id)
     if (task.status === 0)

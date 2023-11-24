@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
-import { TaskDto, TaskQueryDto } from './task.dto'
+import { TaskDto, TaskQueryDto, TaskUpdateDto } from './task.dto'
 import { TaskService } from './task.service'
 import { ApiResult } from '@/common/decorators/api-result.decorator'
 import { IdParam } from '@/common/decorators/id-param.decorator'
@@ -48,10 +48,7 @@ export class TaskController {
   @Put(':id')
   @ApiOperation({ summary: '更新任务' })
   @Permission(Permissions.UPDATE)
-  async update(
-    @IdParam() id: number,
-    @Body() dto: Partial<TaskDto>,
-  ): Promise<void> {
+  async update(@IdParam() id: number, @Body() dto: TaskUpdateDto): Promise<void> {
     const serviceCall = dto.service.split('.')
     await this.taskService.checkHasMissionMeta(serviceCall[0], serviceCall[1])
     await this.taskService.update(id, dto)
