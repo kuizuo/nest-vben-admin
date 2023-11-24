@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { UserPasswordDto } from './dto/password.dto'
-import { UserDto, UserQueryDto , UserUpdateDto } from './dto/user.dto'
+import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
 import { UserService } from './user.service'
 import { IdParam } from '@/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
@@ -32,7 +32,7 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: '获取用户列表' })
   @Permission(Permissions.LIST)
-  async list(@Query() dto: UserQueryDto ) {
+  async list(@Query() dto: UserQueryDto) {
     return this.userService.list(dto)
   }
 

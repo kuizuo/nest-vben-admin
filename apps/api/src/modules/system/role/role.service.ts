@@ -7,7 +7,6 @@ import { EntityManager, In, Repository } from 'typeorm'
 import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleInfo } from './role.model'
 import { PageOptionsDto } from '@/common/dto/page-options.dto'
-import { IAppConfig } from '@/config'
 import { paginate } from '@/helper/paginate'
 import { Pagination } from '@/helper/paginate/pagination'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
@@ -45,11 +44,6 @@ export class RoleService {
       })
       .getOne()
 
-    // if (id === this.configService.get<IAppConfig>('app').adminRoleId) {
-    //   const menus = await this.menuRepository.find({ select: ['id'] });
-    //   return { ...info, menuIds: menus.map((m) => m.id) };
-    // }
-
     const menus = await this.menuRepository.find({
       where: { roles: { id } },
       select: ['id'],
@@ -59,7 +53,7 @@ export class RoleService {
   }
 
   async delete(id: number): Promise<void> {
-    if (id === this.configService.get<IAppConfig>('app').adminRoleId)
+    if (id === 1)
       throw new Error('不能删除超级管理员')
 
     await this.roleRepository.delete(id)
@@ -132,16 +126,14 @@ export class RoleService {
 
     if (!isEmpty(roles)) {
       return roles.some(
-        r => r.id === this.configService.get('app').adminRoleId,
+        r => r.id === 1,
       )
     }
     return false
   }
 
   hasAdminRole(rids: number[]): boolean {
-    return rids.some(
-      r => r === this.configService.get<IAppConfig>('app').adminRoleId,
-    )
+    return rids.includes(1)
   }
 
   /**

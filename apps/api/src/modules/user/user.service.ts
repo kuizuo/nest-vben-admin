@@ -15,7 +15,6 @@ import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
 import { UserEntity } from './entities/user.entity'
 import { AccountInfo } from './user.model'
 import { BusinessException } from '@/common/exceptions/biz.exception'
-import { IAppConfig } from '@/config'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { SYS_USER_INITPASSWORD } from '@/constants/system.constant'
 
@@ -254,7 +253,7 @@ export class UserService {
    */
   async findRootUserId(): Promise<number> {
     const user = await this.userRepository.findOneBy({
-      roles: { id: this.configService.get<IAppConfig>('app').adminRoleId },
+      roles: { id: 1 },
     })
     return user.id
   }
