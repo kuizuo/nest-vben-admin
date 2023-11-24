@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, Relation } from 'typeorm'
 
 import { UserEntity } from '../../user/entities/user.entity'
 import { MenuEntity } from '../menu/menu.entity'
@@ -24,9 +24,9 @@ export class RoleEntity extends AbstractEntity {
   status: number
 
   @ManyToMany(() => UserEntity, user => user.roles)
-  users: UserEntity[]
+  users: Relation<UserEntity[]>
 
   @ManyToMany(() => MenuEntity, menu => menu.roles, {})
   @JoinTable()
-  menus: MenuEntity[]
+  menus: Relation<MenuEntity[]>
 }

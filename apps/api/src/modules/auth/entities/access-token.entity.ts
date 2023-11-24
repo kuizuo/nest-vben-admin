@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm'
 
 import { RefreshTokenEntity } from './refresh-token.entity'
@@ -47,7 +48,7 @@ export class AccessTokenEntity extends BaseEntity {
       cascade: true,
     },
   )
-  refreshToken!: RefreshTokenEntity
+  refreshToken!: Relation<RefreshTokenEntity>
 
   /**
    * @description 所属用户
@@ -56,5 +57,5 @@ export class AccessTokenEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, user => user.accessTokens, {
     onDelete: 'CASCADE',
   })
-  user!: UserEntity
+  user!: Relation<UserEntity>
 }

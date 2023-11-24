@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany } from 'typeorm'
+import { Column, Entity, ManyToMany, Relation } from 'typeorm'
 
 import { RoleEntity } from '../role/role.entity'
 import { AbstractEntity } from '@/common/entity/abstract.entity'
@@ -42,5 +42,5 @@ export class MenuEntity extends AbstractEntity {
   status: number
 
   @ManyToMany(() => RoleEntity, role => role.menus)
-  roles: RoleEntity[]
+  roles: Relation<RoleEntity[]>
 }

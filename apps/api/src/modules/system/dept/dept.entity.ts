@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   OneToMany,
+  Relation,
   Tree,
   TreeChildren,
   TreeParent,
@@ -26,8 +27,8 @@ export class DeptEntity extends AbstractEntity {
   children!: DeptEntity[]
 
   @TreeParent({ onDelete: 'SET NULL' })
-  parent?: DeptEntity | null
+  parent?: DeptEntity
 
   @OneToMany(() => UserEntity, user => user.dept)
-  users: UserEntity[]
+  users: Relation<UserEntity[]>
 }

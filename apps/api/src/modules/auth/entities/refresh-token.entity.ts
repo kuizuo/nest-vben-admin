@@ -6,6 +6,7 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm'
 
 import { AccessTokenEntity } from './access-token.entity'
@@ -47,5 +48,5 @@ export class RefreshTokenEntity extends BaseEntity {
     },
   )
   @JoinColumn()
-  accessToken!: AccessTokenEntity
+  accessToken!: Relation<AccessTokenEntity>
 }

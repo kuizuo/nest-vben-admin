@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, Relation } from 'typeorm'
 
 import { UserEntity } from '../../../user/entities/user.entity'
 import { AbstractEntity } from '@/common/entity/abstract.entity'
@@ -28,5 +28,5 @@ export class LoginLogEntity extends AbstractEntity {
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  user: UserEntity
+  user: Relation<UserEntity>
 }

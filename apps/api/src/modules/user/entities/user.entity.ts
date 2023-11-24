@@ -7,6 +7,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  Relation,
 } from 'typeorm'
 
 import { AbstractEntity } from '@/common/entity/abstract.entity'
@@ -51,14 +52,14 @@ export class UserEntity extends AbstractEntity {
 
   @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable()
-  roles: RoleEntity[]
+  roles: Relation<RoleEntity[]>
 
   @ManyToOne(() => DeptEntity, dept => dept.users)
   @JoinColumn()
-  dept: DeptEntity
+  dept: Relation<DeptEntity>
 
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,
   })
-  accessTokens: AccessTokenEntity[]
+  accessTokens: Relation<AccessTokenEntity[]>
 }
