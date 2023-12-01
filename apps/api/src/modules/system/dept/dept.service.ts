@@ -10,7 +10,7 @@ import { ErrorEnum } from '@/constants/error-code.constant'
 import { DeptEntity } from '@/modules/system/dept/dept.entity'
 import { UserEntity } from '@/modules/user/entities/user.entity'
 
-import { deleteEmptyChildren } from '@/utils/list2tree'
+import { deleteEmptyChildren } from '@/utils/list2tree.util'
 
 @Injectable()
 export class DeptService {

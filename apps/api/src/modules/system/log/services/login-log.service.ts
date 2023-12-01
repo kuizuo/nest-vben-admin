@@ -8,8 +8,8 @@ import UAParser from 'ua-parser-js'
 import { LoginLogQueryDto } from '../dto/log.dto'
 import { LoginLogEntity } from '../entities/login-log.entity'
 import { LoginLogInfo } from '../models/log.model'
-import { IpService } from '@/shared/ip/ip.service'
 import { paginateRaw } from '@/helper/paginate'
+import { getIpAddress } from '@/utils/ip.util'
 
 async function parseLoginLog(e: any, parser: UAParser): Promise<LoginLogInfo> {
   const uaResult = parser.setUA(e.login_log_ua).getResult()
@@ -31,12 +31,11 @@ export class LoginLogService {
     @InjectRepository(LoginLogEntity)
     private loginLogRepository: Repository<LoginLogEntity>,
 
-    private ipService: IpService,
   ) {}
 
   async create(uid: number, ip: string, ua: string): Promise<void> {
     try {
-      const address = await this.ipService.getAddress(ip)
+      const address = await getIpAddress(ip)
 
       await this.loginLogRepository.save({
         ip,

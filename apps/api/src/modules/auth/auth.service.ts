@@ -13,7 +13,7 @@ import { ErrorEnum } from '@/constants/error-code.constant'
 
 import { UserService } from '@/modules/user/user.service'
 
-import { MD5 } from '@/utils'
+import { md5 } from '@/utils'
 
 @Injectable()
 export class AuthService {
@@ -32,7 +32,7 @@ export class AuthService {
     if (isEmpty(user))
       throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
-    const comparePassword = MD5(`${password}${user.psalt}`)
+    const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
 
@@ -58,7 +58,7 @@ export class AuthService {
     if (isEmpty(user))
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
 
-    const comparePassword = MD5(`${password}${user.psalt}`)
+    const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
 
@@ -89,7 +89,7 @@ export class AuthService {
   async checkPassword(username: string, password: string) {
     const user = await this.userService.findUserByUserName(username)
 
-    const comparePassword = MD5(`${password}${user.psalt}`)
+    const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
   }

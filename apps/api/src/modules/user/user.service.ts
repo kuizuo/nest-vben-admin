@@ -24,7 +24,7 @@ import { AccountUpdateDto } from '@/modules/auth/dto/account.dto'
 import { RegisterDto } from '@/modules/auth/dto/auth.dto'
 import { QQService } from '@/shared/qq/qq.service'
 
-import { MD5, randomValue } from '@/utils'
+import { md5, randomValue } from '@/utils'
 
 @Injectable()
 export class UserService {
@@ -114,12 +114,12 @@ export class UserService {
     if (isEmpty(user))
       throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
-    const comparePassword = MD5(`${dto.oldPassword}${user.psalt}`)
+    const comparePassword = md5(`${dto.oldPassword}${user.psalt}`)
     // 原密码不一致，不允许更改
     if (user.password !== comparePassword)
       throw new BusinessException(ErrorEnum.PASSWORD_MISMATCH)
 
-    const password = MD5(`${dto.newPassword}${user.psalt}`)
+    const password = md5(`${dto.newPassword}${user.psalt}`)
     await this.userRepository.update({ id: uid }, { password })
     await this.upgradePasswordV(user.id)
   }
@@ -130,7 +130,7 @@ export class UserService {
   async forceUpdatePassword(uid: number, password: string): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
 
-    const newPassword = MD5(`${password}${user.psalt}`)
+    const newPassword = md5(`${password}${user.psalt}`)
     await this.userRepository.update({ id: uid }, { password: newPassword })
     await this.upgradePasswordV(user.id)
   }
@@ -157,10 +157,10 @@ export class UserService {
         const initPassword = await this.dictService.findValueByKey(
           SYS_USER_INITPASSWORD,
         )
-        password = MD5(`${initPassword ?? '123456'}${salt}`)
+        password = md5(`${initPassword ?? '123456'}${salt}`)
       }
       else {
-        password = MD5(`${password ?? '123456'}${salt}`)
+        password = md5(`${password ?? '123456'}${salt}`)
       }
 
       const u = manager.create(UserEntity, {
@@ -353,7 +353,7 @@ export class UserService {
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32)
 
-      const password = MD5(`${data.password ?? 'a123456'}${salt}`)
+      const password = md5(`${data.password ?? 'a123456'}${salt}`)
 
       const u = manager.create(UserEntity, {
         username,

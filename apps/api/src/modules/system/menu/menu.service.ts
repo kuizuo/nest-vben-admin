@@ -12,8 +12,7 @@ import { BusinessException } from '@/common/exceptions/biz.exception'
 import { ErrorEnum } from '@/constants/error-code.constant'
 import { MenuEntity } from '@/modules/system/menu/menu.entity'
 
-import { deleteEmptyChildren } from '@/utils'
-import { generatorMenu, generatorRouters } from '@/utils/permission'
+import { deleteEmptyChildren, generatorMenu, generatorRouters } from '@/utils'
 
 @Injectable()
 export class MenuService {

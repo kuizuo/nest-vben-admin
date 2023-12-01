@@ -7,8 +7,8 @@ import { RefreshTokenEntity } from '../entities/refresh-token.entity'
 import { ISecurityConfig, SecurityConfig } from '@/config'
 import { RoleService } from '@/modules/system/role/role.service'
 import { UserEntity } from '@/modules/user/entities/user.entity'
+import { generateUUID } from '@/utils'
 
-import { generateUUID } from '@/utils/uuid'
 
 /**
  * 令牌服务

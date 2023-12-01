@@ -9,8 +9,8 @@ import { PaginationTypeEnum } from '@/helper/paginate/interface'
 import { Pagination } from '@/helper/paginate/pagination'
 import { Storage } from '@/modules/tools/storage/storage.entity'
 import { UserEntity } from '@/modules/user/entities/user.entity'
+import { deleteFile } from '@/utils'
 
-import { deleteFile } from '@/utils/file'
 
 @Injectable()
 export class StorageService {
