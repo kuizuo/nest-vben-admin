@@ -1,71 +1,49 @@
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 
-import { ConfigService } from '@nestjs/config'
 import { MailerService as NestMailerService } from '@nestjs-modules/mailer'
 import dayjs from 'dayjs'
 
 import Redis from 'ioredis'
 
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { IAppConfig } from '@/config'
-import { ErrorEnum } from '@/constants/error-code.constant'
-
-import { randomValue } from '@/utils'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { AppConfig, IAppConfig } from '~/config'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { randomValue } from '~/utils'
 
 @Injectable()
 export class MailerService {
   constructor(
+    @Inject(AppConfig.KEY) private appConfig: IAppConfig,
     @InjectRedis() private redis: Redis,
     private mailerService: NestMailerService,
-    private configService: ConfigService,
   ) {}
 
-  async send(to, subject, content): Promise<any> {
-    console.log(to, subject, content)
-
-    return this.mailerService.sendMail({
-      to,
-      from: {
-        name: this.configService.get<IAppConfig>('app').name,
-        address: this.configService.get<string>('mailer.auth.user'),
-      },
-      subject,
-      text: content,
-    })
-  }
-
-  async sendMailHtml(to, subject, html): Promise<any> {
-    return this.mailerService.sendMail({
-      to,
-      from: {
-        name: this.configService.get<IAppConfig>('app').name,
-        address: this.configService.get<string>('mailer.auth.user'),
-      },
-      subject,
-      html,
-    })
-  }
-
-  async sendCode(to, code = randomValue(4, '1234567890')) {
-    const content = `尊敬的用户您好，您的验证码是${code}，请于5分钟内输入。`
-
-    try {
-      await this.send(
-        to,
-        `${this.configService.get<IAppConfig>('app').name}验证码通知`,
-        content,
-      )
-    }
-    catch (error) {
-      console.log(error)
-      throw new BusinessException(ErrorEnum.VERIFICATION_CODE_SEND_FAILED)
+  async log(to: string, code: string, ip: string) {
+    const getRemainTime = () => {
+      const now = dayjs()
+      return now.endOf('day').diff(now, 'second')
     }
 
-    return {
-      to,
-      code,
-    }
+    await this.redis.set(`captcha:${to}`, code, 'EX', 60 * 5)
+
+    const limitCountOfDay = await this.redis.get(`captcha:${to}:limit-day`)
+    const ipLimitCountOfDay = await this.redis.get(`ip:${ip}:send:limit-day`)
+
+    await this.redis.set(`ip:${ip}:send:limit`, 1, 'EX', 60)
+    await this.redis.set(`captcha:${to}:limit`, 1, 'EX', 60)
+    await this.redis.set(
+      `captcha:${to}:send:limit-count-day`,
+      limitCountOfDay,
+      'EX',
+      getRemainTime(),
+    )
+    await this.redis.set(
+      `ip:${ip}:send:limit-count-day`,
+      ipLimitCountOfDay,
+      'EX',
+      getRemainTime(),
+    )
   }
 
   async checkCode(to, code) {
@@ -112,30 +90,62 @@ export class MailerService {
     }
   }
 
-  async log(to: string, code: string, ip: string) {
-    const getRemainTime = () => {
-      const now = dayjs()
-      return now.endOf('day').diff(now, 'second')
+  async send(
+    to,
+    subject,
+    content: string,
+    type: 'text' | 'html' = 'text',
+  ): Promise<any> {
+    if (type === 'text') {
+      return this.mailerService.sendMail({
+        to,
+        subject,
+        text: content,
+      })
+    }
+    else {
+      return this.mailerService.sendMail({
+        to,
+        subject,
+        html: content,
+      })
+    }
+  }
+
+  async sendVerificationCode(to, code = randomValue(4, '1234567890')) {
+    const subject = `[${this.appConfig.name}] 验证码`
+
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject,
+        template: './verification-code-zh',
+        context: {
+          code,
+        },
+      })
+    }
+    catch (error) {
+      console.log(error)
+      throw new BusinessException(ErrorEnum.VERIFICATION_CODE_SEND_FAILED)
     }
 
-    await this.redis.set(`captcha:${to}`, code, 'EX', 60 * 5)
-
-    const limitCountOfDay = await this.redis.get(`captcha:${to}:limit-day`)
-    const ipLimitCountOfDay = await this.redis.get(`ip:${ip}:send:limit-day`)
-
-    await this.redis.set(`ip:${ip}:send:limit`, 1, 'EX', 60)
-    await this.redis.set(`captcha:${to}:limit`, 1, 'EX', 60)
-    await this.redis.set(
-      `captcha:${to}:send:limit-count-day`,
-      limitCountOfDay,
-      'EX',
-      getRemainTime(),
-    )
-    await this.redis.set(
-      `ip:${ip}:send:limit-count-day`,
-      ipLimitCountOfDay,
-      'EX',
-      getRemainTime(),
-    )
+    return {
+      to,
+      code,
+    }
   }
+
+  // async sendUserConfirmation(user: UserEntity, token: string) {
+  //   const url = `example.com/auth/confirm?token=${token}`
+  //   await this.mailerService.sendMail({
+  //     to: user.email,
+  //     subject: 'Confirm your Email',
+  //     template: './confirmation',
+  //     context: {
+  //       name: user.name,
+  //       url,
+  //     },
+  //   })
+  // }
 }

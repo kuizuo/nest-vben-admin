@@ -7,8 +7,9 @@ import { AuthUser } from '../decorators/auth-user.decorator'
 import { Public } from '../decorators/public.decorator'
 
 import { SendEmailCodeDto } from '../dto/captcha.dto'
-import { MailerService } from '@/shared/mailer/mailer.service'
+
 import { Ip } from '@/common/decorators/http.decorator'
+import { MailerService } from '@/shared/mailer/mailer.service'
 
 @ApiTags('Auth - 认证模块')
 @UseGuards(ThrottlerGuard)
@@ -23,13 +24,12 @@ export class EmailController {
   async sendEmailCode(
     @Body() dto: SendEmailCodeDto,
     @Ip() ip: string,
-    @AuthUser('uid') uid: number,
   ): Promise<void> {
     // await this.authService.checkImgCaptcha(dto.captchaId, dto.verifyCode);
     const { email } = dto
 
     await this.mailerService.checkLimit(email, ip)
-    const { code } = await this.mailerService.sendCode(email)
+    const { code } = await this.mailerService.sendVerificationCode(email)
 
     await this.mailerService.log(email, code, ip)
   }

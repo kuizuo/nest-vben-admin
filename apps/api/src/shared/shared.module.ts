@@ -1,20 +1,16 @@
 import { HttpModule } from '@nestjs/axios'
-import { CacheModule } from '@nestjs/cache-manager'
 import { Global, Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { ThrottlerModule } from '@nestjs/throttler'
-import { MailerModule } from '@nestjs-modules/mailer'
-
-import { LoggerModule } from './logger/logger.module'
-import { MailerService } from './mailer/mailer.service'
-import { QQService } from './qq/qq.service'
-import { IMailerConfig } from '@/config'
-import { RedisModule } from './redis/redis.module'
-import { ScheduleModule } from '@nestjs/schedule'
 import { EventEmitterModule } from '@nestjs/event-emitter'
-import { isDev } from '@/global/env'
+import { ScheduleModule } from '@nestjs/schedule'
+import { ThrottlerModule } from '@nestjs/throttler'
 
-const providers = [MailerService, QQService]
+import { HelperModule } from './helper/helper.module'
+import { LoggerModule } from './logger/logger.module'
+import { MailerModule } from './mailer/mailer.module'
+
+import { RedisModule } from './redis/redis.module'
+
+import { isDev } from '@/global/env'
 
 @Global()
 @Module({
@@ -44,15 +40,10 @@ const providers = [MailerService, QQService]
     // redis
     RedisModule,
     // mailer
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        transport: configService.get<IMailerConfig>('mailer'),
-      }),
-      inject: [ConfigService],
-    }),
+    MailerModule,
+    // helper
+    HelperModule,
   ],
-  providers: [...providers],
-  exports: [HttpModule, RedisModule, ...providers],
+  exports: [HttpModule, MailerModule, RedisModule, HelperModule],
 })
 export class SharedModule {}

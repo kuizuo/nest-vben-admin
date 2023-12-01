@@ -35,7 +35,7 @@ export class AccessTokenEntity extends BaseEntity {
   @CreateDateColumn({
     comment: '令牌创建时间',
   })
-  createdAt!: Date
+  created_at!: Date
 
   /**
    * @description 关联的刷新令牌
