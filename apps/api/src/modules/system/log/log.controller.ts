@@ -4,7 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
-import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
 
 import {
   CaptchaLogQueryDto,
@@ -18,7 +18,7 @@ import { CaptchaLogService } from './services/captcha-log.service'
 import { LoginLogService } from './services/login-log.service'
 import { TaskLogService } from './services/task-log.service'
 
-export const Permissions = {
+export const permissions: PermissionMap = {
   TaskList: 'system:log:task:list',
   LogList: 'system:log:login:list',
   CaptchaList: 'system:log:captcha:list',
@@ -37,7 +37,7 @@ export class LogController {
   @Get('login/list')
   @ApiOperation({ summary: '查询登录日志列表' })
   @ApiResult({ type: [LoginLogInfo], isPage: true })
-  @Permission(Permissions.TaskList)
+  @Perm(permissions.TaskList)
   async loginLogPage(
     @Query() dto: LoginLogQueryDto,
   ): Promise<Pagination<LoginLogInfo>> {
@@ -47,7 +47,7 @@ export class LogController {
   @Get('task/list')
   @ApiOperation({ summary: '查询任务日志列表' })
   @ApiResult({ type: [TaskLogEntity], isPage: true })
-  @Permission(Permissions.LogList)
+  @Perm(permissions.LogList)
   async taskList(@Query() dto: TaskLogQueryDto) {
     return this.taskService.list(dto)
   }
@@ -55,7 +55,7 @@ export class LogController {
   @Get('captcha/list')
   @ApiOperation({ summary: '查询验证码日志列表' })
   @ApiResult({ type: [CaptchaLogEntity], isPage: true })
-  @Permission(Permissions.CaptchaList)
+  @Perm(permissions.CaptchaList)
   async captchaList(
     @Query() dto: CaptchaLogQueryDto,
   ): Promise<Pagination<CaptchaLogEntity>> {

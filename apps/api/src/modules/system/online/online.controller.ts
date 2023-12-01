@@ -8,7 +8,7 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
-import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { KickDto } from './online.dto'
 import { OnlineUserInfo } from './online.model'
@@ -24,14 +24,14 @@ export class OnlineController {
   @Get('list')
   @ApiOperation({ summary: '查询当前在线用户' })
   @ApiResult({ type: [OnlineUserInfo] })
-  @Permission('system:online:list')
+  @Perm('system:online:list')
   async list(@AuthUser() user: IAuthUser): Promise<OnlineUserInfo[]> {
     return this.onlineService.listOnlineUser(user.uid)
   }
 
   @Post('kick')
   @ApiOperation({ summary: '下线指定在线用户' })
-  @Permission('system:online:kick')
+  @Perm('system:online:kick')
   async kick(@Body() dto: KickDto, @AuthUser() user: IAuthUser): Promise<void> {
     if (dto.id === user.uid)
       throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER)

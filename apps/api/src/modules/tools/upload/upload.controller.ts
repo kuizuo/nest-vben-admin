@@ -5,7 +5,7 @@ import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
-import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { UploadService } from './upload.service'
 
@@ -18,7 +18,7 @@ export class UploadController {
   @Post()
   @ApiOperation({ summary: '上传' })
   @ApiConsumes('multipart/form-data')
-  @Permission('upload')
+  @Perm('upload:upload')
   async upload(
     @Body() dto: { file: MultipartFile },
     @AuthUser() user: IAuthUser,

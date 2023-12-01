@@ -1,10 +1,10 @@
-export const IS_PUBLIC_KEY = 'is_public'
+export const PUBLIC_KEY = '__public_key__'
 
-export const PERMISSION_KEY = 'permission'
+export const PERMISSION_KEY = '__permission_key__'
 
-export const POLICY_KEY = 'policy'
+export const RESOURCE_KEY = '__resource_key__'
 
-export const ALLOW_ANON_KEY = 'allow_anon_permission'
+export const ALLOW_ANON_KEY = '__allow_anon_permission_key__'
 
 export const AuthStrategy = {
   LOCAL: 'local',
@@ -15,13 +15,12 @@ export const AuthStrategy = {
 
   GITHUB: 'github',
   GOOGLE: 'google',
-
-  PDD: 'pdd',
 } as const
 
 export const Roles = {
   ADMIN: 'admin',
   USER: 'user',
+  // GUEST: 'guest',
 } as const
 
 export type Role = (typeof Roles)[keyof typeof Roles]
