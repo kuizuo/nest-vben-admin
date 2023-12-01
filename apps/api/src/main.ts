@@ -17,7 +17,7 @@ import { useContainer } from 'class-validator'
 import { AppModule } from './app.module'
 
 import { fastifyApp } from './common/adapters/fastify.adapter'
-import { IoAdapter } from './common/adapters/socket.adapter'
+import { RedisIoAdapter } from './common/adapters/socket.adapter'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
@@ -77,8 +77,8 @@ async function bootstrap() {
     }),
   )
 
-  // websocket
-  app.useWebSocketAdapter(new IoAdapter())
+
+  app.useWebSocketAdapter(new RedisIoAdapter(app))
 
   const { port } = configService.get<IAppConfig>('app')!
 

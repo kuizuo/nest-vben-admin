@@ -1,4 +1,3 @@
-import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { HttpModule } from '@nestjs/axios'
 import { CacheModule } from '@nestjs/cache-manager'
 import { Global, Module } from '@nestjs/common'
@@ -10,7 +9,11 @@ import { IpService } from './ip/ip.service'
 import { LoggerModule } from './logger/logger.module'
 import { MailerService } from './mailer/mailer.service'
 import { QQService } from './qq/qq.service'
-import { IMailerConfig, IRedisConfig } from '@/config'
+import { IMailerConfig } from '@/config'
+import { RedisModule } from './redis/redis.module'
+import { ScheduleModule } from '@nestjs/schedule'
+import { EventEmitterModule } from '@nestjs/event-emitter'
+import { isDev } from '@/global/env'
 
 const providers = [MailerService, IpService, QQService]
 
@@ -21,14 +24,8 @@ const providers = [MailerService, IpService, QQService]
     LoggerModule,
     // http
     HttpModule,
-    // redis cache
-    CacheModule.register({
-      isGlobal: true,
-      // store: redisStore,
-
-      // host: 'localhost',
-      // port: 6379,
-    }),
+    // schedule
+    ScheduleModule.forRoot(),
     // rate limit
     ThrottlerModule.forRoot([
       {
@@ -36,15 +33,17 @@ const providers = [MailerService, IpService, QQService]
         ttl: 60000,
       },
     ]),
-    // redis
-    RedisModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        readyLog: true,
-        config: configService.get<IRedisConfig>('redis'),
-      }),
-      inject: [ConfigService],
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+      newListener: false,
+      removeListener: false,
+      maxListeners: 20,
+      verboseMemoryLeak: isDev,
+      ignoreErrors: false,
     }),
+    // redis
+    RedisModule,
     // mailer
     MailerModule.forRootAsync({
       imports: [ConfigModule],
@@ -55,6 +54,6 @@ const providers = [MailerService, IpService, QQService]
     }),
   ],
   providers: [...providers],
-  exports: [HttpModule, CacheModule, ...providers],
+  exports: [HttpModule, RedisModule, ...providers],
 })
 export class SharedModule {}

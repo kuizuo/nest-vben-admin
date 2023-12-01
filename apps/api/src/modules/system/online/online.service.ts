@@ -2,33 +2,35 @@ import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectEntityManager } from '@nestjs/typeorm'
 
+import { RemoteSocket } from 'socket.io'
 import { EntityManager } from 'typeorm'
 
 import { UAParser } from 'ua-parser-js'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+
+import { BusinessEvents } from '~/socket/business-event.constant'
+import { AdminEventsGateway } from '~/socket/events/admin.gateway'
+
 import { UserService } from '../../user/user.service'
+
 import { OnlineUserInfo } from './online.model'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { AdminWSGateway } from '@/modules/socket/admin-ws.gateway'
-import { AdminWSService } from '@/modules/socket/admin-ws.service'
-import { EVENT_KICK } from '@/modules/socket/socket.event'
 
 @Injectable()
 export class OnlineService {
   constructor(
-    @InjectEntityManager() private entityManager: EntityManager,
-    private userService: UserService,
-    private adminWsGateWay: AdminWSGateway,
-    private adminWSService: AdminWSService,
-    private jwtService: JwtService,
+    @InjectEntityManager() private readonly entityManager: EntityManager,
+    private readonly userService: UserService,
+    private readonly adminEventsGateWay: AdminEventsGateway,
+    private readonly jwtService: JwtService,
   ) {}
 
   /**
    * 罗列在线用户列表
    */
   async listOnlineUser(currentUid: number): Promise<OnlineUserInfo[]> {
-    const onlineSockets = await this.adminWSService.getOnlineSockets()
+    const onlineSockets = await this.getOnlineSockets()
     if (!onlineSockets || onlineSockets.length <= 0)
       return []
 
@@ -51,12 +53,12 @@ export class OnlineService {
     // reset redis keys
     await this.userService.forbidden(uid)
     // socket emit
-    const socket = await this.adminWSService.findSocketIdByUid(uid)
+    const socket = await this.findSocketIdByUid(uid)
     if (socket) {
       // socket emit event
-      this.adminWsGateWay.socketServer
+      this.adminEventsGateWay.server
         .to(socket.id)
-        .emit(EVENT_KICK, { operater: currentUserInfo.username })
+        .emit(BusinessEvents.USER_KICK, { operater: currentUserInfo.username })
       // close socket
       socket.disconnect()
     }
@@ -98,5 +100,35 @@ export class OnlineService {
       })
     }
     return []
+  }
+
+  /**
+   * 根据uid查找socketid
+   */
+  async findSocketIdByUid(uid: number): Promise<RemoteSocket<unknown, any>> {
+    const onlineSockets = await this.getOnlineSockets()
+    const socket = onlineSockets.find((socket) => {
+      const token = socket.handshake.query?.token as string
+      const tokenUid = this.jwtService.verify(token).uid
+      return tokenUid === uid
+    })
+    return socket
+  }
+
+  async filterSocketIdByUidArr(
+    uids: number[],
+  ): Promise<RemoteSocket<unknown, any>[]> {
+    const onlineSockets = await this.getOnlineSockets()
+    const sockets = onlineSockets.filter((socket) => {
+      const token = socket.handshake.query?.token as string
+      const tokenUid = this.jwtService.verify(token).uid
+      return uids.includes(tokenUid)
+    })
+    return sockets
+  }
+
+  async getOnlineSockets() {
+    const onlineSockets = await this.adminEventsGateWay.server.fetchSockets()
+    return onlineSockets
   }
 }
