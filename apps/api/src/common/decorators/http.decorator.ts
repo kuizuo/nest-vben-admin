@@ -3,20 +3,14 @@ import type { ExecutionContext } from '@nestjs/common'
 import { createParamDecorator } from '@nestjs/common'
 import type { FastifyRequest } from 'fastify'
 
+import { getIp } from '~/utils/ip.util'
+
 /**
  * 快速获取IP
  */
 export const Ip = createParamDecorator((_, context: ExecutionContext) => {
   const request = context.switchToHttp().getRequest<FastifyRequest>()
-
-  return (
-    // 判断是否有反向代理 IP
-    (
-      (request.headers['x-forwarded-for'] as string)
-      // 判断后端的 socket 的 IP
-      || request.socket.remoteAddress
-    ).replace('::ffff:', '')
-  )
+  return getIp(request)
 })
 
 /**

@@ -2,6 +2,7 @@ import {
   CallHandler,
   ExecutionContext,
   HttpStatus,
+  Injectable,
   NestInterceptor,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
@@ -10,11 +11,12 @@ import { map } from 'rxjs/operators'
 
 import { ResOp } from '~/common/model/response.model'
 
-import { SKIP_TRANSFORM_DECORATOR_KEY } from '../decorators/skip-transform.decorator'
+import { BYPASS_KEY } from '../decorators/bypass.decorator'
 
 /**
- * 统一处理返回接口结果，如果不需要则添加 @SkipTransform 装饰器
+ * 统一处理返回接口结果，如果不需要则添加 @Bypass 装饰器
  */
+@Injectable()
 export class TransformInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
 
@@ -22,11 +24,12 @@ export class TransformInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Observable<any> {
-    const isSkipTransform = this.reflector.get<boolean>(
-      SKIP_TRANSFORM_DECORATOR_KEY,
+    const bypass = this.reflector.get<boolean>(
+      BYPASS_KEY,
       context.getHandler(),
     )
-    if (isSkipTransform)
+
+    if (bypass)
       return next.handle()
 
     return next.handle().pipe(
