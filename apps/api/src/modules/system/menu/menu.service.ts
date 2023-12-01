@@ -70,6 +70,9 @@ export class MenuService {
     const roleIds = await this.roleService.getRoleIdsByUser(uid)
     let menus: MenuEntity[] = []
 
+    if (isEmpty(roleIds))
+      return generatorRouters([])
+
     if (this.roleService.hasAdminRole(roleIds)) {
       menus = await this.menuRepository.find({ order: { orderNo: 'ASC' } })
     }
