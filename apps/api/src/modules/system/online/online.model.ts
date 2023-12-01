@@ -16,9 +16,6 @@ export class OnlineUserInfo {
   @ApiProperty({ description: '是否当前' })
   isCurrent: boolean
 
-  @ApiProperty({ description: '登陆时间' })
-  time: string
-
   @ApiProperty({ description: '系统' })
   os: string
 

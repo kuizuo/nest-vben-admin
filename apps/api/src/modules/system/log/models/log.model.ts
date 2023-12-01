@@ -16,9 +16,6 @@ export class LoginLogInfo {
   @ApiProperty({ description: '浏览器', example: 'Chrome' })
   browser: string
 
-  @ApiProperty({ description: '时间', example: '2022-01-01 00:00:00' })
-  time: string
-
   @ApiProperty({ description: '登录用户名', example: 'admin' })
   username: string
 }
