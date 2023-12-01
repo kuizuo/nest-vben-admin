@@ -16,7 +16,8 @@ import {
 } from 'class-validator'
 import { isEmpty } from 'lodash'
 
-import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { PagerDto } from '~/common/dto/pager.dto'
+
 import { UserEntity } from '~/modules/user/entities/user.entity'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
@@ -83,7 +84,7 @@ export class UserDto {
 
 export class UserUpdateDto extends PartialType(UserDto) {}
 
-export class UserQueryDto extends IntersectionType(PageOptionsDto<UserDto>, PartialType(UserDto)) {
+export class UserQueryDto extends IntersectionType(PagerDto<UserDto>, PartialType(UserDto)) {
   @ApiProperty({ description: '归属大区', example: 1 })
   @IsInt()
   @IsOptional()

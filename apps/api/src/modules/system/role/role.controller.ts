@@ -13,7 +13,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { PagerDto } from '~/common/dto/pager.dto'
 import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 
@@ -43,7 +43,7 @@ export class RoleController {
   @ApiOperation({ summary: '获取角色列表' })
   @ApiResult({ type: [RoleEntity] })
   @Perm(permissions.LIST)
-  async list(@Query() dto: PageOptionsDto) {
+  async list(@Query() dto: PagerDto) {
     return this.roleService.findAll(dto)
   }
 

@@ -18,7 +18,7 @@ import {
 import * as parser from 'cron-parser'
 import { isEmpty } from 'lodash'
 
-import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { PagerDto } from '~/common/dto/pager.dto'
 
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })
@@ -102,4 +102,4 @@ export class TaskDto {
 
 export class TaskUpdateDto extends PartialType(TaskDto) {}
 
-export class TaskQueryDto extends IntersectionType(PageOptionsDto, PartialType(TaskDto)) {}
+export class TaskQueryDto extends IntersectionType(PagerDto, PartialType(TaskDto)) {}
