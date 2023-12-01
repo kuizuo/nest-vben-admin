@@ -9,8 +9,9 @@ import {
   TreeParent,
 } from 'typeorm'
 
+import { AbstractEntity } from '~/common/entity/abstract.entity'
+
 import { UserEntity } from '../../user/entities/user.entity'
-import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')

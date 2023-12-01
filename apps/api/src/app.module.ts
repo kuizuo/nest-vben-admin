@@ -3,6 +3,9 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 
+import * as config from '~/config'
+import { SharedModule } from '~/shared/shared.module'
+
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 
 import { AuthModule } from './modules/auth/auth.module'
@@ -14,8 +17,7 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TodoModule } from './modules/todo/todo.module'
 import { ToolsModule } from './modules/tools/tools.module'
 import { DatabaseModule } from './shared/database/database.module'
-import { SharedModule } from '@/shared/shared.module'
-import * as config from '@/config'
+
 import { SocketModule } from './socket/socket.module'
 
 @Module({

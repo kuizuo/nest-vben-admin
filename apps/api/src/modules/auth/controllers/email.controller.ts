@@ -3,13 +3,13 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler'
 
-import { AuthUser } from '../decorators/auth-user.decorator'
+import { Ip } from '~/common/decorators/http.decorator'
+
+import { MailerService } from '~/shared/mailer/mailer.service'
+
 import { Public } from '../decorators/public.decorator'
 
 import { SendEmailCodeDto } from '../dto/captcha.dto'
-
-import { Ip } from '@/common/decorators/http.decorator'
-import { MailerService } from '@/shared/mailer/mailer.service'
 
 @ApiTags('Auth - 认证模块')
 @UseGuards(ThrottlerGuard)

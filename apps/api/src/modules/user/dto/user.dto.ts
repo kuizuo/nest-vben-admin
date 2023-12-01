@@ -16,9 +16,9 @@ import {
 } from 'class-validator'
 import { isEmpty } from 'lodash'
 
-import { PageOptionsDto } from '@/common/dto/page-options.dto'
-import { UserEntity } from '@/modules/user/entities/user.entity'
-import { IsUnique } from '@/shared/database/constraints/unique.constraint'
+import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { UserEntity } from '~/modules/user/entities/user.entity'
+import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
 export class UserDto {
   @ApiProperty({ description: '登录账号', example: 'kz-admin' })

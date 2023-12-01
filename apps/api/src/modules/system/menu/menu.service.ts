@@ -6,13 +6,15 @@ import { concat, isEmpty, uniq } from 'lodash'
 
 import { In, IsNull, Like, Not, Repository } from 'typeorm'
 
-import { RoleService } from '../role/role.service'
-import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { MenuEntity } from '@/modules/system/menu/menu.entity'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { MenuEntity } from '~/modules/system/menu/menu.entity'
 
-import { deleteEmptyChildren, generatorMenu, generatorRouters } from '@/utils'
+import { deleteEmptyChildren, generatorMenu, generatorRouters } from '~/utils'
+
+import { RoleService } from '../role/role.service'
+
+import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 
 @Injectable()
 export class MenuService {

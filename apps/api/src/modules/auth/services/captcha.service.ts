@@ -4,9 +4,9 @@ import { Injectable } from '@nestjs/common'
 import Redis from 'ioredis'
 import { isEmpty } from 'lodash'
 
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { CaptchaLogService } from '@/modules/system/log/services/captcha-log.service'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { CaptchaLogService } from '~/modules/system/log/services/captcha-log.service'
 
 @Injectable()
 export class CaptchaService {

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity } from 'typeorm'
 
-import { AbstractEntity } from '@/common/entity/abstract.entity'
+import { AbstractEntity } from '~/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_task' })
 export class TaskEntity extends AbstractEntity {

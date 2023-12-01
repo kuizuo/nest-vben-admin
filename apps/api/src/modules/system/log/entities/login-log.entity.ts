@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity, JoinColumn, ManyToOne, Relation } from 'typeorm'
 
+import { AbstractEntity } from '~/common/entity/abstract.entity'
+
 import { UserEntity } from '../../../user/entities/user.entity'
-import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_login_log' })
 export class LoginLogEntity extends AbstractEntity {

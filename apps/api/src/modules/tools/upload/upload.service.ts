@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { isNil } from 'lodash'
 import { Repository } from 'typeorm'
 
-import { Storage } from '@/modules/tools/storage/storage.entity'
+import { Storage } from '~/modules/tools/storage/storage.entity'
 
 import {
   fileRename,
@@ -13,7 +13,7 @@ import {
   getFileType,
   getSize,
   saveLocalFile,
-} from '@/utils/file.util'
+} from '~/utils/file.util'
 
 @Injectable()
 export class UploadService {

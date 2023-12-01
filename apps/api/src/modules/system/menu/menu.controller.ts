@@ -11,13 +11,14 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { flattenDeep } from 'lodash'
 
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { IdParam } from '~/common/decorators/id-param.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { MenuEntity } from '~/modules/system/menu/menu.entity'
+
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuService } from './menu.service'
-import { ApiResult } from '@/common/decorators/api-result.decorator'
-import { IdParam } from '@/common/decorators/id-param.decorator'
-import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
-import { Permission } from '@/modules/auth/decorators/permission.decorator'
-import { MenuEntity } from '@/modules/system/menu/menu.entity'
 
 export const Permissions = {
   LIST: 'system:menu:list',

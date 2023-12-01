@@ -10,15 +10,17 @@ import {
 } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { IdParam } from '~/common/decorators/id-param.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { RoleEntity } from '~/modules/system/role/role.entity'
+
 import { MenuService } from '../menu/menu.service'
+
 import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleService } from './role.service'
-import { ApiResult } from '@/common/decorators/api-result.decorator'
-import { IdParam } from '@/common/decorators/id-param.decorator'
-import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
-import { PageOptionsDto } from '@/common/dto/page-options.dto'
-import { Permission } from '@/modules/auth/decorators/permission.decorator'
-import { RoleEntity } from '@/modules/system/role/role.entity'
 
 export const Permissions = {
   LIST: 'system:role:list',

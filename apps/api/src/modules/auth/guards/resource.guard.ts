@@ -6,10 +6,12 @@ import { isNil } from 'lodash'
 
 import { DataSource, Repository } from 'typeorm'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
+
+import { ErrorEnum } from '~/constants/error-code.constant'
+
 import { IS_PUBLIC_KEY, POLICY_KEY, Roles } from '../constant'
 import { ResourceObject } from '../decorators/resource.decorator'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
 
 @Injectable()
 export class ResourceGuard implements CanActivate {
