@@ -21,5 +21,3 @@ export function formatToDate(
 export function isDateObject(obj: unknown): boolean {
   return isDate(obj) || dayjs.isDayjs(obj)
 }
-
-export const dateUtil = dayjs

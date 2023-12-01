@@ -1,4 +1,4 @@
-import { isExternal } from '@/utils/is'
+import { isExternal } from '~/utils/is.util'
 
 function createRoute(menu, _isRoot) {
   if (isExternal(menu.path)) {

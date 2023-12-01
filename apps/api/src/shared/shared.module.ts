@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { MailerModule } from '@nestjs-modules/mailer'
 
-import { IpService } from './ip/ip.service'
 import { LoggerModule } from './logger/logger.module'
 import { MailerService } from './mailer/mailer.service'
 import { QQService } from './qq/qq.service'
@@ -15,7 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { isDev } from '@/global/env'
 
-const providers = [MailerService, IpService, QQService]
+const providers = [MailerService, QQService]
 
 @Global()
 @Module({

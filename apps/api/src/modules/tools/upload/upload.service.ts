@@ -13,7 +13,7 @@ import {
   getFileType,
   getSize,
   saveLocalFile,
-} from '@/utils/file'
+} from '@/utils/file.util'
 
 @Injectable()
 export class UploadService {
