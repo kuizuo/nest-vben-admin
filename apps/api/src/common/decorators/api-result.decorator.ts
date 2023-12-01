@@ -1,7 +1,7 @@
 import { HttpStatus, Type, applyDecorators } from '@nestjs/common'
 import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger'
 
-import { ResOp } from '@/common/model/response.model'
+import { ResOp } from '~/common/model/response.model'
 
 const baseTypeNames = ['String', 'Number', 'Boolean']
 

@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
-import { isDev } from '@/global/env'
+import { isDev } from '~/global/env'
 
 interface myError {
   readonly status: number

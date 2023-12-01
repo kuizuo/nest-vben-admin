@@ -4,13 +4,14 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { isEmpty } from 'lodash'
 import { EntityManager, In, Repository } from 'typeorm'
 
+import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { paginate } from '~/helper/paginate'
+import { Pagination } from '~/helper/paginate/pagination'
+import { MenuEntity } from '~/modules/system/menu/menu.entity'
+import { RoleEntity } from '~/modules/system/role/role.entity'
+
 import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleInfo } from './role.model'
-import { PageOptionsDto } from '@/common/dto/page-options.dto'
-import { paginate } from '@/helper/paginate'
-import { Pagination } from '@/helper/paginate/pagination'
-import { MenuEntity } from '@/modules/system/menu/menu.entity'
-import { RoleEntity } from '@/modules/system/role/role.entity'
 
 @Injectable()
 export class RoleService {

@@ -7,10 +7,11 @@ import {
 import { Reflector } from '@nestjs/core'
 import { FastifyRequest } from 'fastify'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { AuthService } from '~/modules/auth/auth.service'
+
 import { ALLOW_ANON_KEY, IS_PUBLIC_KEY, PERMISSION_KEY } from '../constant'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { AuthService } from '@/modules/auth/auth.service'
 
 @Injectable()
 export class RbacGuard implements CanActivate {

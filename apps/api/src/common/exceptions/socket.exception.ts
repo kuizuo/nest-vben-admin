@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common'
 import { WsException } from '@nestjs/websockets'
 
-import { ErrorEnum } from '@/constants/error-code.constant'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 export class SocketException extends WsException {
   private errorCode: number

@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import dayjs from 'dayjs'
 
+import { ISecurityConfig, SecurityConfig } from '~/config'
+import { RoleService } from '~/modules/system/role/role.service'
+import { UserEntity } from '~/modules/user/entities/user.entity'
+import { generateUUID } from '~/utils'
+
 import { AccessTokenEntity } from '../entities/access-token.entity'
 import { RefreshTokenEntity } from '../entities/refresh-token.entity'
-import { ISecurityConfig, SecurityConfig } from '@/config'
-import { RoleService } from '@/modules/system/role/role.service'
-import { UserEntity } from '@/modules/user/entities/user.entity'
-import { generateUUID } from '@/utils'
-
 
 /**
  * 令牌服务

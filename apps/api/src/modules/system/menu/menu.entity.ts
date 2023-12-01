@@ -1,7 +1,8 @@
 import { Column, Entity, ManyToMany, Relation } from 'typeorm'
 
+import { AbstractEntity } from '~/common/entity/abstract.entity'
+
 import { RoleEntity } from '../role/role.entity'
-import { AbstractEntity } from '@/common/entity/abstract.entity'
 
 @Entity({ name: 'sys_menu' })
 export class MenuEntity extends AbstractEntity {

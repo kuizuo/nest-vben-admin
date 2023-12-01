@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional, IsString } from 'class-validator'
 
-import { PageOptionsDto } from '@/common/dto/page-options.dto'
+import { PageOptionsDto } from '~/common/dto/page-options.dto'
 
 export class LoginLogQueryDto extends PageOptionsDto {
   @ApiProperty({ description: '用户名' })

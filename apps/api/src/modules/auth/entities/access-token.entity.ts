@@ -9,8 +9,9 @@ import {
   Relation,
 } from 'typeorm'
 
+import { UserEntity } from '~/modules/user/entities/user.entity'
+
 import { RefreshTokenEntity } from './refresh-token.entity'
-import { UserEntity } from '@/modules/user/entities/user.entity'
 
 /**
  * 用户认证token模型

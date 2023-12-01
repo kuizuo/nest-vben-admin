@@ -1,16 +1,17 @@
 import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { IdParam } from '~/common/decorators/id-param.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
+import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { DeptEntity } from '~/modules/system/dept/dept.entity'
+
 import { DeptDto, DeptQueryDto } from './dept.dto'
 import { DeptService } from './dept.service'
-import { ApiResult } from '@/common/decorators/api-result.decorator'
-import { IdParam } from '@/common/decorators/id-param.decorator'
-import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator'
-import { Permission } from '@/modules/auth/decorators/permission.decorator'
-import { DeptEntity } from '@/modules/system/dept/dept.entity'
 
 export const Permissions = {
   LIST: 'system:dept:list',

@@ -7,24 +7,26 @@ import { isEmpty, isNil } from 'lodash'
 
 import { EntityManager, Like, Repository } from 'typeorm'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { SYS_USER_INITPASSWORD } from '~/constants/system.constant'
+
+import { paginate } from '~/helper/paginate'
+import { Pagination } from '~/helper/paginate/pagination'
+import { AccountUpdateDto } from '~/modules/auth/dto/account.dto'
+import { RegisterDto } from '~/modules/auth/dto/auth.dto'
+import { QQService } from '~/shared/helper/qq.service'
+
+import { md5, randomValue } from '~/utils'
+
 import { DictService } from '../system/dict/dict.service'
 import { RoleEntity } from '../system/role/role.entity'
+
 import { UserStatus } from './constant'
 import { PasswordUpdateDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
 import { UserEntity } from './entities/user.entity'
 import { AccountInfo } from './user.model'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { SYS_USER_INITPASSWORD } from '@/constants/system.constant'
-
-import { paginate } from '@/helper/paginate'
-import { Pagination } from '@/helper/paginate/pagination'
-import { AccountUpdateDto } from '@/modules/auth/dto/account.dto'
-import { RegisterDto } from '@/modules/auth/dto/auth.dto'
-import { QQService } from '@/shared/helper/qq.service'
-
-import { md5, randomValue } from '@/utils'
 
 @Injectable()
 export class UserService {

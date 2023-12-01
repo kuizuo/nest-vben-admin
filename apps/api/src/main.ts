@@ -77,7 +77,6 @@ async function bootstrap() {
     }),
   )
 
-
   app.useWebSocketAdapter(new RedisIoAdapter(app))
 
   const { port } = configService.get<IAppConfig>('app')!

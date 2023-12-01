@@ -4,16 +4,19 @@ import { Injectable } from '@nestjs/common'
 import Redis from 'ioredis'
 import { isEmpty } from 'lodash'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
+
+import { ErrorEnum } from '~/constants/error-code.constant'
+
+import { UserService } from '~/modules/user/user.service'
+
+import { md5 } from '~/utils'
+
 import { LoginLogService } from '../system/log/services/login-log.service'
 import { MenuService } from '../system/menu/menu.service'
 import { RoleService } from '../system/role/role.service'
+
 import { TokenService } from './services/token.service'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-
-import { UserService } from '@/modules/user/user.service'
-
-import { md5 } from '@/utils'
 
 @Injectable()
 export class AuthService {

@@ -8,11 +8,12 @@ import { AuthGuard } from '@nestjs/passport'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { isEmpty, isNil } from 'lodash'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+import { AuthService } from '~/modules/auth/auth.service'
+
 import { AuthStrategy, IS_PUBLIC_KEY } from '../constant'
 import { TokenService } from '../services/token.service'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-import { AuthService } from '@/modules/auth/auth.service'
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {

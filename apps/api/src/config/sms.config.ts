@@ -1,6 +1,6 @@
 import { ConfigType, registerAs } from '@nestjs/config'
 
-import { env } from '@/global/env'
+import { env } from '~/global/env'
 
 export const SmsConfig = registerAs('sms', () => ({
   sign: env('SMS_SING', 'Youni'),

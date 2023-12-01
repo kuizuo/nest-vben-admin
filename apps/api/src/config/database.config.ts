@@ -2,7 +2,7 @@ import { ConfigType, registerAs } from '@nestjs/config'
 
 import { DataSource, DataSourceOptions } from 'typeorm'
 
-import { env, envBoolean, envNumber } from '@/global/env'
+import { env, envBoolean, envNumber } from '~/global/env'
 
 // eslint-disable-next-line import/order
 import dotenv from 'dotenv'

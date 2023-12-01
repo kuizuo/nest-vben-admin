@@ -5,6 +5,9 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { ISecurityConfig } from '~/config'
+import { isDev } from '~/global/env'
+
 import { LogModule } from '../system/log/log.module'
 import { MenuModule } from '../system/menu/menu.module'
 import { RoleModule } from '../system/role/role.module'
@@ -21,8 +24,6 @@ import { CaptchaService } from './services/captcha.service'
 import { TokenService } from './services/token.service'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
-import { isDev } from '@/global/env'
-import { ISecurityConfig } from '@/config'
 
 const controllers = [
   AuthController,
