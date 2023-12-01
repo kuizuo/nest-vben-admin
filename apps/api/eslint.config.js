@@ -13,5 +13,22 @@ module.exports = antfu({
     'ts/consistent-type-imports': 'off',
     'node/prefer-global/process': 'off',
     'node/prefer-global/buffer': 'off',
+
+
+    'import/order': [
+      2,
+      {
+        'pathGroups': [
+          {
+            pattern: '~/**',
+            group: 'external',
+            position: 'after',
+          },
+        ],
+        'alphabetize': { order: 'asc', caseInsensitive: false },
+        'newlines-between': 'always-and-inside-groups',
+        'warnOnUnassignedImports': true,
+      },
+    ],
   },
 })

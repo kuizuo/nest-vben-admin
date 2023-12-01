@@ -1,17 +1,18 @@
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
+
+import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
+
+import { Permission } from '~/modules/auth/decorators/permission.decorator'
+
 import { KickDto } from './online.dto'
 import { OnlineUserInfo } from './online.model'
 import { OnlineService } from './online.service'
-import { ApiResult } from '@/common/decorators/api-result.decorator'
-import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
-import { BusinessException } from '@/common/exceptions/biz.exception'
-import { ErrorEnum } from '@/constants/error-code.constant'
-
-import { AuthUser } from '@/modules/auth/decorators/auth-user.decorator'
-
-import { Permission } from '@/modules/auth/decorators/permission.decorator'
 
 @ApiTags('System - 在线用户模块')
 @ApiSecurityAuth()
