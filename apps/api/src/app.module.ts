@@ -1,13 +1,16 @@
-import { Module } from '@nestjs/common'
+import { ClassSerializerInterceptor, Module } from '@nestjs/common'
 
 import { ConfigModule } from '@nestjs/config'
-import { APP_FILTER, APP_GUARD } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 
 import * as config from '~/config'
 import { SharedModule } from '~/shared/shared.module'
 
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 
+import { IdempotenceInterceptor } from './common/interceptors/idempotence.interceptor'
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
+import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 import { AuthModule } from './modules/auth/auth.module'
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
 import { RbacGuard } from './modules/auth/guards/rbac.guard'
@@ -45,6 +48,11 @@ import { SocketModule } from './socket/socket.module'
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
+
+    { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+    { provide: APP_INTERCEPTOR, useFactory: () => new TimeoutInterceptor(15 * 1000) },
+    { provide: APP_INTERCEPTOR, useClass: IdempotenceInterceptor },
 
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RbacGuard },
