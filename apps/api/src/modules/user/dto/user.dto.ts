@@ -18,9 +18,6 @@ import { isEmpty } from 'lodash'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 
-import { UserEntity } from '~/modules/user/entities/user.entity'
-import { IsUnique } from '~/shared/database/constraints/unique.constraint'
-
 export class UserDto {
   @ApiProperty({ description: '登录账号', example: 'kz-admin' })
   @IsString()
@@ -54,7 +51,6 @@ export class UserDto {
   nickname: string
 
   @ApiProperty({ description: '邮箱', example: 'hi@kuizuo.cn' })
-  @IsUnique(UserEntity, { message: '邮箱已被注册' })
   @IsEmail()
   @ValidateIf(o => !isEmpty(o.email))
   email: string
