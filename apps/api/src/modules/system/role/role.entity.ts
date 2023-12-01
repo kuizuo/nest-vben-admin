@@ -24,10 +24,18 @@ export class RoleEntity extends AbstractEntity {
   @ApiProperty({ description: '状态：1启用，0禁用' })
   status: number
 
+  @Column({ nullable: true })
+  @ApiProperty({ description: '是否默认用户' })
+  default: boolean
+
   @ManyToMany(() => UserEntity, user => user.roles)
   users: Relation<UserEntity[]>
 
   @ManyToMany(() => MenuEntity, menu => menu.roles, {})
-  @JoinTable()
+  @JoinTable({
+    name: 'sys_role_menus',
+    joinColumn: { name: 'role_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'menu_id', referencedColumnName: 'id' },
+  })
   menus: Relation<MenuEntity[]>
 }

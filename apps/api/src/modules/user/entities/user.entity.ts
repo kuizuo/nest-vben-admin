@@ -29,7 +29,7 @@ export class UserEntity extends AbstractEntity {
   @Column({ length: 32 })
   psalt: string
 
-  @Column({ name: 'nick_name', nullable: true })
+  @Column({ nullable: true })
   nickname: string
 
   @Column({ name: 'avatar', nullable: true })
@@ -51,11 +51,15 @@ export class UserEntity extends AbstractEntity {
   status: number
 
   @ManyToMany(() => RoleEntity, role => role.users)
-  @JoinTable()
+  @JoinTable({
+    name: 'sys_user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
   roles: Relation<RoleEntity[]>
 
   @ManyToOne(() => DeptEntity, dept => dept.users)
-  @JoinColumn()
+  @JoinColumn({ name: 'dept_id' })
   dept: Relation<DeptEntity>
 
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {

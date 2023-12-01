@@ -20,6 +20,6 @@ export class TaskLogEntity extends AbstractEntity {
   consumeTime: number
 
   @ManyToOne(() => TaskEntity)
-  @JoinColumn()
+  @JoinColumn({ name: 'task_id' })
   task: Relation<TaskEntity>
 }

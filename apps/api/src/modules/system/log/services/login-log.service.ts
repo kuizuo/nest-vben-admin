@@ -22,7 +22,6 @@ async function parseLoginLog(e: any, parser: UAParser): Promise<LoginLogInfo> {
     address: e.login_log_address,
     os: `${`${uaResult.os.name ?? ''} `}${uaResult.os.version}`,
     browser: `${`${uaResult.browser.name ?? ''} `}${uaResult.browser.version}`,
-    time: e.login_log_created_at,
     username: e.user_username,
   }
 }

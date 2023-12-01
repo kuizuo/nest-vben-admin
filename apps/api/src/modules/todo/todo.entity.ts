@@ -15,6 +15,6 @@ export class TodoEntity extends AbstractEntity {
   status: boolean
 
   @ManyToOne(() => UserEntity)
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: Relation<UserEntity>
 }

@@ -20,8 +20,4 @@ export class CaptchaLogEntity extends AbstractEntity {
   @Column({ nullable: true })
   @ApiProperty({ description: '验证码提供方' })
   provider: 'sms' | 'email'
-
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  @ApiProperty({ description: '发送时间' })
-  time: Date
 }

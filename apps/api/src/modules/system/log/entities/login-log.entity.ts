@@ -19,15 +19,11 @@ export class LoginLogEntity extends AbstractEntity {
   @ApiProperty({ description: '登录方式' })
   provider: string
 
-  @Column({ type: 'datetime', nullable: true })
-  @ApiProperty({ description: '登录时间' })
-  time: Date
-
   @Column({ length: 500, nullable: true })
   @ApiProperty({ description: '浏览器ua' })
   ua: string
 
   @ManyToOne(() => UserEntity)
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: Relation<UserEntity>
 }
