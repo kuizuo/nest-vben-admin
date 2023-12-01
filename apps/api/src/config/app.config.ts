@@ -5,7 +5,8 @@ import { env, envNumber } from '~/global/env'
 export const AppConfig = registerAs('app', () => ({
   name: env('APP_NAME'),
   port: envNumber('APP_PORT', 3000),
-  globalPrefix: env('GLOBAL_PREFIX'),
+  baseUrl: env('APP_BASE_URL'),
+  globalPrefix: env('GLOBAL_PREFIX', 'api'),
   locale: env('APP_LOCALE', 'zh-CN'),
 
   logger: {

@@ -10,12 +10,10 @@ import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
 
 @Injectable()
 export class CronService {
-  private logger: Logger
+  private logger: Logger = new Logger(CronService.name)
   constructor(
     private readonly configService: ConfigService,
-  ) {
-    this.logger = new Logger(CronService.name)
-  }
+  ) {}
 
   @CronOnce(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async deleteExpiredJWT() {
