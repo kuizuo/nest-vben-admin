@@ -4,7 +4,7 @@ import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { isEmpty } from 'lodash'
 import { EntityManager, In, Repository } from 'typeorm'
 
-import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { PagerDto } from '~/common/dto/pager.dto'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
@@ -30,7 +30,7 @@ export class RoleService {
   async findAll({
     page,
     pageSize,
-  }: PageOptionsDto): Promise<Pagination<RoleEntity>> {
+  }: PagerDto): Promise<Pagination<RoleEntity>> {
     return paginate(this.roleRepository, { page, pageSize })
   }
 

@@ -24,10 +24,10 @@ export class CoreLoad {
 
 // Intel(R) Xeon(R) Platinum 8163 CPU @ 2.50GHz
 export class Cpu {
-  @ApiProperty({ description: '制造商 e.g. Intel(R)' })
+  @ApiProperty({ description: '制造商' })
   manufacturer?: string
 
-  @ApiProperty({ description: '品牌	e.g. Core(TM)2 Duo' })
+  @ApiProperty({ description: '品牌' })
   brand?: string
 
   @ApiProperty({ description: '物理核心数' })
@@ -36,7 +36,7 @@ export class Cpu {
   @ApiProperty({ description: '型号' })
   model?: string
 
-  @ApiProperty({ description: '速度 in GHz e.g. 3.4' })
+  @ApiProperty({ description: '速度 in GHz' })
   speed?: number
 
   @ApiProperty({ description: 'CPU资源消耗 原始滴答' })

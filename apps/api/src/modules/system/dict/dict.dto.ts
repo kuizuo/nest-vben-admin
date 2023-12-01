@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional, IsString, MinLength } from 'class-validator'
 
-import { PageOptionsDto } from '~/common/dto/page-options.dto'
+import { PagerDto } from '~/common/dto/pager.dto'
 
 export class DictDto {
   @ApiProperty({ description: '参数名称' })
@@ -23,7 +23,7 @@ export class DictDto {
   remark?: string
 }
 
-export class DictQueryDto extends PageOptionsDto {
+export class DictQueryDto extends PagerDto {
   @ApiProperty({ description: '参数名称' })
   @IsString()
   @IsOptional()
