@@ -2,14 +2,13 @@ import cluster from 'node:cluster'
 import path from 'node:path'
 
 import {
-  ClassSerializerInterceptor,
   HttpStatus,
   Logger,
   UnprocessableEntityException,
   ValidationPipe,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { NestFactory, Reflector } from '@nestjs/core'
+import { NestFactory } from '@nestjs/core'
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 
 import { useContainer } from 'class-validator'
@@ -19,9 +18,7 @@ import { AppModule } from './app.module'
 import { fastifyApp } from './common/adapters/fastify.adapter'
 import { RedisIoAdapter } from './common/adapters/socket.adapter'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
-import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
-import { TransformInterceptor } from './common/interceptors/transform.interceptor'
-import { IAppConfig } from './config'
+import type { IAppConfig } from './config'
 import { isDev, isMainProcess } from './global/env'
 import { setupSwagger } from './setup-swagger'
 import { MyLogger } from './shared/logger/logger.service'
@@ -40,20 +37,14 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService)
 
-  const reflector = app.get(Reflector)
+  const { port, globalPrefix } = configService.get<IAppConfig>('app')!
 
-  // class-validator 的 DTO 类中注入 nest 容器的依赖
+  // class-validator 的 DTO 类中注入 nest 容器的依赖 (用于自定义验证器)
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
   app.enableCors({ origin: '*', credentials: true })
-  app.setGlobalPrefix('api')
+  app.setGlobalPrefix(globalPrefix)
   app.useStaticAssets({ root: path.join(__dirname, '..', 'public') })
-
-  app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(reflector),
-    new TransformInterceptor(reflector),
-    new TimeoutInterceptor(),
-  )
 
   if (isDev)
     app.useGlobalInterceptors(new LoggingInterceptor())
@@ -78,8 +69,6 @@ async function bootstrap() {
   )
 
   app.useWebSocketAdapter(new RedisIoAdapter(app))
-
-  const { port } = configService.get<IAppConfig>('app')!
 
   setupSwagger(app, configService)
 
