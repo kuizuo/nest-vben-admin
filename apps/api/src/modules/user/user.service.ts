@@ -22,7 +22,7 @@ import { paginate } from '@/helper/paginate'
 import { Pagination } from '@/helper/paginate/pagination'
 import { AccountUpdateDto } from '@/modules/auth/dto/account.dto'
 import { RegisterDto } from '@/modules/auth/dto/auth.dto'
-import { QQService } from '@/shared/qq/qq.service'
+import { QQService } from '@/shared/helper/qq.service'
 
 import { md5, randomValue } from '@/utils'
 

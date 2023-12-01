@@ -3,6 +3,7 @@ import { Body, Controller, Post } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { EmailSendDto } from './email.dto'
+
 import { ApiSecurityAuth } from '@/common/decorators/swagger.decorator'
 import { MailerService } from '@/shared/mailer/mailer.service'
 
@@ -16,6 +17,6 @@ export class EmailController {
   @Post('send')
   async send(@Body() dto: EmailSendDto): Promise<void> {
     const { to, subject, content } = dto
-    await this.emailService.sendMailHtml(to, subject, content)
+    await this.emailService.send(to, subject, content, 'html')
   }
 }
