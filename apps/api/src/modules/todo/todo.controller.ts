@@ -14,7 +14,7 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 
 import { Pagination } from '~/helper/paginate/pagination'
-import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
 import { Resource } from '~/modules/auth/decorators/resource.decorator'
 
 import { ResourceGuard } from '~/modules/auth/guards/resource.guard'
@@ -23,7 +23,7 @@ import { TodoEntity } from '~/modules/todo/todo.entity'
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 import { TodoService } from './todo.service'
 
-export const Permissions = {
+export const permissions: PermissionMap<'todo'> = {
   LIST: 'todo:list',
   CREATE: 'todo:create',
   READ: 'todo:read',
@@ -40,7 +40,7 @@ export class TodoController {
   @Get()
   @ApiOperation({ summary: '获取Todo列表' })
   @ApiResult({ type: [TodoEntity] })
-  @Permission(Permissions.LIST)
+  @Perm(permissions.LIST)
   async list(@Query() dto: TodoQueryDto): Promise<Pagination<TodoEntity>> {
     return this.todoService.list(dto)
   }
@@ -48,21 +48,21 @@ export class TodoController {
   @Get(':id')
   @ApiOperation({ summary: '获取Todo详情' })
   @ApiResult({ type: TodoEntity })
-  @Permission(Permissions.READ)
+  @Perm(permissions.READ)
   async info(@IdParam() id: number): Promise<TodoEntity> {
     return this.todoService.detail(id)
   }
 
   @Post()
   @ApiOperation({ summary: '创建Todo' })
-  @Permission(Permissions.CREATE)
+  @Perm(permissions.CREATE)
   async create(@Body() dto: TodoDto): Promise<void> {
     await this.todoService.create(dto)
   }
 
   @Put(':id')
   @ApiOperation({ summary: '更新Todo' })
-  @Permission(Permissions.UPDATE)
+  @Perm(permissions.UPDATE)
   @Resource(TodoEntity)
   async update(
     @IdParam() id: number,
@@ -73,7 +73,7 @@ export class TodoController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除Todo' })
-  @Permission(Permissions.DELETE)
+  @Perm(permissions.DELETE)
   @Resource(TodoEntity)
   async delete(@IdParam() id: number): Promise<void> {
     await this.todoService.delete(id)

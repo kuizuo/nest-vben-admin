@@ -11,7 +11,7 @@ import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthService } from '~/modules/auth/auth.service'
 
-import { ALLOW_ANON_KEY, IS_PUBLIC_KEY, PERMISSION_KEY } from '../constant'
+import { ALLOW_ANON_KEY, PERMISSION_KEY, PUBLIC_KEY, Roles } from '../auth.constant'
 
 @Injectable()
 export class RbacGuard implements CanActivate {
@@ -21,7 +21,7 @@ export class RbacGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<any> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ])
@@ -53,17 +53,11 @@ export class RbacGuard implements CanActivate {
     if (!payloadPermission)
       return true
 
-    let allPermissions = await this.authService.getPermissionsCache(user.uid)
+    // 管理员放开所有权限
+    if (user.roles.includes(Roles.ADMIN))
+      return true
 
-    // 缓存失效, 则获取新的 Permission
-    if (!allPermissions) {
-      const res = await this.authService.getPermissions(user.uid)
-
-      allPermissions = res
-
-      // set permissions into cache
-      await this.authService.setPermissionsCache(user.uid, allPermissions)
-    }
+    const allPermissions = await this.authService.getPermissionsCache(user.uid) ?? await this.authService.getPermissions(user.uid)
 
     let canNext = false
 

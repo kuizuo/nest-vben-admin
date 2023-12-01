@@ -14,13 +14,13 @@ import { flattenDeep } from 'lodash'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
 
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuService } from './menu.service'
 
-export const Permissions = {
+export const permissions: PermissionMap<'system:menu'> = {
   LIST: 'system:menu:list',
   CREATE: 'system:menu:create',
   READ: 'system:menu:read',
@@ -37,21 +37,21 @@ export class MenuController {
   @Get()
   @ApiOperation({ summary: '获取所有菜单列表' })
   @ApiResult({ type: [MenuEntity] })
-  @Permission(Permissions.LIST)
+  @Perm(permissions.LIST)
   async list(@Query() dto: MenuQueryDto) {
     return this.menuService.list(dto)
   }
 
   @Get(':id')
   @ApiOperation({ summary: '获取菜单或权限信息' })
-  @Permission(Permissions.READ)
+  @Perm(permissions.READ)
   async info(@IdParam() id: number) {
     return this.menuService.getMenuItemAndParentInfo(id)
   }
 
   @Post()
   @ApiOperation({ summary: '新增菜单或权限' })
-  @Permission(Permissions.CREATE)
+  @Perm(permissions.CREATE)
   async create(@Body() dto: MenuDto): Promise<void> {
     // check
     await this.menuService.check(dto)
@@ -70,7 +70,7 @@ export class MenuController {
 
   @Put(':id')
   @ApiOperation({ summary: '更新菜单或权限' })
-  @Permission(Permissions.UPDATE)
+  @Perm(permissions.UPDATE)
   async update(
     @IdParam() id: number,
     @Body() dto: MenuUpdateDto,
@@ -89,7 +89,7 @@ export class MenuController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除菜单或权限' })
-  @Permission(Permissions.DELETE)
+  @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     if (await this.menuService.checkRoleByMenuId(id))
       throw new BadRequestException('该菜单存在关联角色，无法删除')

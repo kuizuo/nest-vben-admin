@@ -2,15 +2,15 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { FastifyRequest } from 'fastify'
 
-import { isNil } from 'lodash'
+import { isArray, isEmpty, isNil } from 'lodash'
 
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, In, Repository } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
 import { ErrorEnum } from '~/constants/error-code.constant'
 
-import { IS_PUBLIC_KEY, POLICY_KEY, Roles } from '../constant'
+import { PUBLIC_KEY, RESOURCE_KEY, Roles } from '../auth.constant'
 import { ResourceObject } from '../decorators/resource.decorator'
 
 @Injectable()
@@ -21,7 +21,7 @@ export class ResourceGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<any> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ])
@@ -38,7 +38,7 @@ export class ResourceGuard implements CanActivate {
 
     // 如果是检查资源所属，且不是超级管理员，还需要进一步判断是否是自己的数据
     const { entity, condition } = this.reflector.get<ResourceObject>(
-      POLICY_KEY,
+      RESOURCE_KEY,
       context.getHandler(),
     ) ?? { entity: null, condition: null }
 
@@ -46,35 +46,38 @@ export class ResourceGuard implements CanActivate {
       const repo: Repository<any> = this.dataSource.getRepository(entity)
 
       /**
-       * 获取请求中的items,item,id,用于crud操作时验证数据
+       * 获取请求中的 items (ids) 验证数据拥有者
        * @param request
        */
-      const getRequestItemId = (request?: FastifyRequest): number => {
+      const getRequestItems = (request?: FastifyRequest): number[] => {
         const { params = {}, body = {}, query = {} } = (request ?? {}) as any
         const id = params.id ?? body.id ?? query.id
 
-        if (!isNil(id))
-          return Number(id)
+        if (id)
+          return [id]
 
-        return null
+        const { items } = body
+        return !isNil(items) && isArray(items) ? items : []
       }
 
-      const id = getRequestItemId(request)
-      if (!id)
+      const items = getRequestItems(request)
+      if (isEmpty(items))
         throw new BusinessException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND)
-
-      const item = await repo.findOne({ where: { id }, relations: ['user'] })
-      if (!item)
-        throw new BusinessException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND)
-
-      if (!item?.user)
-        throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
       if (condition)
-        return condition(item, user)
+        return condition(repo, items, user)
 
-      // 如果没有设置policy，则默认只能操作自己的数据
-      if (item.user?.id !== user.uid)
+      const recordQuery = {
+        where: {
+          id: In(items),
+          user: { id: user.uid },
+        },
+        relations: ['user'],
+      }
+
+      const records = await repo.find(recordQuery)
+
+      if (isEmpty(records))
         throw new BusinessException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND)
     }
 

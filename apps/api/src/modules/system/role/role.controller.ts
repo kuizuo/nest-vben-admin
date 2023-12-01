@@ -14,7 +14,7 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { PageOptionsDto } from '~/common/dto/page-options.dto'
-import { Permission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 
 import { MenuService } from '../menu/menu.service'
@@ -22,7 +22,7 @@ import { MenuService } from '../menu/menu.service'
 import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleService } from './role.service'
 
-export const Permissions = {
+export const permissions: PermissionMap<'system:role'> = {
   LIST: 'system:role:list',
   CREATE: 'system:role:create',
   READ: 'system:role:read',
@@ -42,7 +42,7 @@ export class RoleController {
   @Get()
   @ApiOperation({ summary: '获取角色列表' })
   @ApiResult({ type: [RoleEntity] })
-  @Permission(Permissions.LIST)
+  @Perm(permissions.LIST)
   async list(@Query() dto: PageOptionsDto) {
     return this.roleService.findAll(dto)
   }
@@ -50,21 +50,21 @@ export class RoleController {
   @Get(':id')
   @ApiOperation({ summary: '获取角色信息' })
   @ApiResult({ type: RoleEntity })
-  @Permission(Permissions.READ)
+  @Perm(permissions.READ)
   async info(@IdParam() id: number) {
     return this.roleService.info(id)
   }
 
   @Post()
   @ApiOperation({ summary: '新增角色' })
-  @Permission(Permissions.CREATE)
+  @Perm(permissions.CREATE)
   async create(@Body() dto: RoleDto): Promise<void> {
     await this.roleService.create(dto)
   }
 
   @Put(':id')
   @ApiOperation({ summary: '更新角色' })
-  @Permission(Permissions.UPDATE)
+  @Perm(permissions.UPDATE)
   async update(
     @IdParam() id: number,
     @Body() dto: RoleUpdateDto,
@@ -75,7 +75,7 @@ export class RoleController {
 
   @Delete(':id')
   @ApiOperation({ summary: '删除角色' })
-  @Permission(Permissions.DELETE)
+  @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     if (await this.roleService.checkUserByRoleId(id))
       throw new BadRequestException('该角色存在关联用户，无法删除')

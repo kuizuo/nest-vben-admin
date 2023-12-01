@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyRequest } from 'fastify'
 import { isEmpty, isNil } from 'lodash'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthService } from '~/modules/auth/auth.service'
 
-import { AuthStrategy, IS_PUBLIC_KEY } from '../constant'
+import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
 
 @Injectable()
@@ -26,13 +26,13 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
   }
 
   async canActivate(context: ExecutionContext): Promise<any> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ])
 
     const request = context.switchToHttp().getRequest<FastifyRequest>()
-    const response = context.switchToHttp().getResponse<FastifyReply>()
+    // const response = context.switchToHttp().getResponse<FastifyReply>()
 
     const Authorization = request.headers.authorization
 
