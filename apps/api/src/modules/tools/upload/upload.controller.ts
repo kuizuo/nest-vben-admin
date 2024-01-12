@@ -1,5 +1,4 @@
-import { MultipartFile } from '@fastify/multipart'
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Post, Req } from '@nestjs/common'
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
@@ -8,6 +7,7 @@ import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 import { Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { UploadService } from './upload.service'
+import { FastifyRequest } from 'fastify'
 
 @ApiSecurityAuth()
 @ApiTags('Tools - 上传模块')
@@ -19,11 +19,8 @@ export class UploadController {
   @ApiOperation({ summary: '上传' })
   @ApiConsumes('multipart/form-data')
   @Perm('upload:upload')
-  async upload(
-    @Body() dto: { file: MultipartFile },
-    @AuthUser() user: IAuthUser,
-  ) {
-    const { file } = dto
+  async upload(@Req() req: FastifyRequest, @AuthUser() user: IAuthUser) {
+    const file = await req.file()
 
     try {
       const path = await this.uploadService.saveFile(file, user.uid)
