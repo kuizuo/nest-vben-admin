@@ -44,6 +44,7 @@
     "rimraf": "^5.0.5",
     "turbo": "^1.12.2",
     "typescript": "^5.3.3",
-    "unbuild": "^2.0.0"
+    "unbuild": "^2.0.0",
+    "@vben/ts-config": "workspace:*"
   }
 }
