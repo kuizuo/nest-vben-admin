@@ -7,6 +7,11 @@
 
 <p align="center">一款简单高效的前后端分离的权限管理系统。</p>
 
+
+> [!Warning]
+> 该项目将不再维护，后续使用 Prisma 替换 Typeorm ，并从 Vben 迁移至 Ant Design Pro。
+>
+> 
 ### 说明
 
 使用 Vben Admin + NestJs 等技术栈，并采用 monorepo 管理项目，希望这个项目在 typescript 全栈的路上能够帮助到你。
